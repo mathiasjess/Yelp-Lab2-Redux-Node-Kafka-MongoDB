@@ -1,0 +1,143 @@
+.biz-site-expanded-grid-content-column {
+  position: absolute;
+  top:5%;
+  left: 20%;
+  min-height: 1px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  min-height: 750px;
+  width: 60%;
+}
+h1 {
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  font-weight: bold;
+  margin-bottom: 6px;
+  font-size: 30px;
+  line-height: 1.2em;
+  color: #333;
+  padding-top: 6px;
+}
+h1.page-title {
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 5px;
+}
+.biz-info-section {
+  margin-bottom: 12px;
+  border-bottom: 1px solid #e6e6e6;
+  padding-bottom: 20px;
+}
+.biz-info-row {
+  *zoom: 1;
+  margin: 0 -15px;
+}
+.biz-info-row .biz-main-info, .biz-info-row .main-form {
+  float: left;
+  padding: 0 15px;
+  min-height: 1px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 55.55556%;
+  *width: 376px;
+}
+ol, ul {
+  list-style: none;
+}
+li {
+  display: list-item;
+  text-align: -webkit-match-parent;
+}
+.BusinessName{
+  margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+.u-nowrap {
+  white-space: nowrap !important;
+}
+label {
+  font-size: 15px;
+  line-height: 20px;
+}
+.inputFields{
+width: 100%;
+}
+h2 {
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  font-weight: bold;
+  /* margin-bottom: 6px; */
+  font-size: 21px;
+  line-height: 1.28571em;
+  color: #d32323;
+  /* margin-block-start: 0.83em; */
+    /* margin-block-end: 0.83em; */
+    /* margin-inline-start: 0px; */
+    /* margin-inline-end: 0px; */
+}
+.arrange_unit {
+  display: flex;
+  width: 50%;
+  justify-content:space-between;
+  padding: 12px;
+    border-top: 1px solid #e6e6e6;
+    padding-top: 11px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  /* display: table-cell;
+  vertical-align: top; */
+}
+
+.ybtn-primary, .ybtn--primary {
+  color: #fff;
+  background: #d32323;
+  border: 1px solid #d32323;
+  background-image: none;
+  background-repeat: no-repeat;
+  transition: all 0.6s;
+  transition-property: background-color, background-position, background-size, border-color;
+  background-position: 50% 50%;
+  background-size: 15000px 15000px;
+}
+
+.ybtn {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+  cursor: pointer;
+  border: 1px solid;
+  font-weight: bold;
+  text-align: center;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-size: 14px;
+  line-height: 1.28571em;
+  padding: 8px 19px 9px;
+  border-radius: 3px;
+}
+button {
+  margin: 0;
+  font-family: inherit;
+  overflow: visible;
+}
+Link{
+  line-height: 1.28571em;
+  padding: 8px 19px 9px;
+  border: 1px solid;
+  vertical-align: middle;
+  border-radius: 3px;
+}
+.card{
+  width: 80%;
+}

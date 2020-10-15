@@ -1,0 +1,157 @@
+.split {
+    height: 100%;
+    position: fixed;
+    top: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+  }
+  
+  .left {
+    left: 0;
+      width: 20%;
+  }
+  
+  .right {
+    right: 0;
+    width: 80%;
+  }
+  
+  .centeredLeft {
+    position: absolute;
+    top: 30%;
+    left: 20%;
+    /* transform: translate(-50%, -50%);  */
+    /*text-align: center; */
+  }
+  .leftTop{
+    position: absolute;
+    top: 10%;
+    left: 20%;
+    width: 80%;
+  }
+
+  .centeredRight {
+    position: absolute;
+    top: 10%;
+    left: 0%;
+    width: 100%;
+    /* transform: translate(-50%, -50%);  */
+    /*text-align: center; */
+  }
+  
+  .centered img {
+    width: 150px;
+    border-radius: 50%;
+  }
+.restaurantName {
+    font-size: 28px;
+    line-height: 36px;
+    font-family: Poppins,Helvetica Neue,Helvetica,Arial,sans-serif;
+    font-weight: 900;
+    word-wrap: break-word!important;
+    word-break: break-word!important;
+    overflow-wrap: break-word!important;
+    color: #2b273c;
+}
+.restaurantdetails{
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    line-height: 20px;
+    font-family: Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 20px;
+    color: #2b273c;
+}
+.restaurantdescription {
+  font-family: Open Sans,Helvetica Neue,Helvetica,Arial,sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+}
+.card-menu {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 35rem;
+  height: 30rem;
+  margin-left: 2%;
+  margin-bottom: 2%;
+}
+.flex-display-items{
+  width: 100%;
+  display:flex; 
+  /* flex-wrap:wrap;  */
+}
+.card-menu:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* .container {
+  padding: 2px 16px;
+} */
+.submitUpdate{
+  display: flex;
+  justify-content: left;
+}
+
+.services{
+  width: 60%;
+  display: flex;
+  justify-content: space-between;
+}
+.glyphicon.glyphicon-ok{
+  color: green;
+}
+.glyphicon.glyphicon-remove{
+  color: red;
+}
+
+.card-img-top-profile{
+  height: 30rem;
+  width: 60rem;
+}
+.maps{
+  float: right;
+  height: 30rem;
+  width: 45rem;
+}
+.header{
+  display: flex;
+  justify-content: space-between;
+}
+.card-items{
+  margin-left: 2%;
+  margin-right: 2%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+}
+.card-img-top-menu{
+  width: 15rem;
+  height: 10rem;
+}
+.card-img-top-menu-items{
+  width: 15rem;
+  height: 10rem;
+}
+.event-actions{
+  display: flex;
+  width: 70%;
+  justify-content: space-between;
+  bottom: 5%;
+}
+.photo-box-dish{
+  width: 25rem;
+  height: 20rem;
+}
+.flex-display-items-menu{
+  width: 100%;
+  display:flex; 
+  justify-content:left;
+}
+.restaurant-menu{
+  width: 90%;
+}
+.menu{
+  width: 70%;
+}

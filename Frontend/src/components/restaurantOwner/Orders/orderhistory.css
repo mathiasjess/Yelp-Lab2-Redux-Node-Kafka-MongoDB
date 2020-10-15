@@ -1,0 +1,106 @@
+.table{ 
+    display: table; 
+    width: 100%;
+    height: 100%;
+  position: absolute; top: 8%; bottom: 0; left: 0; right: 0
+  }
+  .tr-items{ 
+    display: table-row; 
+    height: 100%;
+    background-color: white;
+  }
+  .td-items1{ 
+    display: table-cell; 
+    width: 15%;
+  }
+  .td-items2{ 
+    display: table-cell; 
+    width: 45%;
+  }
+  .td-items3{ 
+    display: table-cell; 
+    width: 30%;
+  }
+.card-img-top-items{
+    width: 25rem;
+    height: 15rem;
+  }
+  .flex-display-items{
+    display:flex; 
+    flex-wrap:wrap; 
+    justify-content:flex-start
+  }
+  .card1{
+    width: 25rem;
+    height: 30rem;
+    border: 0.25px solid rgba(194, 191, 191, 0.8);
+  }
+  table{
+      width: 90%;
+  }
+  tr{
+      padding: 20px;
+  }
+  td, th{
+    font-size: 16px;
+    border: 0.25px solid rgba(194, 191, 191, 0.8);
+    color: #333;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    padding: 15px;
+  }
+
+.card-order{
+  width: 70%;
+  display: inline-block;
+  border:0.25px solid rgba(194, 191, 191, 0.8);
+}
+.order-footer{
+  display: flex;
+  justify-content:left;
+  padding: 10px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 2em;
+  margin: 0 0 6px;
+}
+.no-show{
+  display: block;
+  padding: 12px;
+  position: relative;
+  background: none!important;
+  border: none;
+  /*optional*/
+  font-family: arial, sans-serif;
+  /*input has OS specific font-family*/
+  color: #333;
+  cursor: pointer;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+.Filter-headings{
+text-align: center;
+}
+h4{
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 2em;
+    margin: 0 0 6px;
+}
+h5{
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 2em;
+    margin: 0 0 6px;
+}
+.photo-box{
+  height: 5rem;
+  width: 5rem;
+}
+.order-header{
+  display: flex;
+  justify-content: left;
+  padding:5px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 2em;
+  margin: 0 0 6px;
+}

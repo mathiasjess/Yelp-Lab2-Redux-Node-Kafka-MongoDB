@@ -1,0 +1,20 @@
+.container{
+    width: 50%;
+    margin: auto;
+    left: 20%;
+}
+.Reviews{
+
+    width: 100%;
+    display: inline-block;
+    border:0.25px solid rgba(194, 191, 191, 0.8);
+  }
+.photo-box{
+    height: 5rem;
+    width: 5rem;
+}
+.review-header{
+    display: flex;
+    justify-content: left;
+    padding:5px;
+}
