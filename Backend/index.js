@@ -6,27 +6,12 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var path = require('path')
-app.set('view engine', 'ejs')
+const {mongoDB} = require('./config')
+const mongoose = require('mongoose')
+
 
 const PORT = process.env.PORT || 3001
 
-
-var customerlogin = require('./routes/customer/customerlogin')
-var customerprofile = require('./routes/customer/customerProfile')
-var searchRestaurant = require('./routes/customer/searchRestaurant')
-var review = require('./routes/customer/customerreview')
-var orders = require('./routes/customer/orders')
-var customerevents = require('./routes/customer/events')
-
-
-
-
-var restaurant = require('./routes/restaurant')
-var restaurantevents = require('./routes/restaurant/restaurantevents');
-var restaurantorders = require('./routes/restaurant/restaurantorders')
-var customerdetails = require('./routes/restaurant/customerdetails')
-var restaurantreviews = require('./routes/restaurant/restaurantreviews')
-var restaurantmenu = require('./routes/restaurant/updatemenudetails')
 
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -59,41 +44,82 @@ app.use(function (req, res, next) {
 });
 app.use(express.static(__dirname + '/public'));
 
+var options = {
+    useNewUrlParser : true,
+    useUnifiedTopology : true,
+    poolSize : 500,
+    bufferMaxEntries: 0
+}
+
+mongoose.connect(mongoDB, options, (err,result)=>{
+    if(err){
+        console.log(err)
+        console.log("MongoDB connection failed")
+    }
+    else{
+        console.log("MongoDB connected")
+    }
+})
+
+//Fetching Routes
+// var customerlogin = require('./routes/customer/customerlogin')
+// var customerprofile = require('./routes/customer/customerProfile')
+// var searchRestaurant = require('./routes/customer/searchRestaurant')
+// var review = require('./routes/customer/customerreview')
+// var orders = require('./routes/customer/orders')
+// var customerevents = require('./routes/customer/events')
+
+var registerrestaurant = require('./routes/restaurant/restaurantRegistration')
+var restaurantloginroute = require('./routes/restaurant/restaurantLogin')
+let restaurantprofiledetailsroute = require('./routes/restaurant/restaurantProfile')
+// var testModel = require('./routes/testroutes')
+// app.use('/testroutes', testModel)
+// var restaurant = require('./routes/restaurant')
+// var restaurantevents = require('./routes/restaurant/restaurantevents');
+// var restaurantorders = require('./routes/restaurant/restaurantorders')
+// var customerdetails = require('./routes/restaurant/customerdetails')
+// var restaurantreviews = require('./routes/restaurant/restaurantreviews')
+// var restaurantmenu = require('./routes/restaurant/updatemenudetails')
+
+// Route to handle action calls for registration of restaurant
+app.use('/registerrestaurant',registerrestaurant);
+app.use('/restaurantloginroute',restaurantloginroute);
+app.use('/restaurantprofiledetailsroute',restaurantprofiledetailsroute);
 
 //Route to handle action calls for customer login and register
-app.use('/customerlogin',customerlogin)
+// app.use('/customerlogin',customerlogin)
 
-//Route to handle all actions for customer profile
-app.use('/customerprofile',customerprofile)
+// //Route to handle all actions for customer profile
+// app.use('/customerprofile',customerprofile)
 
-//Route to handle all actions for customer search
-app.use('/search',searchRestaurant)
+// //Route to handle all actions for customer search
+// app.use('/search',searchRestaurant)
 
-//Route to handle all actions for customer search
-app.use('/reviews',review)
+// //Route to handle all actions for customer search
+// app.use('/reviews',review)
 
-//Route to handle all actions for customer orders
-app.use('/orders',orders)
+// //Route to handle all actions for customer orders
+// app.use('/orders',orders)
 
-//Route to handle all actions for customer orders
-app.use('/events',customerevents)
+// //Route to handle all actions for customer orders
+// app.use('/events',customerevents)
 
-//Route to handle Post Request Call for restaurant
-app.use('/restaurant',restaurant)  
+// //Route to handle Post Request Call for restaurant
+// app.use('/restaurant',restaurant)  
 
-//Routes to handle Calls for restaurant event actions
-app.use('/restaurantevents',restaurantevents)
+// //Routes to handle Calls for restaurant event actions
+// app.use('/restaurantevents',restaurantevents)
 
-//Routes to handle Calls for restaurant orders
-app.use('/restaurantorders',restaurantorders)
+// //Routes to handle Calls for restaurant orders
+// app.use('/restaurantorders',restaurantorders)
 
-//Routes to handle Calls for restaurant reviews
-app.use('/restaurantreviews', restaurantreviews)
+// //Routes to handle Calls for restaurant reviews
+// app.use('/restaurantreviews', restaurantreviews)
 
-//Routes to handle Calls for customer details
-app.use('/restaurantviewofcustomer',customerdetails)
+// //Routes to handle Calls for customer details
+// app.use('/restaurantviewofcustomer',customerdetails)
 
-app.use('/restaurantmenu', restaurantmenu)
+// app.use('/restaurantmenu', restaurantmenu)
 
 //start your server on port 3001
 app.listen(PORT);
