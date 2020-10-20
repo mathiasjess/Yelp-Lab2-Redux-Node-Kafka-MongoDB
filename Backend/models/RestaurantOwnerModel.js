@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+var customers = require('./Customer')
 
 const MenuSchema = new Schema({
     dishCategory : String,
@@ -26,9 +27,11 @@ const EventSchema = new Schema({
 
 const ReviewSchema = new Schema({
     customerID: String,
+    customerName: String,
+    customerImage: String,
     ratings: Number,
     comments: String,
-    reviewDate: {type:Date, default:Date.now}
+    reviewDate: {type:Date, default:Date.now}, 
 })
 
 const OrderSummarySchema = new Schema({
@@ -61,7 +64,6 @@ var restaurantOwnerSchema = new Schema({
     timings : {type: String},
     description :{type: String},
     curbPickup : {type: Boolean},
-    dineIn : {type: Boolean},
     dineIn : {type: Boolean},
     yelpDelivery : {type: Boolean},
     latitude : {type: Number},

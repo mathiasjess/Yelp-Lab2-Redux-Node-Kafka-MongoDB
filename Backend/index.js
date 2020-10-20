@@ -62,7 +62,7 @@ mongoose.connect(mongoDB, options, (err,result)=>{
 })
 
 //Fetching Routes
-// var customerlogin = require('./routes/customer/customerlogin')
+
 // var customerprofile = require('./routes/customer/customerProfile')
 // var searchRestaurant = require('./routes/customer/searchRestaurant')
 // var review = require('./routes/customer/customerreview')
@@ -72,23 +72,38 @@ mongoose.connect(mongoDB, options, (err,result)=>{
 var registerrestaurant = require('./routes/restaurant/restaurantRegistration')
 var restaurantloginroute = require('./routes/restaurant/restaurantLogin')
 let restaurantprofiledetailsroute = require('./routes/restaurant/restaurantProfile')
-// var testModel = require('./routes/testroutes')
-// app.use('/testroutes', testModel)
-// var restaurant = require('./routes/restaurant')
-// var restaurantevents = require('./routes/restaurant/restaurantevents');
-// var restaurantorders = require('./routes/restaurant/restaurantorders')
-// var customerdetails = require('./routes/restaurant/customerdetails')
-// var restaurantreviews = require('./routes/restaurant/restaurantreviews')
-// var restaurantmenu = require('./routes/restaurant/updatemenudetails')
+var restaurantmenuroute = require('./routes/restaurant/restaurantMenu')
+var restauranteventsroute = require('./routes/restaurant/restaurantEvents')
+var restaurantordersroute = require('./routes/restaurant/restaurantOrders')
+var restaurantreviewsroute = require('./routes/restaurant/restaurantReviews')
+
 
 // Route to handle action calls for registration of restaurant
 app.use('/registerrestaurant',registerrestaurant);
 app.use('/restaurantloginroute',restaurantloginroute);
 app.use('/restaurantprofiledetailsroute',restaurantprofiledetailsroute);
+app.use('/restaurantmenuroute', restaurantmenuroute)
+app.use('/restauranteventsroute', restauranteventsroute)
+app.use('/restaurantordersroute',restaurantordersroute)
+app.use('/restaurantreviewsroute',restaurantreviewsroute)
 
-//Route to handle action calls for customer login and register
-// app.use('/customerlogin',customerlogin)
 
+//Customer Routes
+var customerregistrationroute = require('./routes/customer/customerRegistration');
+var customerloginroute = require('./routes/customer/customerLogin')
+var customerprofileroute = require('./routes/customer/customerProfile')
+var customersearchroute = require('./routes/customer/searchRestaurant')
+var customerreviewroute = require('./routes/customer/customerReview')
+var customereventsroute = require('./routes/customer/events')
+
+
+
+app.use('/customerregistrationroute',customerregistrationroute)
+app.use('/customerloginroute',customerloginroute)
+app.use('/customerprofileroute',customerprofileroute)
+app.use('/customersearchroute',customersearchroute)
+app.use('/customerreviewroute',customerreviewroute)
+app.use('/customereventsroute',customereventsroute)
 // //Route to handle all actions for customer profile
 // app.use('/customerprofile',customerprofile)
 
@@ -119,7 +134,6 @@ app.use('/restaurantprofiledetailsroute',restaurantprofiledetailsroute);
 // //Routes to handle Calls for customer details
 // app.use('/restaurantviewofcustomer',customerdetails)
 
-// app.use('/restaurantmenu', restaurantmenu)
 
 //start your server on port 3001
 app.listen(PORT);

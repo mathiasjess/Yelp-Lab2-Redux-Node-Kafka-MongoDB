@@ -28,5 +28,5 @@ const CustomerSchema = new Schema({
     versionKey : false
 });
 
-const CustomerModel = mongoose.model('customer',restaurantOwnerSchema);
+const CustomerModel = mongoose.model('customer',CustomerSchema);
 module.exports = CustomerModel;
