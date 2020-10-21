@@ -153,5 +153,9 @@
   width: 90%;
 }
 .menu{
-  width: 70%;
+  margin: auto;
+  width: 80%;
+}
+.container{
+  width: 80%;
 }

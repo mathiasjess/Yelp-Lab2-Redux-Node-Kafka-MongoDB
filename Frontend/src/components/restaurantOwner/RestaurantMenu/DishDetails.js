@@ -27,7 +27,7 @@ class DishDetails extends React.Component {
             <div class="biz-site-expanded-grid-content-column">
                 <div>
                     <div class="main-link">
-                        <Link to='/restaurantHomePage'><span class="glyphicon glyphicon-arrow-left" />Return to RestaurantHomePage</Link>
+                        <Link to="/displaymenu"><span class="glyphicon glyphicon-arrow-left" />Return to Main Menu</Link>
                     </div>
                     <h2 style={{ textAlign: 'center' }}> Dish Details</h2>
                     <div class="card-order">

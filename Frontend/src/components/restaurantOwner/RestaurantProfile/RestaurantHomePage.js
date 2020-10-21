@@ -113,9 +113,6 @@ class RestaurantHomePage extends React.Component {
                                 <Link to='/viewcustomerreviews' class="nav-link disabled" >Reviews</Link>
                             </li>
                             <li class="nav-item">
-                                <Link to = '/orders' class="nav-link disabled" onClick={this.handleOrders}>Orders</Link>
-                            </li>
-                            <li class="nav-item">
                             <Link to = '#' class="nav-link disabled" onClick={this.handleEvents}> Add Events</Link>
                             </li>
                         </ul>

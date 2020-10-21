@@ -95,6 +95,10 @@ class Navbar extends Component {
                 customerFeatures = (
                     <ul class="nav navbar-nav">
                         <button class="customerFeatures" onClick={() => this.props.history.push(`/restauranthomepage/${localStorage.getItem('id')}`)}>Home</button>
+                        <button class="customerFeatures" onClick={() => this.props.history.push("/displaymenu")}>Menu</button>
+                        <button class="customerFeatures" onClick={() => this.props.history.push("/displayevents")}>Events</button>
+                        <button class="customerFeatures" onClick={() => this.props.history.push("/orders")}>Orders</button>
+                        <button class="customerFeatures" onClick={() => this.props.history.push('/viewcustomerreviews')}>Reviews</button>
                     </ul>
                 )
             }

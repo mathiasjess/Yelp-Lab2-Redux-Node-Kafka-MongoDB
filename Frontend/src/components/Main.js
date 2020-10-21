@@ -11,7 +11,9 @@ import CustomerLogin from './customer/CustomerLogin'
 import RestaurantLogin from './restaurantOwner/RestaurantEntryAuth/RestaurantLogin'
 import CustomerHomePage from './customer/CustomerHomePage'
 import RestaurantHomePage from './restaurantOwner/RestaurantProfile/RestaurantHomePage'
+import DisplayMenu from './restaurantOwner/RestaurantMenu/DisplayMenu'
 import DishDetails from './restaurantOwner/RestaurantMenu/DishDetails'
+import DisplayEvents from './restaurantOwner/Events/DisplayEvents'
 import EditEvent from './restaurantOwner/EditEvent'
 import EventList from './restaurantOwner/Events/EventList'
 import RestaurantViewOfCustomer from './restaurantOwner/CustomerView/RestaurantViewOfCustomer'
@@ -70,6 +72,10 @@ class Main extends Component {
                         render={props => <RestaurantHomePage  {...props} />}
                     />
                     <Route
+                        path="/displaymenu"
+                        render={props => <DisplayMenu  {...props} />}
+                    />
+                    <Route
                         path="/dishdetails/:id"
                         render={props => <DishDetails  {...props} />}
                     />
@@ -81,6 +87,10 @@ class Main extends Component {
                         path="/updateorder/:id"
                         render={props => <UpdateOrder  {...props} />}
                     />
+                    <Route
+                    path="/displayevents"
+                    render={props => <DisplayEvents  {...props} />}
+                />
                     <Route
                         path="/editevent/:id"
                         render={props => <EditEvent  {...props} />}
