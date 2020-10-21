@@ -6,7 +6,7 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var path = require('path')
-const {mongoDB} = require('./config')
+const {mongoDB} = require('./utils/config')
 const mongoose = require('mongoose')
 
 

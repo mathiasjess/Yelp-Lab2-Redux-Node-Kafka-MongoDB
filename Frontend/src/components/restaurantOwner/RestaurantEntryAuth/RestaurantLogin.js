@@ -1,15 +1,20 @@
 import React from 'react'
-import Cookies from 'js-cookie';
 import axios from 'axios';
 import {connect} from 'react-redux';
-import {restaurantLogin} from '../../actions/restaurantAction'
+import {restaurantLogin} from '../../../actions/restaurantAction'
+ // @ts-ignore  
+ import jwt_decode from "jwt-decode";
+
+// const jwt_decode = require('jwt-decode');
 
 class RestaurantLogin extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             email:'',
-            password:''
+            password:'',
+            token : '',
+            restaurantId : ''
         }
         this.ChangeHandler = this.ChangeHandler.bind(this)
         this.submitLogin = this.submitLogin.bind(this)
@@ -20,14 +25,14 @@ class RestaurantLogin extends React.Component {
             [event.target.name]:event.target.value
         })
     }
-    componentDidMount(){
-        if(!Cookies.get('id')){
-            this.props.history.replace('/login/restaurantlogin');
-        }
-        else if (!Cookies.get('role') === 'restaurant'){
-            this.props.history.replace(`/restauranthomepage/${Cookies.get('id')}`);
-        }
-    }
+    // componentDidMount(){
+    //     if(!Cookies.get('id')){
+    //         this.props.history.replace('/login/restaurantlogin');
+    //     }
+    //     else if (!Cookies.get('role') === 'restaurant'){
+    //         this.props.history.replace(`/restauranthomepage/${Cookies.get('id')}`);
+    //     }
+    // }
 
     submitLogin(event){
         let responseObj = {}
@@ -39,35 +44,31 @@ class RestaurantLogin extends React.Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://localhost:3001/restaurant/restaurantlogin',data)
+        axios.post('http://localhost:3001/restaurantloginroute/restaurantlogin',data)
         .then(response => {
+            console.log( response.data.token)
+            console.log(response.data.data._id)
             if(response.data.message === "success"){
-                console.log("The data got is", response.data.data)
-                Cookies.set('id',response.data.data.restaurantId)
-                Cookies.set('role','restaurant')
-                console.log("Cookies ID", Cookies.get('id'))
-                console.log("Cookies role", Cookies.get('role'))
-                // console.log('Getting Cookie ID', Cookies.get('id'))
+                this.setState({
+                    token : response.data.token,
+                    restaurantId : response.data.data._id
+                })
                 this.props.restaurantLogin(response.data.data);
-                
-                this.props.history.replace(`/restauranthomepage/${response.data.data.restaurantId}`);
             }
             else if (response.data.message === "error"){
                 alert("Invalid credentials")
             }
         })
     }
-    // componentDidMount(){
-        // if(Cookies.get('id')){
-        //     if (Cookies.get('role') == 'restaurant'){
-        //         this.props.history.replace(`/restauranthomepage/${Cookies.get('id')}`);
-        //     }
-        // }
-        // else{
-        //     this.props.history.push(`/login/restaurantlogin`);
-        // }
-    // }
     render() {
+        if (this.state.token.length > 0){
+            localStorage.setItem("token", this.state.token);
+            var decoded = jwt_decode(this.state.token.split(' ')[1]);
+            localStorage.setItem("id",decoded._id);
+            localStorage.setItem("email",decoded.email);
+            localStorage.setItem("role",decoded.role);
+            this.props.history.replace(`/restauranthomepage/${this.state.restaurantId}`);
+        }
         return (
             <form>
                 <div class="regColumn">

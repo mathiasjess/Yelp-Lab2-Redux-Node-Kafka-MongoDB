@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import {registerRestaurant} from '../../actions/restaurantAction'
+import {registerRestaurant} from '../../../actions/restaurantAction'
 
 class restaurantRegister extends React.Component {
     constructor() {
@@ -43,7 +43,7 @@ class restaurantRegister extends React.Component {
     //set the with credentials to true
     axios.defaults.withCredentials = true;
     //make a post request with the user data
-    axios.post('http://localhost:3001/restaurant/restaurantregister',restaurantRegistrationData)
+    axios.post('http://localhost:3001/registerrestaurant/restaurantregister',restaurantRegistrationData)
     .then(response => {
         console.log("Status Code : ",response.status);
         if(response.status === 200){

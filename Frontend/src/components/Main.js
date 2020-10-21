@@ -6,12 +6,12 @@ import Home from './Home/Home';
 import Login from './Login/Login';
 import Register from './Login/Register'
 import CustomerRegister from './customer/CustomerRegister'
-import RestaurantRegister from './restaurantOwner/RestaurantRegister'
+import RestaurantRegister from './restaurantOwner/RestaurantEntryAuth/RestaurantRegister'
 import CustomerLogin from './customer/CustomerLogin'
-import RestaurantLogin from './restaurantOwner/RestaurantLogin'
+import RestaurantLogin from './restaurantOwner/RestaurantEntryAuth/RestaurantLogin'
 import CustomerHomePage from './customer/CustomerHomePage'
-import RestaurantHomePage from './restaurantOwner/RestaurantHomePage'
-import EditDish from './restaurantOwner/EditDish'
+import RestaurantHomePage from './restaurantOwner/RestaurantProfile/RestaurantHomePage'
+import DishDetails from './restaurantOwner/RestaurantMenu/DishDetails'
 import EditEvent from './restaurantOwner/EditEvent'
 import EventList from './restaurantOwner/Events/EventList'
 import RestaurantViewOfCustomer from './restaurantOwner/CustomerView/RestaurantViewOfCustomer'
@@ -70,8 +70,8 @@ class Main extends Component {
                         render={props => <RestaurantHomePage  {...props} />}
                     />
                     <Route
-                        path="/editdish/:id"
-                        render={props => <EditDish  {...props} />}
+                        path="/dishdetails/:id"
+                        render={props => <DishDetails  {...props} />}
                     />
                     <Route
                         path="/orders"

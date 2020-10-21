@@ -12,12 +12,10 @@ class EventList extends React.Component{
         }
     }
     componentDidMount(){
-        axios.get(`http://localhost:3001/restaurantevents/fetchregistry/${this.props.match.params.id}`)
-        .then(response=>{
-            if(response.data.message === "success"){
-                console.log(response.data.data)
-                this.setState({
-                    registryList :response.data.data
+        this.props.user.events.map(event=>{
+            if(event._id === this.props.match.params.id){
+                return this.setState({
+                    registryList : event.registeredUsers
                 })
             }
         })
@@ -36,15 +34,15 @@ class EventList extends React.Component{
                 <tr>
                 <td>{count = count + 1}</td>
                 <td><Link to= {{pathname: '/restaurantviewofcustomer',
-                            aboutProps:{id: this.state.registryList[0].id}}}>
-                            {this.state.registryList[0].firstName} {this.state.registryList[0].lastName}</Link></td>
+                            aboutProps:{id: this.state.registryList[0].customerID}}}>
+                            {this.state.registryList[0].customerName}</Link></td>
                 </tr>}
             {this.state.registryList.length > 1 && this.state.registryList.map((customer, i)=>{
                 <tr key = {i}>
                 <td>{count = count + 1}</td>
                 <td><Link to= {{pathname: '/restaurantviewofcustomer',
-                            aboutProps:{id: customer.id}}}>
-                            {customer.firstName} {customer.lastName}</Link></td>
+                            aboutProps:{id: customer.customerID}}}>
+                            {customer.customerName}</Link></td>
                 </tr>
             })}
             </table>
@@ -53,4 +51,9 @@ class EventList extends React.Component{
     }
 
 }
-export default EventList
+const mapStateToProps = state => ({
+    user: state.restaurantReducer
+});
+
+
+export default connect(mapStateToProps)(EventList);

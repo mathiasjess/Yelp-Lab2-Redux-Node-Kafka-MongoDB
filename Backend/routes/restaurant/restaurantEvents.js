@@ -22,48 +22,51 @@ router.post('/addEvent/:id', function (req, res) {
             }
             else {
                 returnObject.message = "success";
-                returnObject.data = result;
-                res.json(returnObject);
+                restaurant.find({ 'events.eventName': req.body.eventName }, { 'events.$': 1, _id: 0 }, (err, result) => {
+                    returnObject.data = result
+                    console.log(returnObject.data)
+                    res.json(returnObject)
+                })
             }
         });
 });
 
-// Router to handle post request to fetch events for the restaurant
-router.get('/fetchEvents/:id', function (req, res) {
-    let returnObject = {};
-    console.log("Inside fetch Events");
-    restaurant.findById(req.params.id, { 'events': 1, _id: 0 }, (err, result) => {
-        if (err) {
-            returnObject.message = 'error'
-        }
-        else {
-            returnObject.message = "success"
-            returnObject.data = result
-            res.json(returnObject)
-            console.log("Menu Data", returnObject)
-        }
-    })
+// // Router to handle post request to fetch events for the restaurant
+// router.get('/fetchEvents/:id', function (req, res) {
+//     let returnObject = {};
+//     console.log("Inside fetch Events");
+//     restaurant.findById(req.params.id, { 'events': 1, _id: 0 }, (err, result) => {
+//         if (err) {
+//             returnObject.message = 'error'
+//         }
+//         else {
+//             returnObject.message = "success"
+//             returnObject.data = result
+//             res.json(returnObject)
+//             console.log("Menu Data", returnObject)
+//         }
+//     })
 
-})
+// })
 
 // //Router to handle get request to fetch Single Event
 
-router.get('/fetchsingleevent/:id', function (req, res) {
-    let returnObject = {};
-    console.log("Inside fetchSingle Event")
-    console.log("ID", req.params.id);
-    restaurant.find({ 'events._id': req.params.id }, { 'events.$': 1, _id: 0 }, (err, result) => {
-        if (err) {
-            returnObject.message = 'error'
-        }
-        else {
-            returnObject.message = "success"
-            returnObject.data = result
-            res.json(returnObject)
-        }
-    })
+// router.get('/fetchsingleevent/:id', function (req, res) {
+//     let returnObject = {};
+//     console.log("Inside fetchSingle Event")
+//     console.log("ID", req.params.id);
+//     restaurant.find({ 'events._id': req.params.id }, { 'events.$': 1, _id: 0 }, (err, result) => {
+//         if (err) {
+//             returnObject.message = 'error'
+//         }
+//         else {
+//             returnObject.message = "success"
+//             returnObject.data = result
+//             res.json(returnObject)
+//         }
+//     })
 
-})
+// })
 
 //Router to handle post request to edit event
 router.put('/updatesingleevent', function (req, res) {
@@ -96,7 +99,7 @@ router.put('/updatesingleevent', function (req, res) {
 router.delete('/deleteEvent/:id', function (req, res) {
     let returnObject = {};
     console.log("Inside deleting Event")
-    restaurant.updateOne({},{$pull:{events: {_id: req.params.id}}},{multi: true}, (err, result) => {
+    restaurant.updateOne({}, { $pull: { events: { _id: req.params.id } } }, { multi: true }, (err, result) => {
         if (err) {
             returnObject.message = 'error'
         }
@@ -109,23 +112,23 @@ router.delete('/deleteEvent/:id', function (req, res) {
 
 })
 
-//Router to handle get request to fetch list of users registered for the event
-router.get('/fetchregistry/:id', function(req,res) {
-    let returnObject = {};
-    console.log("Inside fetching Registered Users")
-    console.log("ID", req.params.id);
-    restaurant.find({ 'events._id': req.params.id },
-         {'events.registeredUsers': 1, _id: 0}, (err, result) => {
-        if (err) {
-            returnObject.message = 'error'
-        }
-        else {
-            returnObject.message = "success"
-            returnObject.data = result
-            res.json(returnObject)
-        }
-    })
+// //Router to handle get request to fetch list of users registered for the event
+// router.get('/fetchregistry/:id', function (req, res) {
+//     let returnObject = {};
+//     console.log("Inside fetching Registered Users")
+//     console.log("ID", req.params.id);
+//     restaurant.find({ 'events._id': req.params.id },
+//         { 'events.registeredUsers': 1, _id: 0 }, (err, result) => {
+//             if (err) {
+//                 returnObject.message = 'error'
+//             }
+//             else {
+//                 returnObject.message = "success"
+//                 returnObject.data = result
+//                 res.json(returnObject)
+//             }
+//         })
 
-})
+// })
 
 module.exports = router;

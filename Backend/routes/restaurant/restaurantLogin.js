@@ -1,12 +1,15 @@
 var express = require('express');
 var router = express.Router();
 var restaurant = require('../../models/RestaurantOwnerModel')
+const jwt = require('jsonwebtoken')
+const {secret} = require('../../utils/config')
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 //Route to handle Post Request Call to update basic Restaurant Information
 router.post('/restaurantlogin', function (req, res) {
     let returnObject = {};
+    let loginresult = null;
     email = req.body.email
     password = req.body.password
     new Promise((resolve, reject) => {
@@ -16,6 +19,7 @@ router.post('/restaurantlogin', function (req, res) {
                 returnObject.message = "nouser";
                 res.json(returnObject);
             }
+            loginresult = result[0]
             resolve(result[0])
         });
     })
@@ -28,11 +32,19 @@ router.post('/restaurantlogin', function (req, res) {
             })
                 .then((value) => {
                     if (value[0]) {
-                        returnObject.message = "successfully logged in";
+                        const payload = {_id: loginresult._id, email:loginresult.email, role:'restaurant'};
+                        console.log(payload)
+                        const token = jwt.sign(payload, secret, {
+                            expiresIn : 1008000
+                        });
+                        returnObject.message = "success";
                         returnObject.data = value[1]
+                        returnObject.token = "JWT "+ token
+                        // res.status(200).end("JWT "+ token)
                     }
                     else {
                         returnObject.message = "Invalid credentials"
+                        // res.status(401).end("Invalid credentials")
                     }
                     res.json(returnObject)
                 })

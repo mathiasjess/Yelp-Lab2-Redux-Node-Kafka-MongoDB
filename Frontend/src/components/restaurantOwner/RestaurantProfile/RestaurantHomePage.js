@@ -1,13 +1,13 @@
 import React from 'react'
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import './RestaurantHomePage.css'
+import  '../RestaurantHomePage.css'
 import RestaurantProfile from './RestaurantProfile'
 import UpdateRestaurantProfile from './UpdateRestaurantProfile'
 import { connect } from 'react-redux';
-import Orders from './Orders/Orders'
-import Menu from './AddMenu'
-import Events from './Events'
+import Orders from '../Orders/Orders'
+import Menu from '../RestaurantMenu/AddMenu'
+import Events from '../Events/Events'
 
 
 class RestaurantHomePage extends React.Component {

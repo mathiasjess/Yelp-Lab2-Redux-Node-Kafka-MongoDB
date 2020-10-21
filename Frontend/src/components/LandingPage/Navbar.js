@@ -2,15 +2,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Home from '../Home/Home';
 import '../../App.css';
-import Cookies from 'js-cookie';
 import yelp_logo from '../../images/yelp_icon.png'
 import { connect } from 'react-redux';
 import { restaurantProfileLogout } from '../../actions/restaurantAction'
-import {
-    BrowserRouter as Router, Route,
-    Redirect, Switch
-} from 'react-router-dom';
-// import { withRouter } from 'react-router-dom';
 
 //create the Navbar Component
 class Navbar extends Component {
@@ -25,8 +19,10 @@ class Navbar extends Component {
     }
     //handle logout to destroy the cookie
     handleLogout = () => {
-        Cookies.remove('id');
-        Cookies.remove('role');
+        localStorage.removeItem('id')
+        localStorage.removeItem('email')
+        localStorage.removeItem('role')
+        localStorage.removeItem('token')
         const data = {
             restaurantId: '',
             restaurantName: '',
@@ -56,7 +52,7 @@ class Navbar extends Component {
         })
     }
     componentDidMount() {
-        if (Cookies.get('id')) {
+        if (localStorage.getItem('id')) {
             this.setState({
                 displayHome: false
             })
@@ -64,10 +60,10 @@ class Navbar extends Component {
     }
 
     render() {
-        //if Cookie is set render Logout Button
+        //if localStorage is set render Logout Button
         let navLogin = null;
-        if (Cookies.get('id')) {
-            console.log("Able to read cookie");
+        if (localStorage.getItem('id')) {
+            console.log("Able to read local session storage details");
             navLogin = (
                 <ul class="nav navbar-nav navbar-right">
                     <li><Link to="/home" onClick={this.handleLogout}><span class="glyphicon glyphicon-user"></span>Logout</Link></li>
@@ -75,7 +71,7 @@ class Navbar extends Component {
             );
         } else {
             //Else display login button
-            console.log("Not Able to read cookie");
+            console.log("Not Able to read local session storage details");
             navLogin = (
                 <ul class="nav navbar-nav navbar-right">
                     <li><Link to="/login" onClick={this.handleHome}><span class="glyphicon glyphicon-log-in"></span> Login</Link></li>
@@ -86,30 +82,25 @@ class Navbar extends Component {
         }
 
         let customerFeatures = null;
-        if (Cookies.get('id')) {
-            if (Cookies.get('role') === 'customer') {
+        if (localStorage.getItem('id')) {
+            if (localStorage.getItem('role') === 'customer') {
                 customerFeatures = (
                     <ul class="nav navbar-nav">
-                        <button class="customerFeatures" onClick={() => this.props.history.push(`/customerhomepage/${Cookies.get('id')}`)}>Home</button>
+                        <button class="customerFeatures" onClick={() => this.props.history.push(`/customerhomepage/${localStorage.getItem('id')}`)}>Home</button>
                         <button class="customerFeatures" onClick={() => this.props.history.push(`/mainevents`)}>Events</button>
                     </ul>
                 )
             }
-            else if(Cookies.get('role') === 'restaurant'){
+            else if (localStorage.getItem('role') === 'restaurant') {
                 customerFeatures = (
                     <ul class="nav navbar-nav">
-                <button class="customerFeatures" onClick={() => this.props.history.push(`/restauranthomepage/${Cookies.get('id')}`)}>Home</button>
-                </ul>
+                        <button class="customerFeatures" onClick={() => this.props.history.push(`/restauranthomepage/${localStorage.getItem('id')}`)}>Home</button>
+                    </ul>
                 )
             }
         }
-        let redirectVar = null;
-        // if (cookie.load('cookie')) {
-        //     redirectVar = <Redirect to="/home" />
-        // }
         return (
             <div>
-                {/* {redirectVar}*/}
                 <nav class="navbar navbar-inverse">
                     <div class="container-fluid">
                         <div class="navbar-header">

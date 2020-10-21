@@ -14,18 +14,9 @@ class CustomerReviews extends React.Component{
         }
     }
     componentDidMount(){
-        axios.get(`http://localhost:3001/reviews/getrestaurantreview/${this.props.user.restaurantId}`)
-        .then(response =>{
-            console.log(response.data.data)
-            if(response.data.message === "success"){
                 this.setState({
-                    reviews: response.data.data
+                    reviews: this.props.user.reviews
                 })
-            }
-            else{
-                alert("Could not fetch data. Something went wrong");
-            }
-        })
 
     }
     render(){
@@ -36,9 +27,9 @@ class CustomerReviews extends React.Component{
                return <div class="Reviews" key = {i}>
                     <h4>Rating: {review.ratings}/5</h4>
                     <div class="review-header">
-                    {review.profileImage ? <img src={`/uploads/${review.profileImage}`} alt="Avatar" class="photo-box" /> : <img  class="photo-box" src={default_image} alt="Avatar"/>}
+                    {review.customerImage ? <img src={`/uploads/${review.customerImage}`} alt="Avatar" class="photo-box" /> : <img  class="photo-box" src={default_image} alt="Avatar"/>}
                     <Link to= {{pathname: '/restaurantviewofcustomer',
-                    aboutProps:{id: review.id}}}><h5>{review.firstName} {review.LastName}</h5></Link>
+                    aboutProps:{id: review.customerID}}}><h5>{review.customerName}</h5></Link>
                     </div>
                     <h6>Date: <Moment>{review.reviewDate}</Moment></h6>
                     <h6>Comments:{review.comments}</h6>

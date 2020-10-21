@@ -1,8 +1,8 @@
-import { REGISTER_RESTAURANTOWNERPROFILE, SET_RESTAURANTUSER, UPDATE_RESTAURANTOWNERPROFILE } from '../actions/restaurantAction';
+import { REGISTER_RESTAURANTOWNERPROFILE, SET_RESTAURANTUSER, UPDATE_RESTAURANTOWNERPROFILE, ADD_EVENTS, ADD_DISH, LOGOUT_RESTAURANTOWNERPROFILE } from '../actions/restaurantAction';
 
 
 export const restaurantInitialState = {
-    restaurantId: '',
+    _id: '',
     restaurantName: '',
     email: '',
     password: '',
@@ -18,20 +18,36 @@ export const restaurantInitialState = {
     curbPickup: false,
     dineIn: false,
     yelpDelivery: false,
-    latitude : '',
-    longitude : ''
+    latitude: '',
+    longitude: '',
+    menuItem: [],
+    events: [],
+    reviews: [],
+    orders: []
 }
 
 const restaurantReducer = ((state = restaurantInitialState, action) => {
     switch (action.type) {
-        case 'REGISTER_RESTAURANTOWNERPROFILE':
+        case REGISTER_RESTAURANTOWNERPROFILE:
             return Object.assign(state, action.payload)
-        case 'SET_RESTAURANTUSER':
+        case SET_RESTAURANTUSER:
             return Object.assign(state, action.payload)
-        case 'UPDATE_RESTAURANTOWNERPROFILE':
+        case UPDATE_RESTAURANTOWNERPROFILE:
             return Object.assign(state, action.payload)
-        case 'LOGOUT_RESTAURANTOWNERPROFILE':
+        case LOGOUT_RESTAURANTOWNERPROFILE:
             return Object.assign(state, action.payload)
+        case ADD_EVENTS:
+            let addevents = action.payload
+            return {
+                ...state,
+                events: [...state.events, addevents]
+            }
+        case ADD_DISH:
+            let addDish = action.payload
+            return {
+                ...state,
+                menuItem: [...state.menuItem, addDish]
+            }
         default: return state
     }
 })

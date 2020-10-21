@@ -62,8 +62,11 @@ router.post('/updateMenu', function (req, res) {
             }
             else {
                 returnObject.message = "success";
-                returnObject.data = result;
-                res.json(returnObject);
+                restaurant.find({ 'menuItem.dishName': req.body.dishName }, { 'menuItem.$': 1, _id: 0 }, (err, result) => {
+                    returnObject.data = result
+                    console.log(returnObject.data)
+                    res.json(returnObject)
+                })
             }
         });
 });

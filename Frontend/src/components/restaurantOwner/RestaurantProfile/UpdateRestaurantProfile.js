@@ -1,12 +1,11 @@
 import React from 'react';
-import './RestaurantHomePage.css';
-import './UpdateRestaurantProfile.css';
+import '../RestaurantHomePage.css';
+import '../UpdateRestaurantProfile.css';
 import Cookies from 'js-cookie';
 import { Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { restaurantProfileUpdate } from '../../actions/restaurantAction'
-import restaurantprofileImage from '../../images/restaurantprofileImage.png'
+import {restaurantProfileUpdate} from '../../../actions/restaurantAction'
 
 
 class UpdateRestaurantProfile extends React.Component {
@@ -70,7 +69,7 @@ class UpdateRestaurantProfile extends React.Component {
         data.append('dineIn', Number(this.state.delivery.dineIn));
         data.append('yelpDelivery', Number(this.state.delivery.yelpDelivery));
         console.log("Data", data)
-        axios.post(`http://localhost:3001/restaurant/restaurantprofileUpdate/${this.props.user.restaurantId}`, data)
+        axios.post(`http://localhost:3001/restaurantprofiledetailsroute/restaurantprofileUpdate/${this.props.user._id}`, data)
             .then(response => {
                 if (response.data.message === "success") {
                     this.setState({
