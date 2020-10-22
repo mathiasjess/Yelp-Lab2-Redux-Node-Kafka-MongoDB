@@ -3,6 +3,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import {connect} from 'react-redux';
 import {customerLogin} from '../../actions/customerAction'
+ // @ts-ignore  
+ import jwt_decode from "jwt-decode";
 
 
 class CustomerLogin extends React.Component {
@@ -10,7 +12,9 @@ class CustomerLogin extends React.Component {
         super()
         this.state = {
             email:'',
-            password:''
+            password:'',
+            token : '',
+            customerID: ''
         }
         this.ChangeHandler = this.ChangeHandler.bind(this)
         this.submitLogin = this.submitLogin.bind(this)
@@ -31,18 +35,15 @@ class CustomerLogin extends React.Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://localhost:3001/customerlogin/customerlogin',customerLoginData)
+        axios.post('http://localhost:3001/customerloginroute/customerlogin',customerLoginData)
         .then(response => {
             if(response.data.message === "success"){
                 console.log("The data got is", response.data.data)
-                Cookies.set('id',response.data.data.id)
-                Cookies.set('role','customer')
-                console.log("Cookies ID", Cookies.get('id'))
-                console.log("Cookies role", Cookies.get('role'))
-                // console.log('Getting Cookie ID', Cookies.get('id'))
+                this.setState({
+                   token: response.data.token,
+                   customerID : response.data.data._id
+                })
                 this.props.customerLogin(response.data.data);
-                
-                this.props.history.replace(`/customerhomepage/${response.data.data.id}`);
             }
             else if (response.data.message === "error"){
                 alert("Invalid credentials")
@@ -60,6 +61,14 @@ class CustomerLogin extends React.Component {
         // }
     // }
     render() {
+        if (this.state.token.length > 0){
+            localStorage.setItem("token", this.state.token);
+            var decoded = jwt_decode(this.state.token.split(' ')[1]);
+            localStorage.setItem("id",decoded._id);
+            localStorage.setItem("email",decoded.email);
+            localStorage.setItem("role",decoded.role);
+            this.props.history.replace(`/customerhomepage/${this.state.customerID}`);
+        }
         return (
             <form>
                 <div class="regColumn">

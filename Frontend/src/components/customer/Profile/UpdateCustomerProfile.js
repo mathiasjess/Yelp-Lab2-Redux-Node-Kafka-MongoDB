@@ -42,7 +42,7 @@ class UpdateCustomerProfile extends React.Component {
     updateProfile(event) {
         event.preventDefault();
         const data = new FormData()
-        data.append("id", this.props.user.id);
+        data.append("id", this.props.user._id);
         data.append("email", this.state.email);
         data.append("firstName", this.state.firstName);
         data.append("lastName", this.state.lastName);
@@ -60,7 +60,8 @@ class UpdateCustomerProfile extends React.Component {
         data.append("favourites", this.state.favourites);
         data.append("headline", this.state.headline);
         data.append("zipcode", this.state.zipcode);
-        axios.put(`http://localhost:3001/customerprofile/updatecustomerprofile`, data)
+        console.log("Data", data)
+        axios.put(`http://localhost:3001/customerprofileroute/updatecustomerprofile`, data)
             .then((response) => {
                 if (response.data.message === "success") {
                     alert('Updated Profile')
@@ -77,8 +78,9 @@ class UpdateCustomerProfile extends React.Component {
             })
     }
     componentDidMount() {
+        console.log("Customer id", this.props.user._id)
         this.setState({
-            id: this.props.user.id,
+            id: this.props.user._id,
             email: this.props.user.email,
             firstName: this.props.user.firstName,
             lastName: this.props.user.lastName,

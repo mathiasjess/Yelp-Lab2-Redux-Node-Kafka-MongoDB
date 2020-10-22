@@ -5,7 +5,7 @@ import '../../App.css';
 import yelp_logo from '../../images/yelp_icon.png'
 import { connect } from 'react-redux';
 import { restaurantProfileLogout } from '../../actions/restaurantAction'
-
+import { customerProfileLogout } from '../../actions/customerAction'
 //create the Navbar Component
 class Navbar extends Component {
     constructor(props) {
@@ -14,11 +14,12 @@ class Navbar extends Component {
             displayHome: true,
             customeractionsFlag: false
         }
-        this.handleLogout = this.handleLogout.bind(this);
+        this.handleRestaurantLogout = this.handleRestaurantLogout.bind(this);
+        this.handleCustomerLogout = this.handleCustomerLogout.bind(this);
         this.handleHome = this.handleHome.bind(this);
     }
     //handle logout to destroy the cookie
-    handleLogout = () => {
+    handleRestaurantLogout = () => {
         localStorage.removeItem('id')
         localStorage.removeItem('email')
         localStorage.removeItem('role')
@@ -46,6 +47,17 @@ class Navbar extends Component {
             customeractionsFlag: false
         })
     }
+    handleCustomerLogout=()=>{
+        localStorage.removeItem('id')
+        localStorage.removeItem('email')
+        localStorage.removeItem('role')
+        localStorage.removeItem('token')
+        this.props.customerProfileLogout()
+        this.setState({
+            customeractionsFlag: false
+        })
+
+    }
     handleHome() {
         this.setState({
             displayHome: false
@@ -66,7 +78,7 @@ class Navbar extends Component {
             console.log("Able to read local session storage details");
             navLogin = (
                 <ul class="nav navbar-nav navbar-right">
-                    <li><Link to="/home" onClick={this.handleLogout}><span class="glyphicon glyphicon-user"></span>Logout</Link></li>
+                    <li><Link to="/home" onClick={this.handleRestaurantLogout}><span class="glyphicon glyphicon-user"></span>Logout</Link></li>
                 </ul>
             );
         } else {
@@ -124,7 +136,8 @@ class Navbar extends Component {
 
 function mapDispatchToProps(dispatch) {
     return {
-        restaurantProfileLogout: (data) => dispatch(restaurantProfileLogout(data))
+        restaurantProfileLogout: (data) => dispatch(restaurantProfileLogout(data)),
+        customerProfileLogout :() => dispatch(customerProfileLogout()),
     }
 }
 export default connect(null, mapDispatchToProps)(Navbar);

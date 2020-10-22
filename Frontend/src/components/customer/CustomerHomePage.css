@@ -42,7 +42,7 @@ position: absolute; top: 7%; bottom: 0; left: 0; right: 0
   padding-bottom: 1%;
   display: flex;
   position:absolute;
-  left: 20%;
+  margin: auto;
 }
 .yelp_logo{
   padding-top: 0.25%;

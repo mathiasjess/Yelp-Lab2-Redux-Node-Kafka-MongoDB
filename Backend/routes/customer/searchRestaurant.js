@@ -3,10 +3,10 @@ var router = express.Router();
 var restaurant = require('../../models/RestaurantOwnerModel')
 
 //Router to handle get request to search restaurants
-router.get('/searchforrestaurant/:searchQuery', function (req, res) {
+router.get('/searchforrestaurant', function (req, res) {
     let returnObject = {};
-    console.log(req.query)
     let param1 = req.query[0]
+    console.log("Params",req.query[0])
 
     // let param2 = req.query[1]
     if (param1 === 'Curb Pickup') {
@@ -48,26 +48,27 @@ router.get('/searchforrestaurant/:searchQuery', function (req, res) {
     else {
         restaurant.find({
             "$or": [{
-                "restaurantName": { $regex: '/.*' + param1 + '.*/' }
-            },
-            {
-                "cusine": { $regex: '/.*' + param1 + '.*/' }
-            },
-            {
-                "location": { $regex: '/.*' + param1 + '.*/' }
-            },
-            {
-                "city": { $regex: '/.*' + param1 + '.*/' }
-            },
-            {
-                "zipcode": { $regex: '/.*' + param1 + '.*/' }
-            },
-            {
-                "zipcode": { $regex: '/.*' + param1 + '.*/' }
-            },
-            {
-                "menuItem.dishName": { $regex: '/.*' + param1 + '.*/' }
-            },]
+                // 'restaurantName': { $regex: '/.*' + param1 + '.*/' }
+                'restaurantName': param1
+            }]
+            // {
+            //     "cusine": { $regex: '/.*' + param1 + '.*/' }
+            // },
+            // {
+            //     "location": { $regex: '/.*' + param1 + '.*/' }
+            // },
+            // {
+            //     "city": { $regex: '/.*' + param1 + '.*/' }
+            // },
+            // {
+            //     "zipcode": { $regex: '/.*' + param1 + '.*/' }
+            // },
+            // {
+            //     "zipcode": { $regex: '/.*' + param1 + '.*/' }
+            // },
+            // {
+            //     "menuItem.dishName": { $regex: '/.*' + param1 + '.*/' }
+            // }]
         }, (err, result) => {
             if (err) {
                 returnObject.message = 'error'

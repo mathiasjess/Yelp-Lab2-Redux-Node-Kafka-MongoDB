@@ -179,9 +179,9 @@ h5{
   align-content: center;
 }
 .Reviews{
-  width: 80%;
+  width: 90%;
   display: inline-block;
-  border:0.25px solid rgba(194, 191, 191, 0.8);
+  /* border:0.25px solid rgba(194, 191, 191, 0.8); */
 }
 .profileLinks{
   display: block;
@@ -201,7 +201,7 @@ height: 4rem;
 width: 6rem
 }
 .reviews-header-details{
-  width: 20%;
+  width: 25%;
 display: flex;
 justify-content: space-between;
 }

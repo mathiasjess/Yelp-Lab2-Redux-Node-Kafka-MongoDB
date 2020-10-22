@@ -27,7 +27,7 @@ class SearchRestaurant extends React.Component {
         this.displayMarkers = this.displayMarkers.bind(this)
     }
     componentDidMount() {
-        axios.get('http://localhost:3001/search/searchforrestaurant', { params: [this.props.location.aboutProps.searchParameter1] })
+        axios.get('http://localhost:3001/customersearchroute/searchforrestaurant', { params: [this.props.location.aboutProps.searchParameter1] })
             .then((response) => {
                 console.log(response.data.data)
                 if (response.data.message === "success") {
