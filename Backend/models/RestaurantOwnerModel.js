@@ -36,6 +36,8 @@ const ReviewSchema = new Schema({
 
 const OrderSummarySchema = new Schema({
     customerID: String,
+    customerName : String,
+    customerImage : String,
     totalPrice: Number,
     deliveryOption: String,
     delivery_status: String,

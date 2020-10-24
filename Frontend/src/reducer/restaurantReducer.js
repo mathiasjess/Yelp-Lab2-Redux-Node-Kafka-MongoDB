@@ -1,4 +1,4 @@
-import { REGISTER_RESTAURANTOWNERPROFILE, SET_RESTAURANTUSER, UPDATE_RESTAURANTOWNERPROFILE, ADD_EVENTS, ADD_DISH, LOGOUT_RESTAURANTOWNERPROFILE } from '../actions/restaurantAction';
+import { REGISTER_RESTAURANTOWNERPROFILE, SET_RESTAURANTUSER, UPDATE_RESTAURANTOWNERPROFILE, ADD_EVENTS, ADD_DISH, ADD_REVIEWS, LOGOUT_RESTAURANTOWNERPROFILE } from '../actions/restaurantAction';
 
 
 export const restaurantInitialState = {
@@ -47,6 +47,12 @@ const restaurantReducer = ((state = restaurantInitialState, action) => {
             return {
                 ...state,
                 menuItem: [...state.menuItem, addDish]
+            }
+        case ADD_REVIEWS:
+            let addReview = action.payload
+            return {
+                ...state,
+                reviews: [...state.reviews, addReview]
             }
         default: return state
     }

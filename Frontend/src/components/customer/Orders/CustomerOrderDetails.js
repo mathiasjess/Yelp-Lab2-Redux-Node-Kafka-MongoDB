@@ -8,23 +8,6 @@ import default_image from '../../../images/customer_default_pic.png'
 class CustomerOrderDetails extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            orderSummary: [],
-            orderDetails: [],
-        }
-    }
-    componentDidMount() {
-        axios.all([
-            axios.get(`http://localhost:3001/restaurantorders/individualrestaurantordersummary/${this.props.match.params.id}`),
-            axios.get(`http://localhost:3001/restaurantorders/individualfetchrestaurantorderdetails/${this.props.match.params.id}`)
-        ])
-            .then(axios.spread((response1, response2) => {
-
-                this.setState({
-                    orderSummary: response1.data.data[0],
-                    orderDetails: response2.data.data,
-                })
-            }))
     }
     render() {
         return (
@@ -36,31 +19,36 @@ class CustomerOrderDetails extends React.Component {
                         <Link to ='/customerorderhistory'><span class="glyphicon glyphicon-arrow-left"/>Return to Main Orders Page</Link>
                         </div>    
                         <h2> Orders</h2>
-                            <div class="card-order">
-                            <img src={`/uploads/${this.state.orderSummary.restaurantImage }`} alt="Avatar" class="photo-box-img" />
-                                    <h5>{this.state.orderSummary.restaurantName}</h5>
-                                <div class="order-footer">
-                                    <p><b>Date: </b><Moment>{this.state.orderSummary.Date}</Moment> </p>
-                                    <p><b>Total Price:</b> ${this.state.orderSummary.totalPrice}</p>
-                                </div>
-                                <div>
-                                    <h5> Order details</h5>
-                                    {this.state.orderDetails.length > 0 ? this.state.orderDetails.map(function (order, j) {
-                                        return (
-                                            <div class="order-footer" key={j}>
-                                                <p>{order.dishName}</p>
-                                                <p>{order.price}</p>
-                                                <p>{order.quantity}</p>
-                                            </div>
-                                        );
-                                    }) : null}
-                                </div>
-                                <div class="order-footer">
-                                    <p><b>Delivery Option: </b>{this.state.orderSummary.deliveryOption}</p>
-                                    <p><b>Status:  </b>{this.state.orderSummary.delivery_status}</p>
-                                    <p><b>Order Type:</b> {this.state.orderSummary.deliveryFilter}</p>
-                                </div>
-                            </div>
+                            {this.props.orderhistory.ordersummary && this.props.orderhistory.ordersummary.map((getorder,i)=>{
+                                if(getorder.orderID === this.props.match.params.id){
+                                   return <div class="card-order" key={i}>
+                                    <img src={`/uploads/${getorder.restaurantImage }`} alt="Avatar" class="photo-box-img" />
+                                            <h5>{getorder.restaurantName}</h5>
+                                        <div class="order-footer">
+                                            <p><b>Date: </b><Moment>{getorder.Date}</Moment> </p>
+                                            <p><b>Total Price:</b> ${getorder.totalPrice}</p>
+                                        </div>
+                                        <div>
+                                            <h5> Order details</h5>
+                                            {getorder.orderDetails.length > 0 ? getorder.orderDetails.map(function (orderlist, j) {
+                                                return (
+                                                    <div class="order-footer" key={j}>
+                                                        <p>{orderlist.dishName}</p>
+                                                        <p>{orderlist.price}</p>
+                                                        <p>{orderlist.quantity}</p>
+                                                    </div>
+                                                );
+                                            }) : null}
+                                        </div>
+                                        <div class="order-footer">
+                                            <p><b>Delivery Option: </b>{getorder.deliveryOption}</p>
+                                            <p><b>Status:  </b>{getorder.delivery_status}</p>
+                                            <p><b>Order Type:</b> {getorder.deliveryFilter}</p>
+                                        </div>
+                                    </div>
+                                }
+                            })}
+
                         </div>
                     </div>
                 </div>
@@ -70,7 +58,8 @@ class CustomerOrderDetails extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    user: state.customerReducer
+    user: state.customerReducer,
+    orderhistory: state.customerOtherDetailsReducer
 });
 
 export default connect(mapStateToProps)(CustomerOrderDetails);

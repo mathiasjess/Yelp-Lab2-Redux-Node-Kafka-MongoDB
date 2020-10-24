@@ -7,6 +7,7 @@ import restaurant_image from '../../../images/restaurantprofileImage.png'
 import { connect } from 'react-redux';
 import Moment from 'react-moment';
 import 'moment-timezone';
+import {customerReviews} from '../../../actions/customerOtherDetailsAction'
 
 class ProfileDetails extends React.Component {
     constructor(props) {
@@ -19,6 +20,8 @@ class ProfileDetails extends React.Component {
         this.handleEventsPage = this.handleEventsPage.bind(this)
     }
     componentDidMount(props) {
+        let reviewsResult = []
+        let individualResult = {}
         console.log("Params",this.props.match.params.id)
         // axios.get(`http://localhost:3001/customerprofileroute/customerprofile/${this.props.match.params.id}`)
         //     .then((response) => {
@@ -33,10 +36,21 @@ class ProfileDetails extends React.Component {
         axios.get(`http://localhost:3001/customerreviewroute/getcustomerreviews/${this.props.match.params.id}`)
         .then((response) => {
             if (response.data.message === "success") {
-                console.log("Reviews data", response.data.data)
-                this.setState({
-                    reviews: response.data.data
-                })
+                console.log(response.data.data)
+                {response.data.data && response.data.data.map(item => {
+                    individualResult = {
+                        restaurantID : item._id,
+                        restaurantName : item.restaurantName,
+                        restaurantImage : item.restaurantImage,
+                        reviewDate : item.reviews[0].reviewDate,
+                        ratings: item.reviews[0].ratings,
+                        comments : item.reviews[0].comments
+                    }
+                    reviewsResult.push(individualResult)
+                    individualResult = {}
+                })}
+                console.log("Refactored reviews", reviewsResult)
+                this.props.customerReviews(reviewsResult)
             }
 
         })
@@ -49,7 +63,7 @@ class ProfileDetails extends React.Component {
         this.props.history.push(`/customerevents/${custID}`)
     }
     render() {
-        console.log("Customer email", this.state.customerDetails.email)
+        console.log(this.props.custReviews)
         let renderprofilepage = (
             <div class="table">
             <div class="tr-middle">
@@ -118,15 +132,15 @@ class ProfileDetails extends React.Component {
                 </div>
                 <div class="td-2">
                     <h2>Reviews</h2>
-                    {this.state.reviews.map((item, i) => {
-                        return <div class="Reviews">
-                            <h4>Ratings: {item.reviews[0].ratings}/5</h4>
+                    {this.props.custReviews.reviews && this.props.custReviews.reviews.map((item, i) => {
+                        return <div class="Reviews" key={i}>
+                            <h4>Ratings: {item.ratings}/5</h4>
                             <div class="reviews-header-details">
                             {item.restaurantImage ? <img src={`/uploads/${item.restaurantImage }`} alt="Avatar" class="photo-box-rest" />: <img class="photo-box-rest" src={restaurant_image} alt="Avatar" /> }
                             <h5 style={{paddingTop:'1rem'}}>  {item.restaurantName}</h5>
                             </div>
-                            <p style={{paddingTop:'2rem'}}><b>Date: </b><Moment>{item.reviews[0].reviewDate}</Moment></p>
-                            <p><b>Comments: </b>{item.reviews[0].comments}</p>
+                            <p style={{paddingTop:'2rem'}}><b>Date: </b><Moment>{item.reviewDate}</Moment></p>
+                            <p><b>Comments: </b>{item.comments}</p>
                         </div>
                     })}
                 </div>
@@ -161,8 +175,16 @@ class ProfileDetails extends React.Component {
 
 }
 const mapStateToProps = state => ({
-    user: state.customerReducer
+    user: state.customerReducer,
+    custReviews : state.customerOtherDetailsReducer
 });
 
+function mapDispatchToProps(dispatch) {
+    return {
+        customerReviews : (data) => dispatch(customerReviews(data))
 
-export default withRouter(connect(mapStateToProps)(ProfileDetails));
+    }
+}
+
+
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(ProfileDetails));

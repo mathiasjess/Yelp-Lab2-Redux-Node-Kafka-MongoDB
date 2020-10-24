@@ -6,6 +6,7 @@ import default_pic from '../../../images/restaurantprofileImage.png'
 import yelp_brand from '../../../images/yelp_brand.png'
 import { Link } from 'react-router-dom'
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
+import { restaurantLogin } from '../../../actions/restaurantAction'
 
 class SearchRestaurant extends React.Component {
     constructor(props) {
@@ -43,10 +44,14 @@ class SearchRestaurant extends React.Component {
 
     }
     goToRestaurant(restaurantId) {
-
-            this.props.history.push(`/customerviewofrestaurant/${restaurantId}`)
-            // this.props.history.push(`/customerviewofrestaurant/${restaurantId}/${delivery_option}`)
-
+        axios.get(`http://localhost:3001/restaurantprofiledetailsroute/restaurantprofiledetails/${restaurantId}`)
+            .then((response) => {
+                if (response.data.message === "success") {
+                    this.props.restaurantLogin(response.data.data)
+                    this.props.history.push(`/customerviewofrestaurant/${restaurantId}`)
+                }
+            })
+        // this.props.history.push(`/customerviewofrestaurant/${restaurantId}/${delivery_option}`)
     }
     Filter(e) {
         this.setState({
@@ -122,7 +127,7 @@ class SearchRestaurant extends React.Component {
                 <div class="tr-middle1">
                     <div class="td-filter">
                         <div class="tr-filtermode">
-                            <h5 style={{textAlign:'center'}}>Mode</h5>
+                            <h5 style={{ textAlign: 'center' }}>Mode</h5>
                             <p>{this.state.curbPickup}</p>
                             <ul>
                                 <li class="BusinessName"><label class="u-nowrap">
@@ -130,24 +135,24 @@ class SearchRestaurant extends React.Component {
                                         name="curbPickup"
                                         checked={this.state.delivery.curbPickup}
                                         onChange={this.Filter} />
-                                        <p>Curbside Pickup</p></label></li>
+                                    <p>Curbside Pickup</p></label></li>
 
                                 <li class="BusinessName"><label class="u-nowrap">
                                     <input type="checkbox"
                                         name="dineIn"
                                         checked={this.state.delivery.dineIn}
                                         onChange={this.Filter} />
-                                        <p>Dine In</p></label></li>
+                                    <p>Dine In</p></label></li>
                                 <li class="BusinessName"><label class="u-nowrap">
                                     <input type="checkbox"
                                         name="yelpDelivery"
                                         checked={this.state.delivery.yelpDelivery}
                                         onChange={this.Filter} />
-                                        <p>Yelp Delivery</p></label></li>
+                                    <p>Yelp Delivery</p></label></li>
                             </ul>
                         </div>
                         <div class="tr-filterlocation">
-                            <h5 style={{textAlign:'center'}}>Neighbourhood Locations</h5>
+                            <h5 style={{ textAlign: 'center' }}>Neighbourhood Locations</h5>
                             <ul>
                                 <li class="BusinessName"><label class="u-nowrap">
                                     <input type="checkbox"
@@ -165,7 +170,7 @@ class SearchRestaurant extends React.Component {
                             return (<div class="card" key={i}>
                                 <div class="search-res-header">
                                     {result.restaurantImage ? <img src={`/uploads/${result.restaurantImage}`} alt="Avatar" class="card-img-top-search" /> : <img class="card-img-top-search" src={default_pic} alt="Card image cap" />}
-                                    <h4 style={{paddingTop:'45px'}}>{result.restaurantName}</h4>
+                                    <h4 style={{ paddingTop: '45px' }}>{result.restaurantName}</h4>
                                 </div>
                                 <div class="card-body">
                                     <p><b>Address:</b>{result.location},{result.city}-{result.zipcode}</p>
@@ -178,7 +183,7 @@ class SearchRestaurant extends React.Component {
                                         <h6>{result.dineIn ? <span class="glyphicon glyphicon-ok">Dine In </span> : <span class="glyphicon glyphicon-remove">Dine In</span>}</h6>
                                     </div>
                                     <p><b>Phone No:</b>{result.contact}</p>
-                                    <button class="btn btn-danger" onClick={() => this.goToRestaurant(result.restaurantId)}>Visit website</button>
+                                    <button class="btn btn-danger" onClick={() => this.goToRestaurant(result._id)}>Visit website</button>
                                 </div>
                             </div>)
                         })}
@@ -200,10 +205,17 @@ class SearchRestaurant extends React.Component {
     }
 }
 
+
 const mapStateToProps = state => ({
     user: state.customerReducer
 });
 
+function mapDispatchToProps(dispatch) {
+    return {
+        restaurantLogin: (data) => dispatch(restaurantLogin(data))
+    }
+}
+
 export default GoogleApiWrapper({
     apiKey: 'AIzaSyCiheh-O9omWKbtCfWf-S539GT82IK8aNQ'
-})(connect(mapStateToProps)(SearchRestaurant));
+})(connect(mapStateToProps, mapDispatchToProps)(SearchRestaurant));

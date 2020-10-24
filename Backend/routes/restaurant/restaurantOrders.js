@@ -22,6 +22,7 @@ router.get('/restaurantordersummary/:id', function(req,res) {
 //Router to handle updating order status
 router.put('/updateorderstatus', function (req, res) {
     let returnObject = {};
+    console.log("Req body", req.body)
     restaurant.updateOne({ 'orders._id': req.body.orderID },
         {
             '$set': {
@@ -36,6 +37,7 @@ router.put('/updateorderstatus', function (req, res) {
             else {
                 returnObject.message = "success";
                 returnObject.data = result;
+                console.log(result)
                 res.json(returnObject);
             }
         });

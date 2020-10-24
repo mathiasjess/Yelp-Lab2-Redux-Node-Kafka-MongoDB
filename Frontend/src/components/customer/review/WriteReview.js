@@ -2,6 +2,8 @@ import React from 'react'
 import '../../restaurantOwner/RestaurantHomePage.css'
 import {connect} from 'react-redux'
 import axios from 'axios'
+import {restaurantReviewAdd} from '../../../actions/restaurantAction'
+import {customerReviews} from '../../../actions/customerOtherDetailsAction'
 
 class WriteReview extends React.Component{
     constructor(props){
@@ -24,16 +26,28 @@ class WriteReview extends React.Component{
     }
     addReview(event){
         event.preventDefault();
-        const data = {
-            restaurantId : this.props.match.params.id,
-            customerId : this.props.user.id,
+        const sendrestaurantdata = {
+            customerID : this.props.user._id,
+            customerName : this.props.user.firstName + ' '+ this.props.user.lastName,
+            customerImage : this.props.user.profileImage,
             reviewDate : new Date(),
             ratings: this.state.ratings,
             comments : this.state.comments
         }
-        axios.post('http://localhost:3001/reviews/writereview',data)
+        const customerdata = {
+            restaurantID : this.props.restaurant._id,
+            restaurantName : this.props.restaurant.restaurantName,
+            customerImage : this.props.user.profileImage,
+            reviewDate : new Date(),
+            ratings: this.state.ratings,
+            comments : this.state.comments
+        }
+        axios.post(`http://localhost:3001/customerreviewroute/writereview/${this.props.match.params.id}`,sendrestaurantdata)
         .then((response)=>{
             if(response.data.message === "success"){
+                this.props.restaurantReviewAdd(sendrestaurantdata)
+                this.props.customerReviews(customerdata)
+
                 alert("Review added")
                     this.props.history.push(`/customerviewofrestaurant/${this.props.match.params.id}`)
 
@@ -75,8 +89,17 @@ class WriteReview extends React.Component{
 }
 
 const mapStateToProps = state => ({
-    user: state.customerReducer
+    user: state.customerReducer,
+    restaurant : state.restaurantReducer
 });
 
+function mapDispatchToProps(dispatch) {
+    return {
+        restaurantReviewAdd: (data) => dispatch(restaurantReviewAdd(data)),
+        customerReviews : (data) => dispatch(customerReviews(data))
 
-export default connect(mapStateToProps)(WriteReview);
+    }
+}
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(WriteReview);

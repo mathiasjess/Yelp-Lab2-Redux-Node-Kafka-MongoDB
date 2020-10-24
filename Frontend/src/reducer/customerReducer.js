@@ -1,27 +1,27 @@
-import { SET_YELPCUSTOMER, UPDATE_YELPCUSTOMERPROFILE, LOGOUT_YELPCUSTOMERPROFILE } from '../actions/customerAction'
+import { SET_YELPCUSTOMER, UPDATE_YELPCUSTOMERPROFILE,LOGOUT_YELPCUSTOMERPROFILE } from '../actions/customerAction'
 
 export const customerInitialState = {
-    _id: '',
-    username: '',
-    email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
-    DOB: '',
-    location: '',
-    city: '',
-    state: '',
-    country: '',
-    nickName: '',
-    phoneNumber: '',
-    yelpingSince: '',
-    thingsILove: '',
-    findmeIn: '',
-    websiteDetails: '',
-    profileImage: '',
-    favourites: '',
-    headline: '',
-    zipcode: ''
+    // _id: '',
+    // username: '',
+    // email: '',
+    // password: '',
+    // firstName: '',
+    // lastName: '',
+    // DOB: '',
+    // location: '',
+    // city: '',
+    // state: '',
+    // country: '',
+    // nickName: '',
+    // phoneNumber: '',
+    // yelpingSince: '',
+    // thingsILove: '',
+    // findmeIn: '',
+    // websiteDetails: '',
+    // profileImage: '',
+    // favourites: '',
+    // headline: '',
+    // zipcode: ''
 }
 
 const customerReducer = ((state = customerInitialState, action) => {

@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import default_pic from '../../../images/restaurantprofileImage.png'
 import './CustomerOrders.css'
 import { connect } from 'react-redux'
 import { addToCart, addItem, removeItem, removecart } from '../../../actions/cartActions'
@@ -12,6 +13,7 @@ class CustomerOrders extends React.Component {
             items: [],
             restaurantID: '',
             customerID: '',
+            orderID: '',
             completeOrderFlag: false,
             takeOutValue : '',
 
@@ -30,13 +32,26 @@ class CustomerOrders extends React.Component {
             customerID: this.props.user.id,
 
         })
+        axios.get(`http://localhost:3001/restaurant/fetchMenu/${this.props.match.params.id}`)
+            .then((response) => {
+                console.log(response.data.data)
+                if (response.data.message === "success") {
+
+                    this.setState({
+                        items: response.data.data
+                    })
+                }
+                else if (response.data.message === "error") {
+                    alert("Something went wrong. Please try again")
+                }
+            })
     }
     viewDetails(menuId){
-        //Change to reuse restaurant component
         return this.props.history.push(`/viewindividualdish/${menuId}/${this.props.match.params.id}`)
     }
     handleAddToCart(itemID, dishName, price) {
         let Orderdata = {
+            orderID: this.state.orderID,
             itemID: itemID,
             dishName: dishName,
             price: price
@@ -62,27 +77,34 @@ class CustomerOrders extends React.Component {
     completeOrder(restaurantId) {
         console.log("Take Out value", this.state.takeOutValue)
         let OrderDetails = {
-            customerID: this.props.user._id,
-            customerName : this.props.user.firstName + ' ' + this.props.user.lastName,
-            customerImage : this.props.user.profileImage,
-            restaurantID: this.props.restaurant._id,
+            customerID: this.props.user.id,
+            restaurantID: restaurantId,
             total_price: this.props.cartItems.total,
             delivery_option: this.state.takeOutValue,
             delivery_status: 'Order Recieved',
-            deliveryFilter: 'New Order',
-            orderDetails : this.props.cartItems.addedItems
+            deliveryFilter: 'New Order'
         }
-        console.log("Restaurant Id",this.props.restaurant._id)
         // let formData= new FormData()
         // formData.append('data',JSON.stringify())
-        axios.post('http://localhost:3001/customerordersroute/sendorderdetails', OrderDetails)
+        axios.post('http://localhost:3001/orders/sendordersummary', OrderDetails)
             .then(response => {
                 if (response.data.message === "success") {
-                    this.props.history.push(`/customerorderhistory`)
+                    axios.post(`http://localhost:3001/orders/sendorderdetails/${response.data.data}`, this.props.cartItems.addedItems)
+                        .then(response => {
+                            if (response.data.message === "success") {
+                                alert('Placed order successfully')
+                                this.props.removecart()
+                                this.props.history.push(`/customerorderhistory`)
+                            }
+                            else {
+                                console.log('Could not complete order')
+                                this.props.history.push(`/customerhomepage/${this.props.user.id}`)
+                                
+                            }
+                        })
                 }
                 else if (response.data.message === "error") {
-                    console.log('Could not complete order')
-                    this.props.history.push(`/customerhomepage/${this.props.user.id}`)
+                    alert("Something went wrong")
                     this.props.removecart()
                 }
             })
@@ -97,9 +119,9 @@ class CustomerOrders extends React.Component {
         let addedItems = null
         if (this.props.cartItems.addedItems) {
             addedItems = (
-                this.props.cartItems.addedItems.map((item,i) => {
+                this.props.cartItems.addedItems.map(item => {
                     return (
-                        <tr key={i}>
+                        <tr>
                             <td>{item.dishName}</td>
                             <td>{item.price}</td>
                             <td>{item.quantity}</td>
@@ -122,14 +144,14 @@ class CustomerOrders extends React.Component {
                     <button class = "btn btn-primary" onClick={()=>{this.props.history.push(`/customerviewofrestaurant/${this.props.match.params.id}`)}}> Go Back to Restaurant Page</button>
                         <h2>Order Food from our Menu</h2>
                         <div class="flex-display-items">
-                            {this.props.restaurant.menuItem.map((menu, i) => {
+                            {this.state.items.map((menu, i) => {
                                 return <div class="card1" key={i}>
-                                <img src={`/uploads/${menu.dishImages[0]}`} alt="Avatar" class="card-img-top-items" alt="Card image cap" />
+                                <img src={`/uploads/${menu.dishImage1}`} alt="Avatar" class="card-img-top-items" alt="Card image cap" />
                                     <div class="container-order-menu">
                                         <p style={{textAlign:'left'}}><b> Dish Name: </b>{menu.dishName}</p>
                                         <p style={{textAlign:'left'}}><b>Price: </b>{menu.price}</p>
-                                        <button class="btn btn-primary" value={menu._id} onClick={() => this.viewDetails(menu._id)}>View Details</button>
-                                        <button class="btn btn-primary" value={menu._id} onClick={() => this.handleAddToCart(menu._id, menu.dishName, menu.price)}>Add to Cart</button>
+                                        <button class="btn btn-primary" value={menu.itemID} onClick={() => this.viewDetails(menu.itemID)}>View Details</button>
+                                        <button class="btn btn-primary" value={menu.itemID} onClick={() => this.handleAddToCart(menu.itemID, menu.dishName, menu.price)}>Add to Cart</button>
                                     </div>
                                 </div>
                             })}
@@ -167,8 +189,8 @@ class CustomerOrders extends React.Component {
                                     <option value = "delivery">Delivery</option>
                                     </select>
                                 </form>
-                                <button class="btn btn-danger" onClick={() => this.completeOrder(this.props.restaurant._id)}>Complete Order</button>
-                                <button class="btn btn-danger" onClick={() => this.CancelOrder(this.props.restaurant._id)}>Cancel Order</button>
+                                <button class="btn btn-danger" onClick={() => this.completeOrder(this.props.match.params.id)}>Complete Order</button>
+                                <button class="btn btn-danger" onClick={() => this.CancelOrder(this.props.match.params.id)}>Cancel Order</button>
                                 {this.state.completeOrderFlag && <div>
 
                                 </div>}
@@ -181,8 +203,7 @@ class CustomerOrders extends React.Component {
 }
 const mapStateToProps = state => ({
     cartItems: state.cartReducer,
-    user: state.customerReducer,
-    restaurant : state.restaurantReducer
+    user: state.customerReducer
 });
 
 function mapDispatchToProps(dispatch) {
