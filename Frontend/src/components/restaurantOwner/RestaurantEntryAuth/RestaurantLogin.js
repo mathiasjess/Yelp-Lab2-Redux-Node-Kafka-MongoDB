@@ -47,7 +47,6 @@ class RestaurantLogin extends React.Component {
         axios.post('http://localhost:3001/restaurantloginroute/restaurantlogin',data)
         .then(response => {
             console.log( response.data.token)
-            console.log(response.data.data._id)
             if(response.data.message === "success"){
                 this.setState({
                     token : response.data.token,

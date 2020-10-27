@@ -17,17 +17,21 @@ class EventList extends React.Component {
         };
         this.handlePageClick = this.handlePageClick.bind(this);
     }
-    componentDidMount() {
+    async componentDidMount() {
+        console.log("Event ID",this.props.match.params.id)
+        await this.props.user.events.map(event => {
+            if (event._id === this.props.match.params.id) {
+                this.setState({
+                    data:event.registeredUsers
+                })
+            }
+        })
         this.receivedData()
     }
     receivedData() {
         let count = 0
-        const data = this.props.user.events.map(event => {
-            if (event._id === this.props.match.params.id) {
-                return event.registeredUsers
-            }
-        })
-        const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
+        console.log("Data", this.state.data)
+        const slice = this.state.data.slice(this.state.offset, this.state.offset + this.state.perPage)
         const postData = slice.map(customer => <React.Fragment>
             <tr>
                 <td>{count = count + 1}</td>
@@ -40,7 +44,7 @@ class EventList extends React.Component {
         </React.Fragment>)
 
         this.setState({
-            pageCount: Math.ceil(data.length / this.state.perPage),
+            pageCount: Math.ceil(this.state.data.length / this.state.perPage),
 
             postData
         })
@@ -57,8 +61,6 @@ class EventList extends React.Component {
         });
 
     };
-    componentDidMount() {
-    }
     render() {
         let count = 0
         return (

@@ -5,6 +5,8 @@ import Popup from "reactjs-popup";
 import { connect } from 'react-redux'
 import Moment from 'react-moment';
 import { customerOrderHistory } from '../../../actions/customerOtherDetailsAction'
+import ReactPaginate from 'react-paginate';
+import '../../restaurantOwner/Paginate.css' 
 
 
 class CustomerOrderHistory extends React.Component {
@@ -14,6 +16,10 @@ class CustomerOrderHistory extends React.Component {
             orderSummary: [],
             handlePickupFlag: false,
             handleDeliveredFlag: false,
+            offset: 0,
+            data: [],
+            perPage: 3,
+            currentPage: 0
         }
         this.orderdetails = this.orderdetails.bind(this)
         this.handlePickUp = this.handlePickUp.bind(this)
@@ -21,10 +27,10 @@ class CustomerOrderHistory extends React.Component {
         this.handleFilters = this.handleFilters.bind(this)
         this.handleAllOrders = this.handleAllOrders.bind(this)
     }
-    componentDidMount() {
+    async componentDidMount() {
         let OrderHistoryresult = []
         let individualOrder = {}
-        axios.get(`http://localhost:3001/customerordersroute/fetchcustomerordersummary/${this.props.user._id}`)
+        await axios.get(`http://localhost:3001/customerordersroute/fetchcustomerordersummary/${this.props.user._id}`)
             .then(response => {
                 console.log("Response of order history", response.data.data[0])
                 if (response.data.message === "success") {
@@ -49,54 +55,95 @@ class CustomerOrderHistory extends React.Component {
                         orderSummary : OrderHistoryresult
                     })
                     this.props.customerOrderHistory(OrderHistoryresult)
+                    this.receivedData();
                 }
                 else {
                     alert("Could not fetch Customer Order History")
                 }
             })
     }
+    receivedData() {
+        const slice = this.state.orderSummary.slice(this.state.offset, this.state.offset + this.state.perPage)
+        const postData = slice.map(summary => <React.Fragment>
+                <div class="card-order">
+                    <h4>Restaurant: {summary.restaurantName}</h4>
+                    <div class="order-footer">
+                        <p><b>Date: </b><Moment>{summary.Date}</Moment></p>
+                        <p><b>Total Price:</b> {summary.totalPrice}</p>
+                    </div>
+                    <div class="order-footer">
+                        <p><b>Delivery Option:</b> {summary.deliveryOption}</p>
+                        <p><b>Status:</b> {summary.delivery_status}</p>
+                        <p><b>Order Type: </b> {summary.deliveryFilter}</p>
+                        <button class="btn btn-primary" onClick={() => this.orderdetails(summary.orderID)}>View Details</button>
+                    </div>
+                </div>
+        </React.Fragment>)
+
+        this.setState({
+            pageCount: Math.ceil(this.state.orderSummary.length / this.state.perPage),
+
+            postData
+        })
+    }
+    handlePageClick = (e) => {
+        const selectedPage = e.selected;
+        const offset = selectedPage * this.state.perPage;
+
+        this.setState({
+            currentPage: selectedPage,
+            offset: offset
+        }, () => {
+            this.receivedData()
+        });
+
+    };
     orderdetails(orderID) {
         return this.props.history.push(`customerorderdetails/${orderID}`)
     }
-    handlePickUp() {
+    async handlePickUp() {
         this.setState({
             handlePickupFlag: true,
             handleDeliveredFlag: false
         })
-        this.setState({
+        await this.setState({
             orderSummary: this.props.orderhistory.ordersummary.filter((summary) => {
                 return summary.deliveryOption === 'pickup'
             })
 
         });
+        this.receivedData();
     }
-    handleDelivered() {
+    async handleDelivered() {
         this.setState({
             handleDeliveredFlag: true,
             handlePickupFlag: false
         })
-        this.setState({
+        await this.setState({
             orderSummary: this.props.orderhistory.ordersummary.filter((summary) => {
                 return summary.deliveryOption === 'delivery'
             })
 
         });
+        this.receivedData()
     }
-    handleFilters(deliveryOption, deliveryStatus) {
-        this.setState({
+    async handleFilters(deliveryOption, deliveryStatus) {
+        await this.setState({
             orderSummary: this.props.orderhistory.ordersummary.filter((summary) => {
                 return summary.deliveryOption === deliveryOption && summary.delivery_status === deliveryStatus
             })
 
         });
-    }
+        this.receivedData()
+    }   
 
-    handleAllOrders() {
-        this.setState({
+    async handleAllOrders() {
+     await this.setState({
             handleDeliveredFlag: false,
             handlePickupFlag: false,
             orderSummary: this.props.orderhistory.ordersummary
         })
+        this.receivedData();
     }
     render() {
         console.log("From the store", this.props.orderhistory.ordersummary)
@@ -140,23 +187,19 @@ class CustomerOrderHistory extends React.Component {
                     </div>
                     <div class="td-items2">
                         <h2> Orders</h2>
-                        {this.state.orderSummary && this.state.orderSummary.map((summary, i) => {
-                            return (
-                                <div class="card-order" key={i}>
-                                    <h4>Restaurant: {summary.restaurantName}</h4>
-                                    <div class="order-footer">
-                                        <p><b>Date: </b><Moment>{summary.Date}</Moment></p>
-                                        <p><b>Total Price:</b> {summary.totalPrice}</p>
-                                    </div>
-                                    <div class="order-footer">
-                                        <p><b>Delivery Option:</b> {summary.deliveryOption}</p>
-                                        <p><b>Status:</b> {summary.delivery_status}</p>
-                                        <p><b>Order Type: </b> {summary.deliveryFilter}</p>
-                                        <button class="btn btn-primary" onClick={() => this.orderdetails(summary.orderID)}>View Details</button>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                        {this.state.postData}
+                        <ReactPaginate
+                        previousLabel={"<<"}
+                        nextLabel={">>"}
+                        breakLabel={"..."}
+                        breakClassName={"break-me"}
+                        pageCount={this.state.pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={this.handlePageClick}
+                        containerClassName={"pagination"}
+                        subContainerClassName={"pages pagination"}
+                        activeClassName={"active"} />
                     </div>
                 </div>
             </div>

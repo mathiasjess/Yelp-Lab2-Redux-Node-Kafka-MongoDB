@@ -36,8 +36,8 @@ class DisplayEvents extends React.Component {
     receivedData() {
         const data = this.props.user.events;
         const slice = data.slice(this.state.offset, this.state.offset + this.state.perPage)
-        const postData = slice.map(event => <React.Fragment>
-         <div class="card-menu">
+        const postData = slice.map((event,i) => <React.Fragment>
+         <div class="card-menu" key={i}>
             <div class="card-items">
                 <h4 style={{ textAlign: "center" }}><b>{event.eventName}</b></h4>
                 <p><b> Details: </b>{event.eventDescription}</p>
