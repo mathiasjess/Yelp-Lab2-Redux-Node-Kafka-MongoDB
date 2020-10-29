@@ -68,7 +68,7 @@ class CustomerOrderHistory extends React.Component {
                 <div class="card-order">
                     <h4>Restaurant: {summary.restaurantName}</h4>
                     <div class="order-footer">
-                        <p><b>Date: </b><Moment>{summary.Date}</Moment></p>
+                        <p><b>Date: </b><Moment>{summary.orderDate}</Moment></p>
                         <p><b>Total Price:</b> {summary.totalPrice}</p>
                     </div>
                     <div class="order-footer">

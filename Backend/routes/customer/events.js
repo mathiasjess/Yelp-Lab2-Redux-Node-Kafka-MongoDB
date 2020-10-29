@@ -6,16 +6,29 @@ var restaurant = require('../../models/RestaurantOwnerModel')
 
 router.get('/fetchEvents', function(req,res) {
     let returnObject = {}
+        // restaurant.distinct('$events._id', {},{}, (err, result)=>{
     restaurant.aggregate([
-        {$unwind : "$events"},
-        {$project : {_id : 0, 
-            eventId : "$events._id",
-            eventName : "$events.eventName",
-            eventDescription : "$events.eventDescription ",
-            eventTime: "$events.eventTime",
-            eventDate : "$events.eventDate",
-            eventLocation: "$events.eventLocation",
-            eventHashtag : "$events.eventHashtag"}}
+        // {$bucket:{
+        //     groupBy: "$events._id", 
+        //     output: {
+        //     // restaurantName : 'restaurantName',
+        //     // restaurantImage: 'restaurantImage',
+        //     "eventID": "$events._id",
+        //     "eventName":"$events.eventName"
+        //     } 
+        // }}
+        // {$unwind : "$events"},
+        {$project : {_id : 1,
+            restaurantName : 1,
+            restaurantImage: 1,
+            events: '$events'}},
+            // eventId : "$events._id",
+            // eventName : "$events.eventName",
+            // eventDescription : "$events.eventDescription ",
+            // eventTime: "$events.eventTime",
+            // eventDate : "$events.eventDate",
+            // eventLocation: "$events.eventLocation",
+            // eventHashtag : "$events.eventHashtag"}}
     ],(err,result)=>{
         if(err) {
             returnObject.message = 'error'
@@ -33,13 +46,13 @@ router.post('/registerForEvent', function (req, res) {
     let returnObject = {};
     console.log(req.body.eventId)
     let addRegistry = {
-        customerID: req.body.customerID,
+        customerID: req.body.customerId,
         customerName: req.body.customerName
     }
     console.log("Add dish", addRegistry)
 
     restaurant.update(
-        {'events._id': req.body.eventId }, {$push : {'events.0.registeredUsers' : addRegistry}}, (err, result) => {
+        {_id: req.body.restaurantId, 'events._id': req.body.eventId }, {$push : {'events.$.registeredUsers' : addRegistry}}, (err, result) => {
             if (err) {
                 returnObject.message = "error";
                 res.json(returnObject);

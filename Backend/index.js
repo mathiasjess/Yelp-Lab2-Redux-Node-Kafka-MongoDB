@@ -96,6 +96,7 @@ var customersearchroute = require('./routes/customer/searchRestaurant')
 var customerreviewroute = require('./routes/customer/customerReview')
 var customereventsroute = require('./routes/customer/events')
 var customerordersroute = require('./routes/customer/customerOrders')
+var allcustomersroute = require('./routes/customer/friends')
 
 
 
@@ -106,6 +107,7 @@ app.use('/customersearchroute',customersearchroute)
 app.use('/customerreviewroute',customerreviewroute)
 app.use('/customereventsroute',customereventsroute)
 app.use('/customerordersroute',customerordersroute)
+app.use('/allcustomersroute',allcustomersroute)
 // //Route to handle all actions for customer profile
 // app.use('/customerprofile',customerprofile)
 

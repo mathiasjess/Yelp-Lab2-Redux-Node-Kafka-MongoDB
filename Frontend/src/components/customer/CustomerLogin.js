@@ -1,8 +1,8 @@
 import React from 'react'
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import {connect} from 'react-redux';
-import {customerLogin} from '../../actions/customerAction'
+// import {connect} from 'react-redux';
+// import {customerLogin} from '../../actions/customerAction'
  // @ts-ignore  
  import jwt_decode from "jwt-decode";
 
@@ -13,7 +13,7 @@ class CustomerLogin extends React.Component {
         this.state = {
             email:'',
             password:'',
-            token : '',
+            credentials : '',
             customerID: ''
         }
         this.ChangeHandler = this.ChangeHandler.bind(this)
@@ -40,10 +40,10 @@ class CustomerLogin extends React.Component {
             if(response.data.message === "success"){
                 console.log("The data got is", response.data.data)
                 this.setState({
-                   token: response.data.token,
+                   credentials: response.data,
                    customerID : response.data.data._id
                 })
-                this.props.customerLogin(response.data.data);
+                // this.props.customerLogin(response.data.data);
             }
             else if (response.data.message === "error"){
                 alert("Invalid credentials")
@@ -61,12 +61,14 @@ class CustomerLogin extends React.Component {
         // }
     // }
     render() {
-        if (this.state.token.length > 0){
-            localStorage.setItem("token", this.state.token);
-            var decoded = jwt_decode(this.state.token.split(' ')[1]);
+        if (this.state.credentials){
+            localStorage.setItem("token", this.state.credentials.token);
+            var decoded = jwt_decode(this.state.credentials.token.split(' ')[1]);
             localStorage.setItem("id",decoded._id);
             localStorage.setItem("email",decoded.email);
+            localStorage.setItem("name",this.state.credentials.firstName + ' '+ this.state.credentials.lastName);
             localStorage.setItem("role",decoded.role);
+            localStorage.getItem("location",this.state.credentials.zipcode);
             this.props.history.replace(`/customerhomepage/${this.state.customerID}`);
         }
         return (
@@ -87,10 +89,10 @@ class CustomerLogin extends React.Component {
 
 }
 
-function mapDispatchToProps(dispatch){
-    console.log("Dispatch",dispatch);
-    return {
-        customerLogin : (data) => dispatch(customerLogin(data))
-    }
-}
-export default connect(null,mapDispatchToProps)(CustomerLogin);
+// function mapDispatchToProps(dispatch){
+//     console.log("Dispatch",dispatch);
+//     return {
+//         customerLogin : (data) => dispatch(customerLogin(data))
+//     }
+// }
+export default CustomerLogin;

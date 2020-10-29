@@ -45,6 +45,12 @@ router.put('/updatecustomerprofile', upload.single('profileImage'), function (re
     }
     console.log(imagename)
     console.log("ID", req.body.id);
+    if(req.body.DOB === 'undefined'){
+        console.log("This is undefined")
+    }
+    else{
+        console.log(req.body.DOB)
+    }
     const updateCustomerObject = {
         email: req.body.email === 'null'? null: req.body.email,
         firstName: req.body.firstName === 'null'? null: req.body.firstName,
@@ -52,7 +58,7 @@ router.put('/updatecustomerprofile', upload.single('profileImage'), function (re
         DOB: req.body.DOB === 'null'? null:req.body.DOB,
         location: req.body.location === 'null'? null : req.body,
         city: req.body.city === 'null'? null : req.body.city,
-        state: req.body.state === 'null'? null : req.body.state,
+        state: req.body.State === 'null'? null : req.body.State,
         country: req.body.country === 'null'? null : req.body.country,
         nickName: req.body.nickName === 'null'? null : req.body.nickName,
         phoneNumber: req.body.phoneNumber === 'null'? null : req.body.phoneNumber,
@@ -63,6 +69,24 @@ router.put('/updatecustomerprofile', upload.single('profileImage'), function (re
         headline: req.body.headline === "null"? null: req.body.headline,
         zipcode: req.body.zipcode === "null"? null: req.body.zipcode,
         profileImage: imagename === 'null'? null :imagename
+
+        // email: req.body.email,
+        // firstName: req.body.firstName,
+        // lastName: req.body.lastName,
+        // DOB :req.body.DOB,
+        // location: req.body.location,
+        // city: req.body.city,
+        // state: req.body.state .state,
+        // country: req.body.country,
+        // nickName: req.body.nickName,
+        // phoneNumber: req.body.phoneNumber,
+        // thingsILove: req.body.thingsILove,
+        // findmeIn: req.body.findmeIn,
+        // websiteDetails: req.body.websiteDetails,
+        // favourites: req.body.favourites,
+        // headline: req.body.headline,
+        // zipcode: req.body.zipcode,
+        // profileImage: imagename 
 
     }
     console.log("updateCustomerObject",updateCustomerObject)

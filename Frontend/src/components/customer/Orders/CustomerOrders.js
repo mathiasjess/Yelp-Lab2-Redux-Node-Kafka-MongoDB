@@ -4,6 +4,8 @@ import './CustomerOrders.css'
 import { connect } from 'react-redux'
 import { addToCart, addItem, removeItem, removecart } from '../../../actions/cartActions'
 import { Link } from 'react-router-dom';
+import ReactPaginate from 'react-paginate';
+import '../../restaurantOwner/Paginate.css' 
 
 class CustomerOrders extends React.Component {
     constructor(props) {
@@ -14,6 +16,10 @@ class CustomerOrders extends React.Component {
             customerID: '',
             completeOrderFlag: false,
             takeOutValue : '',
+            offset: 0,
+            data: [],
+            perPage: 3,
+            currentPage: 0
 
         }
         this.addtoCart = this.handleAddToCart.bind(this)
@@ -30,6 +36,7 @@ class CustomerOrders extends React.Component {
             customerID: this.props.user.id,
 
         })
+        this.receivedData()
     }
     viewDetails(menuId){
         //Change to reuse restaurant component
@@ -87,6 +94,38 @@ class CustomerOrders extends React.Component {
                 }
             })
     }
+    receivedData() {
+        const slice = this.props.restaurant.menuItem.slice(this.state.offset, this.state.offset + this.state.perPage)
+        const postData = slice.map(menu => <React.Fragment>
+               <div class="card1">
+                <img src={`/uploads/${menu.dishImages[0]}`} alt="Avatar" class="card-img-top-items" alt="Card image cap" />
+                    <div class="container-order-menu">
+                        <p style={{textAlign:'left'}}><b> Dish Name: </b>{menu.dishName}</p>
+                        <p style={{textAlign:'left'}}><b>Price: </b>{menu.price}</p>
+                        <button class="btn btn-primary" value={menu._id} onClick={() => this.viewDetails(menu._id)}>View Details</button>
+                        <button class="btn btn-primary" value={menu._id} onClick={() => this.handleAddToCart(menu._id, menu.dishName, menu.price)}>Add to Cart</button>
+                    </div>
+                </div>
+        </React.Fragment>)
+
+        this.setState({
+            pageCount: Math.ceil(this.props.restaurant.menuItem.length / this.state.perPage),
+
+            postData
+        })
+    }
+    handlePageClick = (e) => {
+        const selectedPage = e.selected;
+        const offset = selectedPage * this.state.perPage;
+
+        this.setState({
+            currentPage: selectedPage,
+            offset: offset
+        }, () => {
+            this.receivedData()
+        });
+
+    };
 
     CancelOrder(restaurantID) {
         this.props.removecart()
@@ -122,18 +161,20 @@ class CustomerOrders extends React.Component {
                     <button class = "btn btn-primary" onClick={()=>{this.props.history.push(`/customerviewofrestaurant/${this.props.match.params.id}`)}}> Go Back to Restaurant Page</button>
                         <h2>Order Food from our Menu</h2>
                         <div class="flex-display-items">
-                            {this.props.restaurant.menuItem.map((menu, i) => {
-                                return <div class="card1" key={i}>
-                                <img src={`/uploads/${menu.dishImages[0]}`} alt="Avatar" class="card-img-top-items" alt="Card image cap" />
-                                    <div class="container-order-menu">
-                                        <p style={{textAlign:'left'}}><b> Dish Name: </b>{menu.dishName}</p>
-                                        <p style={{textAlign:'left'}}><b>Price: </b>{menu.price}</p>
-                                        <button class="btn btn-primary" value={menu._id} onClick={() => this.viewDetails(menu._id)}>View Details</button>
-                                        <button class="btn btn-primary" value={menu._id} onClick={() => this.handleAddToCart(menu._id, menu.dishName, menu.price)}>Add to Cart</button>
-                                    </div>
-                                </div>
-                            })}
+                        {this.state.postData}
                         </div>
+                        <ReactPaginate
+                        previousLabel={"<<"}
+                        nextLabel={">>"}
+                        breakLabel={"..."}
+                        breakClassName={"break-me"}
+                        pageCount={this.state.pageCount}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={this.handlePageClick}
+                        containerClassName={"pagination"}
+                        subContainerClassName={"pages pagination"}
+                        activeClassName={"active"} />
                     </div>
                     <div class="td-items3">
                         {this.props.cartItems.addedItems ?

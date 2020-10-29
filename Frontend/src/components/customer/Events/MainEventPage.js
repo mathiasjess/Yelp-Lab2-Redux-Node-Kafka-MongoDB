@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import default_pic from '../../../images/restaurantprofileImage.png'
 import Moment from 'react-moment';
 import 'moment-timezone';
+import {restaurantEvents} from '../../../actions/customerOtherDetailsAction'
+import { Link } from 'react-router-dom';
 
 class MainEventsPage extends React.Component {
     constructor(props) {
@@ -13,29 +15,61 @@ class MainEventsPage extends React.Component {
             currentDate: '',
             searchParameter: '',
             eventsData: [],
-            originaleventsData: [],
             searchFlag: false
         }
         this.captureSearchParameters = this.captureSearchParameters.bind(this)
         this.getSearchResults = this.getSearchResults.bind(this)
         this.registerForEvent = this.registerForEvent.bind(this)
         this.getAllResults = this.getAllResults.bind(this)
+        this.handleorderofevents = this.handleorderofevents.bind(this)
+        this.getSingleEvent = this.getSingleEvent.bind(this)
     }
-    componentDidMount() {
-
-        axios.get(`http://localhost:3001/events/fetchEvents`)
+    async componentDidMount() {
+        let individualevent = {}
+        let allEvents = []
+        let x = null
+        let y = null
+        await axios.get(`http://localhost:3001/customereventsroute/fetchEvents`)
             .then((response) => {
                 console.log(response.data.data)
                 if (response.data.message === "success") {
-                    this.setState({
-                        eventsData: response.data.data,
-                        originaleventsData: response.data.data,
+                    {response.data.data && response.data.data.map(event => {
+                        event.events.map(item => {
+                            individualevent = {
+                                restaurantId: event._id,
+                                restaurantName: event.restaurantName,
+                                restaurantImage: event.restaurantImage,
+                                eventID: item._id,
+                                eventName: item.eventName,
+                                eventDescription: item.eventDescription,
+                                eventTime: item.eventTime,
+                                eventDate: item.eventDate,
+                                eventLocation: item.eventLocation,
+                                eventHashtag: item.eventHashtag,
+                                registeredUsers: item.registeredUsers
+
+                            }
+                            allEvents.push(individualevent)
+                            individualevent = {}
+                        })
+                    })}
+                    console.log("Refactored",allEvents)
+                    const sortedEvents = allEvents.sort((a,b)=>{
+                        x = new Date(a.eventDate.slice(0,10))
+                        y = new Date(b.eventDate.slice(0,10))
+                        return(x-y)
                     })
-                }
-                else if (response.data.message === "error") {
-                    alert("Something went wrong. Please try again")
+                    console.log("Sorted Events", sortedEvents)
+                    this.props.restaurantEvents(sortedEvents)
+                    this.setState({
+                        eventsData : this.props.events.events
+                    })
+                    // this.receivedData();
                 }
             })
+    }
+    getSingleEvent(){
+        console.log("Search Value", this.state.searchParameter)
     }
     captureSearchParameters(event) {
         event.preventDefault();
@@ -43,33 +77,51 @@ class MainEventsPage extends React.Component {
             [event.target.name]: event.target.value
         })
     }
-    getSearchResults(event) {
-        event.preventDefault();
-        let searchValue = this.state.searchParameter
-        axios.get(`http://localhost:3001/events/fetchSingleEvent/${searchValue}`)
-            .then((response) => {
-                console.log(response.data.data)
-                if (response.data.message === "success") {
-                    this.setState({
-                        eventsData: response.data.data,
-                        searchFlag: true
-                    })
-                }
-                else if (response.data.message === "error") {
-                    alert("Something went wrong. Please try again")
-                }
+    handleorderofevents(order){
+        let x = null
+        let y = null
+        let sortedEvents = null
+        if(order === "asc"){
+                sortedEvents = this.state.eventsData.sort((a,b)=>{
+                x = new Date(a.eventDate.slice(0,10))
+                y = new Date(b.eventDate.slice(0,10))
+                return(x-y)
             })
+        }
+        else{
+                sortedEvents = this.state.eventsData.sort((a,b)=>{
+                x = new Date(a.eventDate.slice(0,10))
+                y = new Date(b.eventDate.slice(0,10))
+                return(y-x)
+            })  
+        }
+        this.setState({
+            eventsData : sortedEvents
+        })
+    }   
+    getSearchResults = (event)=>{
+        event.preventDefault();
+        // let searchValue = this.state.searchParameter
+        console.log("Search value", this.state.searchParameter)
+        // this.props.events.events.map((event)=>{
+        //     if(event.eventName === searchValue){
+        //         return this.setState({
+        //             searchFlag : true,
+        //             eventsData : event
+        //         })
+        //     }
+        // })
     }
 
     registerForEvent(eventID, restaurantID) {
         const data = {
             eventId: eventID,
             restaurantId: restaurantID,
-            customerId: this.props.user.id,
+            customerId: this.props.user._id,
             customerName: this.props.user.firstName + " " + this.props.user.lastName
         }
         console.log("Data", data)
-        axios.post(`http://localhost:3001/events/registerForEvent`, data)
+        axios.post(`http://localhost:3001/customereventsroute/registerForEvent`, data)
             .then((response) => {
                 console.log(response.data.data)
                 if (response.data.message === "success") {
@@ -84,10 +136,11 @@ class MainEventsPage extends React.Component {
     getAllResults() {
         this.setState({
             searchFlag: false,
-            eventsData: this.state.originaleventsData
+            eventsData: this.props.events.events
         })
     }
     render() {
+        console.log("All events inside render", this.state.eventsData)
         return (
             <div class="table">
                 <div class="tr-onerow">
@@ -96,9 +149,9 @@ class MainEventsPage extends React.Component {
                     </div>
                     <div class="td-onerow2">
                         <form class="search-class">
-                            <input class="form-control mr-sm-2" name="searchParameter" type="text" onChange={this.captureSearchParameters} placeholder="dish names,cuisines," aria-label="Search" />
+                            <input class="form-control mr-sm-2" name="searchParameter" type="text" onChange={this.captureSearchParameters} placeholder="Event Names" aria-label="Search" />
                             {/*<button class="btn btn-outline-success my-2 my-sm-0" onClick = {this.searchRestaurant} type="submit">Search</button>*/}
-                            <button class="btn btn-danger" onClick={this.getSearchResults}>search</button>
+                            <button class="btn btn-danger" onClick={()=>this.handleorderofevents("desc")}>search</button>
                         </form>
                     </div>
                     <div class="td-onerow3">
@@ -108,16 +161,17 @@ class MainEventsPage extends React.Component {
                     <div class="td-tworow1">
                     </div>
                     <div class="td-tworow2">
+                    <Link to ="#" onClick={()=>this.handleorderofevents("asc")}><span class = "glyphicon glyphicon-arrow-up"> Ascending</span></Link>
+                    <Link to ="#" onClick={()=>this.handleorderofevents("desc")}><span class = "glyphicon glyphicon-arrow-down"> Desceding</span></Link>
                         {this.state.eventsData && this.state.eventsData.map((event, i) => {
-                                return <div class="card-events">
+                                return <div class="card-events" key ={i}>
                                     <div class="card-events-body">
-                                        <p>Upcoming</p>
                                         <h4 class="card-title">{event.eventName}</h4>
                                         <p>Host: {event.restaurantName}</p>
-                                        <p>{event.eventDate}</p>
+                                        <p>Date: <Moment>{event.eventDate}</Moment></p>
                                         <div class="event-details">
-                                        <button class="btn btn-danger" onClick={() => this.registerForEvent(event.eventId, event.restaurantId)}>Register</button>
-                                        <button class="btn btn-primary" onClick={()=> this.props.history.push(`individualeventdetails/${event.eventId}`)}>See details</button>
+                                        <button class="btn btn-danger" onClick={() => this.registerForEvent(event.eventID, event.restaurantId)}>Register</button>
+                                        <button class="btn btn-primary" onClick={()=> this.props.history.push(`individualeventdetails/${event.eventID}`)}>See details</button>
                                         </div>
                                     </div>
                                 </div>
@@ -132,8 +186,14 @@ class MainEventsPage extends React.Component {
     }
 }
 const mapStateToProps = state => ({
-    user: state.customerReducer
+    user: state.customerReducer,
+    events : state.customerOtherDetailsReducer
 });
+function mapDispatchToProps(dispatch) {
+    return {
+        restaurantEvents: (data) => dispatch(restaurantEvents(data))
+    }
+}
 
 
-export default connect(mapStateToProps)(MainEventsPage);
+export default connect(mapStateToProps, mapDispatchToProps)(MainEventsPage);

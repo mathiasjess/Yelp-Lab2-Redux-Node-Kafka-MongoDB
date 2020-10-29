@@ -205,3 +205,9 @@ width: 6rem
 display: flex;
 justify-content: space-between;
 }
+
+.buttonsuser{
+  display: flex;
+  width: 35%;
+  justify-content: space-between;
+}

@@ -16,7 +16,7 @@ class UpdateCustomerProfile extends React.Component {
             DOB: '',
             location: '',
             city: '',
-            state: '',
+            State: '',
             country: '',
             nickName: '',
             phoneNumber: '',
@@ -49,7 +49,7 @@ class UpdateCustomerProfile extends React.Component {
         data.append("DOB", this.state.DOB);
         data.append("location", this.state.location);
         data.append("city", this.state.city);
-        data.append("state", this.state.state);
+        data.append("state", this.state.State);
         data.append("country", this.state.country);
         data.append("nickName", this.state.nickName);
         data.append("phoneNumber", this.state.phoneNumber);
@@ -82,23 +82,24 @@ class UpdateCustomerProfile extends React.Component {
         this.setState({
             id: this.props.user._id,
             email: this.props.user.email,
-            firstName: this.props.user.firstName,
-            lastName: this.props.user.lastName,
-            DOB: this.props.user.DOB,
-            location: this.props.user.location,
-            city: this.props.user.city,
-            state: this.props.user.state,
-            country: this.props.user.country,
-            nickName: this.props.user.nickName,
-            phoneNumber: this.props.user.phoneNumber,
-            thingsILove: this.props.user.thingsILove,
-            profileImage : this.props.user.profileImage,
-            findmeIn: this.props.user.findmeIn,
-            websiteDetails: this.props.user.websiteDetails,
-            favourites: this.props.user.favourites,
-            headline: this.props.user.headline,
-            zipcode: this.props.user.zipcode
+            firstName: this.props.user.firstName ? this.props.user.firstName : null,
+            lastName: this.props.user.lastName  ? this.props.user.lastName : null,
+            DOB: this.props.user.DOB  ? this.props.user.DOB : null,
+            location: this.props.user.location  ? this.props.user.location : null,
+            city: this.props.user.city  ? this.props.user.city : null,
+            State: this.props.user.state  ? this.props.user.state : null,
+            country: this.props.user.country  ? this.props.user.country : null,
+            nickName: this.props.user.nickName  ? this.props.user.nickName : null,
+            phoneNumber: this.props.user.phoneNumber  ? this.props.user.phoneNumber : null,
+            thingsILove: this.props.user.thingsILove  ? this.props.user.thingsILove : null,
+            profileImage : this.props.user.profileImage  ? this.props.user.profileImage : null,
+            findmeIn: this.props.user.findmeIn  ? this.props.user.findmeIn : null,
+            websiteDetails: this.props.user.websiteDetails  ? this.props.user.websiteDetails : null,
+            favourites: this.props.user.favourites  ? this.props.user.favourites : null,
+            headline: this.props.user.headline  ? this.props.user.headline : null,
+            zipcode: this.props.user.zipcode  ? this.props.user.zipcode : null
         })
+        console.log("Website", this.state.websiteDetails)
     }
     updateallprofileData(){
         const data = {

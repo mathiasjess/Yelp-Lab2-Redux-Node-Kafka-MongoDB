@@ -31,6 +31,7 @@ import CustomerOrders from './customer/Orders/CustomerOrders'
 import CustomerOrderHistory from './customer/Orders/CustomerOrderHistory'
 import CustomerOrderDetails from './customer/Orders/CustomerOrderDetails'
 import IndividualDishDetails from './customer/Orders/IndividualDishDetailsC'
+import AllCustomers from './customer/Friends/Allcustomers'
 import { Switch, Route, withRouter } from 'react-router-dom';
 //Create a Main Component
 class Main extends Component {
@@ -151,6 +152,10 @@ class Main extends Component {
                         path="/viewindividualdish/:menuId/:restId"
                         render={props => <IndividualDishDetails  {...props} />}
                     />
+                    <Route
+                    path="/allusers"
+                    render={props => <AllCustomers  {...props} />}
+                />
 
                     <Route path="/home" component={Home} />
                 </div>

@@ -13,15 +13,13 @@ class IndividualEventDetails extends React.Component {
         }
     }
     componentDidMount() {
-        axios.get(`http://localhost:3001/events/fetchsinglevent/${this.props.match.params.id}`)
-            .then(response => {
-                console.log(response.data.data[0])
-                if (response.data.message === "success") {
-                    this.setState({
-                        eventDetails: response.data.data[0],
-                    })
-                }
-            })
+        this.props.events.events.map(event=>{
+            if(event.eventID === this.props.match.params.id){
+                this.setState({
+                    eventDetails : event
+                })
+            }
+        })
     }
     render() {
         return (
@@ -46,7 +44,8 @@ class IndividualEventDetails extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    user: state.customerReducer
+    user: state.customerReducer,
+    events : state.customerOtherDetailsReducer
 });
 
 export default connect(mapStateToProps)(IndividualEventDetails);

@@ -1,0 +1,42 @@
+.table-users-list{
+    margin-left: 0;
+    margin-right: auto;
+    width: 40%;
+}
+.searchuser{
+    padding-bottom: 7rem;
+}
+.searchuserclass{
+    padding-top: 0.25%;
+    padding-bottom: 2%;
+    display: flex;
+    position:absolute;
+    left: 30%;
+    /* margin-left: auto; */
+    margin-right: auto;
+}
+.leftside{
+    float: left;
+    width: 30%;
+    top:30%;
+    margin-left: 10%;
+
+}
+.rightside{
+    float: right;
+    width: 70%;
+    
+}
+.no-button-user-show{
+    display: block;
+    padding: 12px;
+    position: relative;
+    background: none!important;
+    border: none;
+    /*optional*/
+    font-family: arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: #333;
+    cursor: pointer;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }

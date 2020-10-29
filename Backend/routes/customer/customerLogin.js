@@ -42,6 +42,9 @@ router.post('/customerlogin', function (req, res) {
                         returnObject.message = "success";
                         returnObject.data = value[1]
                         returnObject.token = "JWT "+ token
+                        returnObject.firstName = loginresult.firstName
+                        returnObject.lastName = loginresult.lastName
+                        returnObject.zipcode = loginresult.zipcode
                         // res.status(200).end("JWT "+ token)
                     }
                     else {

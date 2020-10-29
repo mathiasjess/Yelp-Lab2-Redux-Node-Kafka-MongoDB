@@ -21,7 +21,8 @@ router.post('/customerregister', function (req, res) {
     })
         .then((value) => {
             let myObj = {
-                username : req.body.username,
+                firstName : req.body.firstName,
+                lastName : req.body.lastName,
                 email : req.body.email,
                 password : value
             }

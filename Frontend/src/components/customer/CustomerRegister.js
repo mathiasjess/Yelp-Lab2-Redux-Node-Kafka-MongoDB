@@ -6,7 +6,8 @@ class customerRegister extends React.Component {
     constructor() {
         super()
         this.state = {
-            username:'',
+            firstName:'',
+            lastName: '',
             email:'',
             password:'',
         }
@@ -23,14 +24,15 @@ class customerRegister extends React.Component {
         //prevent page from refresh
         event.preventDefault();
         const customerRegistrationData = {
-            username: this.state.username,
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
             email: this.state.email,
             password: this.state.password
         }
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://localhost:3001/customerlogin/customerregister',customerRegistrationData)
+        axios.post('http://localhost:3001/customerregistrationroute/customerregister',customerRegistrationData)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){
@@ -47,8 +49,9 @@ class customerRegister extends React.Component {
         return (
             <form>
                 <div class="regColumn">
-                    <div class="form-group">
-                        <input onChange={this.ChangeHandler} type="text" class="form-control" name="username" placeholder="Username" />
+                    <div class="form-group" style={{display:"flex", width:"30%", justifyContent:"space-between"}}>
+                        <input onChange={this.ChangeHandler} type="text" class="form-control" name="firstName" placeholder="First Name" />
+                        <input onChange={this.ChangeHandler} type="text" class="form-control" name="lastName" placeholder="Last Name" />
                     </div>
                     <div class="form-group">
                         <input onChange={this.ChangeHandler} type="email" class="form-control" name="email" placeholder="Email ID" />
