@@ -66,6 +66,7 @@ class RestaurantLogin extends React.Component {
             localStorage.setItem("id",decoded._id);
             localStorage.setItem("email",decoded.email);
             localStorage.setItem("role",decoded.role);
+            localStorage.setItem("name",decoded.name);
             this.props.history.replace(`/restauranthomepage/${this.state.restaurantId}`);
         }
         return (

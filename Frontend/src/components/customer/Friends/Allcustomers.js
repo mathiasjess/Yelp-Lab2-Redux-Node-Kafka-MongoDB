@@ -40,22 +40,23 @@ class AllCustomers extends React.Component {
                 }
             })
     }
-    handleFilters(filter) {
+    async handleFilters(filter) {
         let mainID = localStorage.getItem('id')
         if (filter === 'allusers') {
-            this.setState({
+           await this.setState({
                 data: this.props.allusers.yelpusers
             })
         }
         else if (filter === 'location') {
-            this.setState({
+          await this.setState({
                 data: this.state.searchResults.filter((result) => {
                     return result.zipcode === localStorage.getItem('zipcode');
                 })
             })
         }
         else if (filter === 'following') {
-            axios.get(`http://localhost:3001/allcustomersroute/following/${mainID}`)
+            console.log("Inside following")
+            await axios.get(`http://localhost:3001/allcustomersroute/following/${mainID}`)
                 .then(response => {
                     if (response.data.message === "success") {
                         this.setState({
@@ -67,6 +68,7 @@ class AllCustomers extends React.Component {
                     }
                 })
         }
+        this.receivedData()
     }
     captureSearchParameters(event) {
         event.preventDefault();

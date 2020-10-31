@@ -16,6 +16,7 @@ class EventList extends React.Component {
             registryList: [],
         };
         this.handlePageClick = this.handlePageClick.bind(this);
+        this.gotocustomerPage = this.gotocustomerPage.bind(this);
     }
     async componentDidMount() {
         console.log("Event ID",this.props.match.params.id)
@@ -28,11 +29,16 @@ class EventList extends React.Component {
         })
         this.receivedData()
     }
+    gotocustomerPage(id){
+        console.log("Customer ID inside events page", id)
+        this.props.history.replace(`/restaurantviewofcustomer/${id}`)
+    }
     receivedData() {
         let count = 0
         console.log("Data", this.state.data)
         const slice = this.state.data.slice(this.state.offset, this.state.offset + this.state.perPage)
         const postData = slice.map(customer => <React.Fragment>
+            {console.log("Inside event list", customer.cus)}
             <tr>
                 <td>{count = count + 1}</td>
                 <td><Link to={{

@@ -1,0 +1,9 @@
+.infinite-container{
+    height: 600px;
+    width:100%; 
+    padding:3px; 
+    border: 0.25px solid rgba(194, 191, 191, 0.8);
+    margin-left: auto;
+    margin-right:auto;
+    overflow:auto;
+}

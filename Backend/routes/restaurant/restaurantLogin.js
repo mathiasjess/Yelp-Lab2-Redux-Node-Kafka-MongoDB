@@ -32,7 +32,7 @@ router.post('/restaurantlogin', function (req, res) {
             })
                 .then((value) => {
                     if (value[0]) {
-                        const payload = {_id: loginresult._id, email:loginresult.email, role:'restaurant'};
+                        const payload = {_id: loginresult._id, email:loginresult.email, role:'restaurant', name: loginresult.restaurantName};
                         console.log(payload)
                         const token = jwt.sign(payload, secret, {
                             expiresIn : 1008000

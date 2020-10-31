@@ -32,6 +32,7 @@ import CustomerOrderHistory from './customer/Orders/CustomerOrderHistory'
 import CustomerOrderDetails from './customer/Orders/CustomerOrderDetails'
 import IndividualDishDetails from './customer/Orders/IndividualDishDetailsC'
 import AllCustomers from './customer/Friends/Allcustomers'
+import ChatPage from './restaurantOwner/Messaging/ChatPage'
 import { Switch, Route, withRouter } from 'react-router-dom';
 //Create a Main Component
 class Main extends Component {
@@ -89,9 +90,9 @@ class Main extends Component {
                         render={props => <UpdateOrder  {...props} />}
                     />
                     <Route
-                    path="/displayevents"
-                    render={props => <DisplayEvents  {...props} />}
-                />
+                        path="/displayevents"
+                        render={props => <DisplayEvents  {...props} />}
+                    />
                     <Route
                         path="/editevent/:id"
                         render={props => <EditEvent  {...props} />}
@@ -153,9 +154,13 @@ class Main extends Component {
                         render={props => <IndividualDishDetails  {...props} />}
                     />
                     <Route
-                    path="/allusers"
-                    render={props => <AllCustomers  {...props} />}
-                />
+                        path="/allusers"
+                        render={props => <AllCustomers  {...props} />}
+                    />
+                    <Route
+                        path="/chatpage"
+                        render={props => <ChatPage  {...props} />}
+                    />
 
                     <Route path="/home" component={Home} />
                 </div>

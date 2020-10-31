@@ -6,10 +6,12 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var path = require('path')
-const {mongoDB} = require('./utils/config')
+const { mongoDB } = require('./utils/config')
 const mongoose = require('mongoose')
 
-
+const server = require("http").createServer(app);
+const io = require('socket.io')(server)
+const Chat = require('./models/ChatModel')
 const PORT = process.env.PORT || 3001
 
 
@@ -45,20 +47,46 @@ app.use(function (req, res, next) {
 app.use(express.static(__dirname + '/public'));
 
 var options = {
-    useNewUrlParser : true,
-    useUnifiedTopology : true,
-    poolSize : 500,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    poolSize: 500,
     bufferMaxEntries: 0
 }
 
-mongoose.connect(mongoDB, options, (err,result)=>{
-    if(err){
+mongoose.connect(mongoDB, options, (err, result) => {
+    if (err) {
         console.log(err)
         console.log("MongoDB connection failed")
     }
-    else{
+    else {
         console.log("MongoDB connected")
     }
+})
+
+
+io.on("connection", socket => {
+    socket.on("Input Chat Message", msg => {
+        let chat = new Chat({
+            customerId: msg.customerId,
+            sender: msg.sender,
+            restaurantId: msg.restaurantId,
+            chatMessage: msg.chatMessage,
+            nowtime: msg.nowtime
+        })
+        console.log("Chat details", chat)
+        chat.save((err, doc) => {
+            if (err) return res.json({ success: false })
+            // Chat.find({"_id": doc._id})
+            // .populate("sender")
+            // .exec((err, doc)=>{
+            //     return io.emit("Output Chat Message", doc)
+            // })
+            Chat.find({ "_id": doc._id }, (err,result)=>{
+                if(err) return res.json({message: "Error"})
+                return io.emit("Output Chat Message", result)
+            })
+        })
+    })
 })
 
 //Fetching Routes
@@ -76,16 +104,18 @@ var restaurantmenuroute = require('./routes/restaurant/restaurantMenu')
 var restauranteventsroute = require('./routes/restaurant/restaurantEvents')
 var restaurantordersroute = require('./routes/restaurant/restaurantOrders')
 var restaurantreviewsroute = require('./routes/restaurant/restaurantReviews')
+var chatroutes = require('./routes/restaurant/ChatsRoute')
 
 
 // Route to handle action calls for registration of restaurant
-app.use('/registerrestaurant',registerrestaurant);
-app.use('/restaurantloginroute',restaurantloginroute);
-app.use('/restaurantprofiledetailsroute',restaurantprofiledetailsroute);
+app.use('/registerrestaurant', registerrestaurant);
+app.use('/restaurantloginroute', restaurantloginroute);
+app.use('/restaurantprofiledetailsroute', restaurantprofiledetailsroute);
 app.use('/restaurantmenuroute', restaurantmenuroute)
 app.use('/restauranteventsroute', restauranteventsroute)
-app.use('/restaurantordersroute',restaurantordersroute)
-app.use('/restaurantreviewsroute',restaurantreviewsroute)
+app.use('/restaurantordersroute', restaurantordersroute)
+app.use('/restaurantreviewsroute', restaurantreviewsroute)
+app.use('/chatroutes', chatroutes)
 
 
 //Customer Routes
@@ -100,14 +130,14 @@ var allcustomersroute = require('./routes/customer/friends')
 
 
 
-app.use('/customerregistrationroute',customerregistrationroute)
-app.use('/customerloginroute',customerloginroute)
-app.use('/customerprofileroute',customerprofileroute)
-app.use('/customersearchroute',customersearchroute)
-app.use('/customerreviewroute',customerreviewroute)
-app.use('/customereventsroute',customereventsroute)
-app.use('/customerordersroute',customerordersroute)
-app.use('/allcustomersroute',allcustomersroute)
+app.use('/customerregistrationroute', customerregistrationroute)
+app.use('/customerloginroute', customerloginroute)
+app.use('/customerprofileroute', customerprofileroute)
+app.use('/customersearchroute', customersearchroute)
+app.use('/customerreviewroute', customerreviewroute)
+app.use('/customereventsroute', customereventsroute)
+app.use('/customerordersroute', customerordersroute)
+app.use('/allcustomersroute', allcustomersroute)
 // //Route to handle all actions for customer profile
 // app.use('/customerprofile',customerprofile)
 
@@ -140,5 +170,6 @@ app.use('/allcustomersroute',allcustomersroute)
 
 
 //start your server on port 3001
-app.listen(PORT);
+// app.listen(PORT);
+server.listen(PORT);
 console.log("Server Listening on port 3001");

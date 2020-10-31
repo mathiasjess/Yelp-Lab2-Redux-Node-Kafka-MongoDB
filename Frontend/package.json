@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@types/jwt-decode": "^2.2.1",
+    "antd": "^4.7.3",
     "axios": "^0.18.1",
     "google-maps-react": "^2.0.6",
     "js-cookie": "^2.2.1",
@@ -23,6 +24,7 @@
     "react-scripts": "1.1.5",
     "reactjs-popup": "^2.0.4",
     "redux": "^4.0.5",
+    "socket.io": "^2.3.0",
     "webpack": "^3.11.0"
   },
   "scripts": {
