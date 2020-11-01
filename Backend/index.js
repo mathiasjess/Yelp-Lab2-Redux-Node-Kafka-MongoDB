@@ -71,7 +71,8 @@ io.on("connection", socket => {
             sender: msg.sender,
             restaurantId: msg.restaurantId,
             chatMessage: msg.chatMessage,
-            nowtime: msg.nowtime
+            nowtime: msg.nowtime,
+            sendertype : msg.sendertype
         })
         console.log("Chat details", chat)
         chat.save((err, doc) => {

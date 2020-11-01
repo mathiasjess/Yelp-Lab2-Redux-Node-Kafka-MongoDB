@@ -33,6 +33,7 @@ import CustomerOrderDetails from './customer/Orders/CustomerOrderDetails'
 import IndividualDishDetails from './customer/Orders/IndividualDishDetailsC'
 import AllCustomers from './customer/Friends/Allcustomers'
 import ChatPage from './restaurantOwner/Messaging/ChatPage'
+import ChatHistory from './restaurantOwner/Messaging/ChatHistory'
 import { Switch, Route, withRouter } from 'react-router-dom';
 //Create a Main Component
 class Main extends Component {
@@ -158,10 +159,13 @@ class Main extends Component {
                         render={props => <AllCustomers  {...props} />}
                     />
                     <Route
-                        path="/chatpage"
+                        path="/gotoconversations"
+                        render={props => <ChatHistory {...props} />}
+                    />
+                    <Route
+                        path="/chatpage/:id"
                         render={props => <ChatPage  {...props} />}
                     />
-
                     <Route path="/home" component={Home} />
                 </div>
             </div>

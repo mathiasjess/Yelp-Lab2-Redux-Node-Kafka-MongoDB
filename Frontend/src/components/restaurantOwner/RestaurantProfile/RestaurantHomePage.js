@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import  '../RestaurantHomePage.css'
+import '../RestaurantHomePage.css'
 import RestaurantProfile from './RestaurantProfile'
 import UpdateRestaurantProfile from './UpdateRestaurantProfile'
 import { connect } from 'react-redux';
@@ -17,24 +17,24 @@ class RestaurantHomePage extends React.Component {
             homePageFlag: true,
             updateProfileFlag: false,
             addMenuFlag: false,
-            ordersFlag:false,
-            eventsFlag:false,
+            ordersFlag: false,
+            eventsFlag: false,
             profileData: ''
         }
         this.handleMainProfile = this.handleMainProfile.bind(this)
-        this.handleUpdateRestaurantProfile= this.handleUpdateRestaurantProfile.bind(this)
+        this.handleUpdateRestaurantProfile = this.handleUpdateRestaurantProfile.bind(this)
         this.handleAddMenu = this.handleAddMenu.bind(this)
         this.handleOrders = this.handleOrders.bind(this)
         this.handleEvents = this.handleEvents.bind(this)
 
     }
-    handleMainProfile(){
+    handleMainProfile() {
         this.setState({
             homePageFlag: true,
             updateProfileFlag: false,
-            addMenuFlag:false,
-            ordersFlag:false,
-            eventsFlag:false
+            addMenuFlag: false,
+            ordersFlag: false,
+            eventsFlag: false
         })
 
     }
@@ -42,37 +42,37 @@ class RestaurantHomePage extends React.Component {
         this.setState({
             homePageFlag: false,
             updateProfileFlag: true,
-            addMenuFlag:false,
-            ordersFlag:false,
-            eventsFlag:false
+            addMenuFlag: false,
+            ordersFlag: false,
+            eventsFlag: false
         })
     }
     handleAddMenu() {
         this.setState({
             homePageFlag: false,
             updateProfileFlag: false,
-            addMenuFlag:true,
-            ordersFlag:false,
-            eventsFlag:false
+            addMenuFlag: true,
+            ordersFlag: false,
+            eventsFlag: false
         })
     }
     handleOrders() {
         this.setState({
             homePageFlag: false,
             updateProfileFlag: false,
-            addMenuFlag:false,
-            ordersFlag:true,
-            eventsFlag:false
+            addMenuFlag: false,
+            ordersFlag: true,
+            eventsFlag: false
         })
     }
 
-    handleEvents(){
+    handleEvents() {
         this.setState({
             homePageFlag: false,
             updateProfileFlag: false,
-            addMenuFlag:false,
-            ordersFlag:false,
-            eventsFlag:true
+            addMenuFlag: false,
+            ordersFlag: false,
+            eventsFlag: true
         })
 
     }
@@ -82,14 +82,14 @@ class RestaurantHomePage extends React.Component {
             homePageFlag: true,
             updateProfileFlag: false,
             addMenuFlag: false,
-            ordersFlag:false,
-            eventsFlag:false
+            ordersFlag: false,
+            eventsFlag: false
         })
     }
     render() {
         return (
             <div>
-            <div class="split left">
+                <div class="split left">
                     <div class="leftTop">
                         <h2>{this.props.user.restaurantName}</h2>
                         <h6>{this.props.user.location}, {this.props.user.city}</h6>
@@ -107,13 +107,13 @@ class RestaurantHomePage extends React.Component {
                                 {/* <span  class="nav-link" >Update  Restaurant Profile</span>*/}
                             </li>
                             <li class="nav-item">
-                                <Link to = '#' class="nav-link" onClick = {this.handleAddMenu}>Add Dishes to Menu</Link>
+                                <Link to='#' class="nav-link" onClick={this.handleAddMenu}>Add Dishes to Menu</Link>
                             </li>
                             <li class="nav-item">
                                 <Link to='/viewcustomerreviews' class="nav-link disabled" >Reviews</Link>
                             </li>
                             <li class="nav-item">
-                            <Link to = '#' class="nav-link disabled" onClick={this.handleEvents}> Add Events</Link>
+                                <Link to='#' class="nav-link disabled" onClick={this.handleEvents}> Add Events</Link>
                             </li>
                         </ul>
 
@@ -127,7 +127,7 @@ class RestaurantHomePage extends React.Component {
                     {this.state.ordersFlag && <Orders />}
                     {this.state.eventsFlag && <Events />}
                 </div>
-        </div>
+            </div>
         )
     }
 

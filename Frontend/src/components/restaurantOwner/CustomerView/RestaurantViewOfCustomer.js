@@ -69,7 +69,7 @@ class ProfileDetails extends React.Component {
                         <h5> {this.props.user.city}, {this.props.user.state} </h5>
 
                         <h6> Favourites Include: {this.props.user.favourites} </h6>
-                        <button class="btn btn-danger" onClick={() => this.props.history.push(`/chatpage`)}>
+                        <button class="btn btn-danger" onClick={() => this.props.history.push(`/chatpage/${this.props.user._id}`)}>
                         <span class="glyphicon glyphicon-envelope" aria-hidden="true"> Message</span>
                     </button>
                     </div>

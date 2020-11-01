@@ -7,7 +7,8 @@ const ChatSchema = new Schema({
     sender : {type: String},
     restaurantId : {type: String, required: true},
     chatMessage : {type: String},
-    nowtime : {type:Date}
+    nowtime : {type:Date},
+    sendertype : {type:String}
 },
 {
     versionKey : false

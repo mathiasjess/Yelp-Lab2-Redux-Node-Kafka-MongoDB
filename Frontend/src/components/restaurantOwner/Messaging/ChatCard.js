@@ -7,14 +7,14 @@ function ChatCard(props){
     return(
         <div style={{ width: '100%' }}>
         <Comment
-            author={<b>{props.sender}  </b>}
+            author={<b>{props.sender}   </b>}
             content={
                     <p>
                         Message: {props.chatMessage}
                     </p>
             }
             datetime={
-                <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
+                <Tooltip>
                 <span>{moment(props.nowtime).format('YYYY-MM-DD HH:mm:ss')}</span>
                 </Tooltip>
             }

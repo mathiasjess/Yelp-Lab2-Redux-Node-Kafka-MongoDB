@@ -14,13 +14,34 @@ constructor(){
     super()
     this.state={
         chatMessage : "",
+        restaurantId :"",
+        customerId : ""
     }
     this.handleSearchChange = this.handleSearchChange.bind(this)
     this.submitChatMessage = this.submitChatMessage.bind(this)
     this.renderCards = this.renderCards.bind(this)
 }
 componentDidMount(){
-    axios.get("http://localhost:3001/chatroutes/getchats", { params: [this.props.restaurant._id,this.props.user._id] })
+    if (localStorage.getItem('role') === 'restaurant') {
+        this.setState(({
+            restaurantId : localStorage.getItem('id'),
+            customerId : this.props.match.params.id
+        }),function(){ this.getconversations()})
+    }
+    if (localStorage.getItem('role') === 'customer') {
+        this.setState(({
+            customerId: localStorage.getItem('id'),
+            restaurantId : this.props.match.params.id
+        }),function(){ this.getconversations()})
+    }
+
+    let server = "http://localhost:3001"
+    this.socket = io(server);
+}
+async getconversations(){
+    console.log("Inside getconversations")
+    console.log("ids",this.state.restaurantId,this.state.customerId)
+    await axios.get("http://localhost:3001/chatroutes/getchats", { params: [this.state.restaurantId,this.state.customerId] })
     .then(response =>{
         if(response.data.message === "error"){
             alert("Could not fetch Chat history")
@@ -30,11 +51,7 @@ componentDidMount(){
 
         }
     })
-
-    let server = "http://localhost:3001"
-    this.socket = io(server);
 }
-
 handleSearchChange = (e) => {
     this.setState({
         chatMessage : e.target.value
@@ -54,18 +71,20 @@ renderCards=(chats)=>{
 
 submitChatMessage = (e)=>{
     e.preventDefault();
-    let customerId = this.props.user._id
+    let customerId = this.state.customerId
     let sender = localStorage.getItem('name')
-    let restaurantId = this.props.restaurant._id
+    let restaurantId = this.state.restaurantId
     let chatMessage = this.state.chatMessage
     let nowtime = moment();
+    let sendertype = localStorage.getItem('role')
 
     this.socket.emit("Input Chat Message", {
         customerId,
         sender,
         restaurantId,
         chatMessage,
-        nowtime
+        nowtime,
+        sendertype
     });
     this.socket.on("Output Chat Message", messageFromBackend =>{
         this.props.setChats(messageFromBackend[0])
@@ -116,8 +135,6 @@ render(){
 }
 
 const mapStateToProps = state => ({
-    user: state.customerReducer,
-    restaurant: state.restaurantReducer,
     chatdetails : state.chatReducer
 });
 

@@ -7,3 +7,20 @@
     margin-right:auto;
     overflow:auto;
 }
+.chatHistorycontainer{
+    width: 50%;
+    margin: auto;
+    left: 20%;
+}
+.Chats{
+
+    width: 100%;
+    display: inline-block;
+    border:0.25px solid rgba(194, 191, 191, 0.8);
+  }
+.Chat-header{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding:5px;
+}

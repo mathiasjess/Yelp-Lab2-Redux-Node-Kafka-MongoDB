@@ -99,6 +99,7 @@ class Navbar extends Component {
                 customerFeatures = (
                     <ul class="nav navbar-nav">
                         <button class="customerFeatures" onClick={() => this.props.history.push(`/customerhomepage/${localStorage.getItem('id')}`)}>Home</button>
+                        <button class="customerFeatures" onClick={() => this.props.history.push("/gotoconversations")}>Messages</button>
                         <button class="customerFeatures" onClick={() => this.props.history.push(`/mainevents`)}>Events</button>
                         <button class="customerFeatures" onClick={() => this.props.history.push(`/allusers`)}>Users</button>
                     </ul>
@@ -108,6 +109,7 @@ class Navbar extends Component {
                 customerFeatures = (
                     <ul class="nav navbar-nav">
                         <button class="customerFeatures" onClick={() => this.props.history.push(`/restauranthomepage/${localStorage.getItem('id')}`)}>Home</button>
+                        <button class="customerFeatures" onClick={() => this.props.history.push("/gotoconversations")}>Messages</button>
                         <button class="customerFeatures" onClick={() => this.props.history.push("/displaymenu")}>Menu</button>
                         <button class="customerFeatures" onClick={() => this.props.history.push("/displayevents")}>Events</button>
                         <button class="customerFeatures" onClick={() => this.props.history.push("/orders")}>Orders</button>
