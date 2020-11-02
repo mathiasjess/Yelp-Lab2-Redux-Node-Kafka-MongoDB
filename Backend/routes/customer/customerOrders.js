@@ -8,6 +8,7 @@ router.post('/sendorderdetails', function (req, res) {
     console.log("Restaurant ID", req.body.restaurantID)
     let returnObject = {};
     let ordersObject = {
+        restaurantId : req.body.restaurantID,
         customerID: req.body.customerID,
         customerName : req.body.customerName,
         customerImage : req.body.customerImage,
@@ -17,39 +18,49 @@ router.post('/sendorderdetails', function (req, res) {
         deliveryFilter: req.body.deliveryFilter,
         orderDetails: req.body.orderDetails
     }
-    console.log("Add dish",ordersObject)
-    restaurant.updateOne(
-        { _id: req.body.restaurantID }, { $push:{orders: ordersObject}}, (err, result) => {
-            if (err) {
-                returnObject.message = "error";
-                res.json(returnObject);
-            }
-            else {
-                returnObject.message = "success";
-                res.json(returnObject)
-            }
-        });
+    console.log("Orders",ordersObject)
+    kafka.make_request('sendorderdetails', req.body, function (err, results) {
+        console.log(req.body);
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Inside err");
+            res.json({
+                status: "error",
+                msg: "System Error, Try Again."
+            })
+        } else {
+            console.log("Inside else");
+            res.json({
+                data: results
+            });
+            res.end();
+        }
+    })
 });
 
 //Fetch order details for a particular customer
 router.get('/fetchcustomerordersummary/:id', function (req, res) {
     console.log("Inside Customer Order History");
     let returnObject = {};
-    console.log("ID", req.params.id);
-    restaurant.find({'orders.customerID':req.params.id},{ _id : 0, 'restaurantName': 1, 'restaurantImage':1,'orders._id':1, 'orders.totalPrice':1,'orders.deliveryOption':1,'orders.delivery_status':1,
-    'orders.deliveryFilter':1, 'orders.orderDetails':1}, (err, result) => {
-        // restaurant.find({'orders.customerID':req.params.id},{ _id : 0, 'orders': 1}, (err, result) => {
-
-            if (err) {
-                returnObject.message = 'error'
-            }
-            else {
-                returnObject.message = "success"
-                returnObject.data = result
-                res.json(returnObject)
-                console.log(returnObject.data)
-            }
-        })
+    kafka.make_request('fetchordersummary', req.params.id, function (err, results) {
+        console.log(req.body);
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Inside err");
+            res.json({
+                status: "error",
+                msg: "System Error, Try Again."
+            })
+        } else {
+            console.log("Inside else");
+            res.json({
+                data: results
+            });
+            res.end();
+        }
+    })
 
 })
 

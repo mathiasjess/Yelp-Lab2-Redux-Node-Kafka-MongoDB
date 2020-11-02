@@ -39,10 +39,10 @@ class Events extends React.Component {
         }
         axios.post(`http://localhost:3001/restauranteventsroute/addEvent/${this.props.user._id}`,data)
         .then(response =>{
-            if(response.data.message === "success"){
-                console.log(response.data.data[0].events[0])
+            if(response.data.data.message === "success"){
+                console.log(response.data.data.data[0].events[0])
                 alert("Successfully added Event")
-                this.props.restaurantEventAdd(response.data.data[0].events[0])
+                this.props.restaurantEventAdd(response.data.data.data[0].events[0])
             }
             else if (response.data.message === "error"){
                 alert("Something went wrong. Could not add event. Please try again")

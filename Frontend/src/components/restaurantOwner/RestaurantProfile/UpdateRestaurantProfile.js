@@ -68,22 +68,22 @@ class UpdateRestaurantProfile extends React.Component {
         data.append('curbPickup', Number(this.state.delivery.curbPickup));
         data.append('dineIn', Number(this.state.delivery.dineIn));
         data.append('yelpDelivery', Number(this.state.delivery.yelpDelivery));
-        console.log("Data", data)
         axios.post(`http://localhost:3001/restaurantprofiledetailsroute/restaurantprofileUpdate/${this.props.user._id}`, data)
             .then(response => {
-                if (response.data.message === "success") {
+                console.log("After updating",response.data)
+                console.log("After updating",response.data.data.message)
+                if (response.data.data.message === "success") {
                     this.setState({
-                        restaurantImage: response.data.data
+                        restaurantImage: response.data.data.data
                     })
                     // console.log('Getting Cookie ID', Cookies.get('id'))
                     this.updateallprofileData();
-
-                    this.props.history.push(`/restauranthomepage/${this.props.user.restaurantId}`);
                     alert('Saved Changes to Profile')
+                    this.props.history.push(`/restauranthomepage/${this.props.user._id}`);
                 }
                 else if (response.data.message === "error") {
                     alert("Something Went wrong. Could not update")
-                    this.props.history.push(`/restauranthomepage/${this.props.user.restaurantId}`);
+                    this.props.history.push(`/restauranthomepage/${this.props.user._id}`);
                 }
             })
 

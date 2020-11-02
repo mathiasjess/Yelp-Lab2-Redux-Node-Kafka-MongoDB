@@ -1,54 +1,32 @@
 var express = require('express');
 var router = express.Router();
 var restaurant = require('../../models/RestaurantOwnerModel')
-const jwt = require('jsonwebtoken')
-const {secret} = require('../../utils/config')
-var bcrypt = require('bcrypt');
-const saltRounds = 10;
+const kafka = require('../../kafka/client')
+// const jwt = require('jsonwebtoken')
+// const {secret} = require('../../utils/config')
+// var bcrypt = require('bcrypt');
+// const saltRounds = 10;
 
 //Route to handle Post Request Call to update basic Restaurant Information
 router.post('/restaurantlogin', function (req, res) {
-    let returnObject = {};
-    let loginresult = null;
-    email = req.body.email
-    password = req.body.password
-    new Promise((resolve, reject) => {
-        restaurant.find({ email: email }, function (error, result) {
-            console.log(result[0])
-            if (!result[0]) {
-                returnObject.message = "nouser";
-                res.json(returnObject);
-            }
-            loginresult = result[0]
-            resolve(result[0])
-        });
-    })
-        .then((value) => {
-            new Promise((resolve, reject) => {
-                bcrypt.compare(password, value.password, (err, result) => {
-                    if (err) throw err;
-                    resolve([result, value]);
-                })
+    kafka.make_request('restaurantlogin', req.body, function (err, results) {
+        console.log(req.body);
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Inside err");
+            res.json({
+                status: "error",
+                msg: "System Error, Try Again."
             })
-                .then((value) => {
-                    if (value[0]) {
-                        const payload = {_id: loginresult._id, email:loginresult.email, role:'restaurant', name: loginresult.restaurantName};
-                        console.log(payload)
-                        const token = jwt.sign(payload, secret, {
-                            expiresIn : 1008000
-                        });
-                        returnObject.message = "success";
-                        returnObject.data = value[1]
-                        returnObject.token = "JWT "+ token
-                        // res.status(200).end("JWT "+ token)
-                    }
-                    else {
-                        returnObject.message = "Invalid credentials"
-                        // res.status(401).end("Invalid credentials")
-                    }
-                    res.json(returnObject)
-                })
-        })
+        } else {
+            console.log("Inside else");
+            res.json({
+                data: results
+            });
+            res.end();
+        }
+    })
 });
 
 module.exports = router;

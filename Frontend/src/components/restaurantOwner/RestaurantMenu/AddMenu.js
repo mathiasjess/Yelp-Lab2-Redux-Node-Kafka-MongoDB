@@ -82,13 +82,15 @@ class Menu extends React.Component {
                     console.log(data)
                     axios.post('http://localhost:3001/restaurantmenuroute/updateMenu', data)
                         .then(response => {
-                            if (response.data.message === "success") {
-                                console.log(response.data.data[0].menuItem[0])
+                            // console.log(response.data.data.data.menuItem)
+                            console.log("Response",response.data.data.message)
+                            if (response.data.data.message === "success") {
+                                console.log(response.data.data.data[0].menuItem[0])
                                 alert('Added Dish to Menu')
-                                this.props.restaurantDishAdd(response.data.data[0].menuItem[0])
+                                this.props.restaurantDishAdd(response.data.data.data[0].menuItem[0])
                                 this.props.history.push(`/restauranthomepage/${this.props.user._id}`);
                             }
-                            else if (response.data.message === "error") {
+                            else if (response.data.data.message === "error") {
                                 alert("Something Went wrong. Could not add dish. Please try again")
                                 this.props.history.push(`/restauranthomepage/${this.props.user._id}`);
                             }

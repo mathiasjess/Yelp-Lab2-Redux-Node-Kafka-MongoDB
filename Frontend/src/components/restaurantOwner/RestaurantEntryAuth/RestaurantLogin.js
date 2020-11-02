@@ -46,15 +46,18 @@ class RestaurantLogin extends React.Component {
         //make a post request with the user data
         axios.post('http://localhost:3001/restaurantloginroute/restaurantlogin',data)
         .then(response => {
-            console.log( response.data.token)
-            if(response.data.message === "success"){
+            console.log( response.data.data)
+            console.log("Token", response.data.data.token)
+            console.log("Data", response.data.data.data)
+            console.log("Message", response.data.data.message)
+            if(response.data.data.message === "success"){
                 this.setState({
-                    token : response.data.token,
-                    restaurantId : response.data.data._id
+                    token : response.data.data.token,
+                    restaurantId : response.data.data.data._id
                 })
-                this.props.restaurantLogin(response.data.data);
+                this.props.restaurantLogin(response.data.data.data);
             }
-            else if (response.data.message === "error"){
+            else if (response.data.data.message === "error"){
                 alert("Invalid credentials")
             }
         })

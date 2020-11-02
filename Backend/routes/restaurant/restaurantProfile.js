@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var restaurant = require('../../models/RestaurantOwnerModel')
-
+const kafka = require('../../kafka/client')
 
 const path = require('path');
 var multer = require('multer');
@@ -31,9 +31,9 @@ router.post('/restaurantprofileUpdate/:id', upload.single('restaurantImage'), fu
     else{
         imagename = req.body.restaurantImage
     }
-    let returnObject = {};
     console.log(" Mongo ID", req.params.id);
     const updateObject = {
+        restaurantId: req.params.id,
         restaurantImage: imagename,
         restaurantName : req.body.restaurantName,
         email : req.body.email,
@@ -49,16 +49,22 @@ router.post('/restaurantprofileUpdate/:id', upload.single('restaurantImage'), fu
         dineIn : req.body.dineIn,
         yelpDelivery : req.body.yelpDelivery
     }
-    restaurant.findByIdAndUpdate(req.params.id, updateObject, (err, result) => {
-        console.log("result", result);
+    kafka.make_request('updaterestaurantprofile', updateObject, function (err, results) {
+        console.log(updateObject.restaurantId);
+        console.log('In result');
+        console.log(results);
         if (err) {
-            returnObject.message = "error";
-            res.json(returnObject);
-        }
-        else {
-            returnObject.message = "success";
-            returnObject.data = imagename;
-            res.json(returnObject);
+            console.log("Inside err");
+            res.json({
+                status: "error",
+                msg: "System Error, Try Again."
+            })
+        } else {
+            console.log("Inside else");
+            res.json({
+                data: results
+            });
+            res.end();
         }
     });
 });
@@ -67,18 +73,23 @@ router.post('/restaurantprofileUpdate/:id', upload.single('restaurantImage'), fu
 router.get('/restaurantprofiledetails/:id', function (req, res) {
     let returnObject = {};
     console.log("Inside restaurant profile");
-    restaurant.findById(req.params.id, (err, result) => {
+    kafka.make_request('restaurantprofiledetails', req.params.id, function (err, results) {
+        console.log('In result');
+        console.log(results);
         if (err) {
-            returnObject.message = 'error'
+            console.log("Inside err");
+            res.json({
+                status: "error",
+                msg: "System Error, Try Again."
+            })
+        } else {
+            console.log("Inside else");
+            res.json({
+                data: results
+            });
+            res.end();
         }
-        else {
-            returnObject.message = "success"
-            returnObject.data = result
-            res.json(returnObject)
-            console.log("Profile Data", returnObject)
-        }
-    })
-
+    });
 })
 
 module.exports = router;

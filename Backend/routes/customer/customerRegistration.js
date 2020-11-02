@@ -2,36 +2,26 @@ var express = require('express');
 var router = express.Router();
 var customer = require('../../models/Customer')
 
-var bcrypt = require('bcrypt');
-const saltRounds = 10;
-
 // Route to handle Post Request Call for customer Registration
 router.post('/customerregister', function (req, res) {
-    let returnObject = {};
-    password = req.body.password
-
-    new Promise((resolve, reject) => {
-        bcrypt.genSalt(saltRounds, (err, salt) => {
-            if (err) throw err;
-            bcrypt.hash(password, salt, (err, encrypted) => {
-                if (err) throw err;
-                resolve(encrypted)
+    kafka.make_request('customerregister', req.body, function (err, results) {
+        console.log(req.body);
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Inside err");
+            res.json({
+                status: "error",
+                msg: "System Error, Try Again."
             })
-        })
+        } else {
+            console.log("Inside else");
+            res.json({
+                data: results
+            });
+            res.end();
+        }
     })
-        .then((value) => {
-            let myObj = {
-                firstName : req.body.firstName,
-                lastName : req.body.lastName,
-                email : req.body.email,
-                password : value
-            }
-            console.log("My object", myObj)
-            const newCustomer = new customer(myObj);
-            newCustomer.save()
-                .then(() => res.json('New Customer added!'))
-                .catch(err => res.json(400).json('Error' + err));
-        })
 
 });
 

@@ -6,7 +6,8 @@ var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var cors = require('cors');
 var path = require('path')
-const { mongoDB } = require('./utils/config')
+require('./mongoose');
+// const { mongoDB } = require('./utils/config')
 const mongoose = require('mongoose')
 
 const server = require("http").createServer(app);
@@ -53,15 +54,15 @@ var options = {
     bufferMaxEntries: 0
 }
 
-mongoose.connect(mongoDB, options, (err, result) => {
-    if (err) {
-        console.log(err)
-        console.log("MongoDB connection failed")
-    }
-    else {
-        console.log("MongoDB connected")
-    }
-})
+// mongoose.connect(mongoDB, options, (err, result) => {
+//     if (err) {
+//         console.log(err)
+//         console.log("MongoDB connection failed")
+//     }
+//     else {
+//         console.log("MongoDB connected")
+//     }
+// })
 
 
 io.on("connection", socket => {
