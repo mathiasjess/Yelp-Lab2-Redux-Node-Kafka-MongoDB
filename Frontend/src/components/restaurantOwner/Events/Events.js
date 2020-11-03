@@ -4,6 +4,7 @@ import { useSelector, connect } from 'react-redux';
 import axios from 'axios'
 import { Link, withRouter } from 'react-router-dom';
 import {restaurantEventAdd} from '../../../actions/restaurantAction';
+import { rooturl } from '../../../config/settings';
 
 class Events extends React.Component {
     constructor(props) {
@@ -37,7 +38,8 @@ class Events extends React.Component {
             eventLocation : this.state.eventLocation,
             eventHashtag : this.state.eventHashtag           
         }
-        axios.post(`http://localhost:3001/restauranteventsroute/addEvent/${this.props.user._id}`,data)
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        axios.post(rooturl+`/restauranteventsroute/addEvent/${this.props.user._id}`,data)
         .then(response =>{
             if(response.data.data.message === "success"){
                 console.log(response.data.data.data[0].events[0])

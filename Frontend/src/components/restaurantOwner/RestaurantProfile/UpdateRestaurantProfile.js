@@ -6,6 +6,7 @@ import { Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import {restaurantProfileUpdate} from '../../../actions/restaurantAction'
+import { rooturl } from '../../../config/settings';
 
 
 class UpdateRestaurantProfile extends React.Component {
@@ -68,7 +69,8 @@ class UpdateRestaurantProfile extends React.Component {
         data.append('curbPickup', Number(this.state.delivery.curbPickup));
         data.append('dineIn', Number(this.state.delivery.dineIn));
         data.append('yelpDelivery', Number(this.state.delivery.yelpDelivery));
-        axios.post(`http://localhost:3001/restaurantprofiledetailsroute/restaurantprofileUpdate/${this.props.user._id}`, data)
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        axios.post(rooturl+`/restaurantprofiledetailsroute/restaurantprofileUpdate/${this.props.user._id}`, data)
             .then(response => {
                 console.log("After updating",response.data)
                 console.log("After updating",response.data.data.message)

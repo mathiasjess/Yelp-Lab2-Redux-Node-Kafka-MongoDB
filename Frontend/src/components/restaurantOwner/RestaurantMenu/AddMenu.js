@@ -4,6 +4,7 @@ import axios from 'axios'
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { restaurantDishAdd } from '../../../actions/restaurantAction';
+import { rooturl } from '../../../config/settings';
 
 
 class Menu extends React.Component {
@@ -41,21 +42,21 @@ class Menu extends React.Component {
             dishCategory: event.target.value
         })
     }
-    async uploadPics() {
-        const data = new FormData()
-        for (var x = 0; x < this.state.dishImages.length; x++) {
-            data.append('file', this.state.dishImages[x])
-        }
-        axios.post('http://localhost:3001/restaurantmenuroute/uploadpics', data)
-            .then(res => { // then print response status
-                if (res.data.message === "success") {
-                    console.log("Image names", res.data.data)
-                    this.setState({
-                        fetchedImages: res.data.data
-                    })
-                }
-            })
-    }
+    // async uploadPics() {
+    //     const data = new FormData()
+    //     for (var x = 0; x < this.state.dishImages.length; x++) {
+    //         data.append('file', this.state.dishImages[x])
+    //     }
+    //     axios.post(rooturl+'/restaurantmenuroute/uploadpics', data)
+    //         .then(res => { // then print response status
+    //             if (res.data.message === "success") {
+    //                 console.log("Image names", res.data.data)
+    //                 this.setState({
+    //                     fetchedImages: res.data.data
+    //                 })
+    //             }
+    //         })
+    // }
 
     updateMenu(event) {
         event.preventDefault();
@@ -63,7 +64,8 @@ class Menu extends React.Component {
         for (var x = 0; x < this.state.dishImages.length; x++) {
             data.append('file', this.state.dishImages[x])
         }
-        axios.post('http://localhost:3001/restaurantmenuroute/uploadpics', data)
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        axios.post(rooturl+'/restaurantmenuroute/uploadpics', data)
             .then(res => { // then print response status
                 if (res.data.message === "success") {
                     console.log("Image names", res.data.data)
@@ -80,7 +82,8 @@ class Menu extends React.Component {
                         dishCategory: this.state.dishCategory
                     }
                     console.log(data)
-                    axios.post('http://localhost:3001/restaurantmenuroute/updateMenu', data)
+                    axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+                    axios.post(rooturl+'/restaurantmenuroute/updateMenu', data)
                         .then(response => {
                             // console.log(response.data.data.data.menuItem)
                             console.log("Response",response.data.data.message)
@@ -106,7 +109,7 @@ class Menu extends React.Component {
                     <div class="biz-info-section">
                         <div class="biz-info-row">
                             <ul>
-                                <li class="BusinessName"><label class="u-nowrap">Dish Image 1</label></li>
+                                <li class="BusinessName"><label class="u-nowrap">Dish Images</label></li>
                                 <li><input type="file"
                                     name="dishImages"
                                     id='dishImages'

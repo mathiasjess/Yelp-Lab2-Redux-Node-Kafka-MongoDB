@@ -1,20 +1,19 @@
 import React from 'react';
 import axios from 'axios';
-import Cookies from 'js-cookie';
-import {registerRestaurant} from '../../../actions/restaurantAction'
+import { rooturl } from '../../../config/settings';
 
 class restaurantRegister extends React.Component {
     constructor() {
         super()
         this.state = {
-            restaurantname : "",
-            email : "",
-            password : "",
-            location : "",
-            city: "",
-            state : "",
-            country : "",
-            zipcode: "",
+            restaurantname: '',
+            email: '',
+            password: '',
+            location: '',
+            city: '',
+            state: '',
+            country: '',
+            zipcode: '',
         }
         this.ChangeHandler = this.ChangeHandler.bind(this)
         this.submitRegister = this.submitRegister.bind(this)
@@ -22,38 +21,39 @@ class restaurantRegister extends React.Component {
     ChangeHandler(event) {
         event.preventDefault();
         this.setState({
-            [event.target.name] :event.target.value
+            [event.target.name]: event.target.value
         })
     }
 
-    submitRegister(event){
-    //prevent page from refresh
-    event.preventDefault();
-    const restaurantRegistrationData = {
-        restaurantname: this.state.restaurantname,
-        email: this.state.email,
-        password: this.state.password,
-        location : this.state.location,
-        city: this.state.city,
-        state : this.state.state,
-        country : this.state.country,
-        zipcode: this.state.zipcode
-    }
-    console.log(restaurantRegistrationData)
-    //set the with credentials to true
-    axios.defaults.withCredentials = true;
-    //make a post request with the user data
-    axios.post('http://localhost:3001/registerrestaurant/restaurantregister',restaurantRegistrationData)
-    .then(response => {
-        console.log("Status Code : ",response.status);
-        if(response.status === 200){
-            alert("Restaurant Registration successful")
-            this.props.history.replace('/login/restaurantlogin');
+    // Submit Restaurant registration information
+    submitRegister(event) {
+        //prevent page from refresh
+        event.preventDefault();
+        const restaurantRegistrationData = {
+            restaurantname: this.state.restaurantname,
+            email: this.state.email,
+            password: this.state.password,
+            location: this.state.location,
+            city: this.state.city,
+            state: this.state.state,
+            country: this.state.country,
+            zipcode: this.state.zipcode
         }
-    })
-    .catch(error=>{
-        alert("Could not register")
-    })
+        console.log(restaurantRegistrationData)
+        //set the with credentials to true
+        axios.defaults.withCredentials = true;
+        //make a post request with the user data
+        axios.post(rooturl+'/registerrestaurant/restaurantregister', restaurantRegistrationData)
+            .then(response => {
+                console.log("Status Code : ", response.status);
+                if (response.status === 200) {
+                    alert("Restaurant Registration successful")
+                    this.props.history.replace('/login/restaurantlogin');
+                }
+            })
+            .catch(error => {
+                alert("Could not register")
+            })
     }
     render() {
         return (
@@ -86,4 +86,4 @@ class restaurantRegister extends React.Component {
 }
 
 
-export default restaurantRegister ;
+export default restaurantRegister;

@@ -3,7 +3,7 @@ require('../../../Backend/mongoose')
 const jwt = require('jsonwebtoken')
 const {secret} = require('../../../Backend/utils/config')
 
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcryptjs');
 const saltRounds = 10;
 
 // Route to handle Post Request Call for customer Registration

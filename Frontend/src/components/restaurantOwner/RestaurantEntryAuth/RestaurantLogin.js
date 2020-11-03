@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {restaurantLogin} from '../../../actions/restaurantAction'
  // @ts-ignore  
  import jwt_decode from "jwt-decode";
+ import { rooturl } from '../../../config/settings';
 
 // const jwt_decode = require('jwt-decode');
 
@@ -44,7 +45,7 @@ class RestaurantLogin extends React.Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://localhost:3001/restaurantloginroute/restaurantlogin',data)
+        axios.post(rooturl+'/restaurantloginroute/restaurantlogin',data)
         .then(response => {
             console.log( response.data.data)
             console.log("Token", response.data.data.token)

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 var express = require('express');
 var router = express.Router();
-var restaurant = require('../../models/RestaurantOwnerModel')
+const kafka = require('../../kafka/client')
 
 //Router to handle post request to add dishes to Menu
 router.post('/sendorderdetails', function (req, res) {

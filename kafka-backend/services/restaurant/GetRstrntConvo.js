@@ -1,4 +1,4 @@
-var restaurant = require('../../../Backend/models/RestaurantOwnerModel')
+var Chat = require('../../../Backend/models/ChatModel')
 require('../../../Backend/mongoose')
 
 //Router to handle updating order status

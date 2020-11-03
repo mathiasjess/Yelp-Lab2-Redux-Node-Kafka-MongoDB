@@ -9,6 +9,7 @@ var path = require('path')
 require('./mongoose');
 // const { mongoDB } = require('./utils/config')
 const mongoose = require('mongoose')
+const passport = require('passport');
 
 const server = require("http").createServer(app);
 const io = require('socket.io')(server)
@@ -18,6 +19,10 @@ const PORT = process.env.PORT || 3001
 
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+
+
+// Passport middleware
+app.use(passport.initialize());
 
 //use express session to maintain session data
 app.use(session({

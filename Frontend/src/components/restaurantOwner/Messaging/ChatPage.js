@@ -8,6 +8,7 @@ import axios from 'axios'
 import './Chat.css'
 import {setChats, getChats} from '../../../actions/ChatActions'
 import ChatCard from './ChatCard'
+import { rooturl } from '../../../config/settings';
 
 class ChatPage extends React.Component{
 constructor(){
@@ -35,19 +36,20 @@ componentDidMount(){
         }),function(){ this.getconversations()})
     }
 
-    let server = "http://localhost:3001"
+    let server = rooturl
     this.socket = io(server);
 }
 async getconversations(){
     console.log("Inside getconversations")
     console.log("ids",this.state.restaurantId,this.state.customerId)
-    await axios.get("http://localhost:3001/chatroutes/getchats", { params: [this.state.restaurantId,this.state.customerId] })
+    await axios.get(rooturl+"/chatroutes/getchats", { params: [this.state.restaurantId,this.state.customerId] })
     .then(response =>{
-        if(response.data.message === "error"){
+        console.log("Chat details",response.data.data)
+        if(response.data.data.message === "error"){
             alert("Could not fetch Chat history")
         }
-        else if (response.data.message === "success"){
-            this.props.getChats(response.data.data)
+        else if (response.data.data.message === "success"){
+            this.props.getChats(response.data.data.data)
 
         }
     })

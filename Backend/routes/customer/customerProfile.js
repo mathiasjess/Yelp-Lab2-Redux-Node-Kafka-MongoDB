@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var customer = require('../../models/Customer')
+const kafka = require('../../kafka/client')
 
 const path = require('path');
 var multer = require('multer')
@@ -18,19 +19,24 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 router.get('/customerprofile/:id', function(req,res){
-    let returnObject = {};
-    customer.find({_id:req.params.id},(err, result) => {
-        console.log("result", result);
+    kafka.make_request('customerprofiledetails', req.params.id, function (err, results) {
+        console.log(req.body);
+        console.log('in result');
+        console.log(results);
         if (err) {
-            returnObject.message = "error";
-            res.json(returnObject);
+            console.log("Inside err");
+            res.json({
+                status: "error",
+                msg: "System Error, Try Again."
+            })
+        } else {
+            console.log("Inside else");
+            res.json({
+                data: results
+            });
+            res.end();
         }
-        else {
-            returnObject.message = "success";
-            returnObject.data = result;
-            res.json(returnObject);
-        }
-})
+    })
 })
 
 //Router to handle post request to update Customer Profile Data
@@ -52,6 +58,7 @@ router.put('/updatecustomerprofile', upload.single('profileImage'), function (re
         console.log(req.body.DOB)
     }
     const updateCustomerObject = {
+        customerId : req.body.id,
         email: req.body.email === 'null'? null: req.body.email,
         firstName: req.body.firstName === 'null'? null: req.body.firstName,
         lastName: req.body.lastName === 'null'? null: req.body.lastName,
@@ -90,17 +97,22 @@ router.put('/updatecustomerprofile', upload.single('profileImage'), function (re
 
     }
     console.log("updateCustomerObject",updateCustomerObject)
-    customer.updateOne({_id:req.body.id}, updateCustomerObject, (err, result) => {
-        console.log("result", result);
+    kafka.make_request('updatecustomerprofile',updateCustomerObject, function (err, results) {
+        console.log('in result');
+        console.log(results);
         if (err) {
-            returnObject.message = "error";
-            res.json(returnObject);
+            console.log("Inside err");
+            res.json({
+                status: "error",
+                msg: "System Error, Try Again."
+            })
+        } else {
+            console.log("Inside else");
+            res.json({
+                data: results
+            });
+            res.end();
         }
-        else {
-            returnObject.message = "success";
-            returnObject.data = imagename;
-            res.json(returnObject);
-        }
-    });
+    })
 });
 module.exports = router;

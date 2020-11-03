@@ -1,13 +1,13 @@
 import React from 'react'
 import '../RestaurantHomePage.css'
 import '../reviews/reviews.css'
-import axios from 'axios'
 import restaurantprofileImage from '../../../images/restaurantprofileImage.png'
 import default_image from '../../../images/customer_default_pic.png'
 import { connect } from 'react-redux';
 import { Route, Link, withRouter } from 'react-router-dom';
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 import Moment from 'react-moment';
+import { imagepath } from '../../../config/imagepath';
 
 
 
@@ -30,7 +30,7 @@ class RestaurantProfile extends React.Component {
         return (
             <div class="centeredRight" >
                 <div class="header">
-                    {this.props.user.restaurantImage ? <img src={`/uploads/${this.props.user.restaurantImage}`} alt="Avatar" class="card-img-top-profile" /> : <img src={restaurantprofileImage} />}
+                    {this.props.user.restaurantImage ? <img src={imagepath+`${this.props.user.restaurantImage}`} alt="Avatar" class="card-img-top-profile" /> : <img src={restaurantprofileImage} />}
                     <div class="maps">
                         <Map
                             google={this.props.google}
@@ -65,7 +65,7 @@ class RestaurantProfile extends React.Component {
                    return <div class="Reviews" key = {i}>
                         <h4>Rating: {review.ratings}/5</h4>
                         <div class="review-header">
-                        {review.customerImage ? <img src={`/uploads/${review.customerImage}`} alt="Avatar" class="photo-box" /> : <img  class="photo-box" src={default_image} alt="Avatar"/>}
+                        {review.customerImage ? <img src={imagepath+`${review.customerImage}`} alt="Avatar" class="photo-box" /> : <img  class="photo-box" src={default_image} alt="Avatar"/>}
                         <Link to= {{pathname: '/restaurantviewofcustomer',
                         aboutProps:{id: review.customerID}}}><h5>{review.customerName}</h5></Link>
                         </div>

@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux';
 import '../RestaurantHomePage.css';
 import { Link } from 'react-router-dom'
+import { imagepath } from '../../../config/imagepath';
 
 class DishDetails extends React.Component {
     constructor(props) {
@@ -34,7 +35,7 @@ class DishDetails extends React.Component {
                         <h5>{this.state.dishDetails.dishName}</h5>
                         <h6>Category: {this.state.dishDetails.dishCategory}</h6>
                         {this.state.dishDetails.dishImages && this.state.dishDetails.dishImages.map(function(image){
-                            return <img src={`/uploads/${image}`} alt="Avatar" class="photo-box-dish" />
+                            return <img src={imagepath+`${image}`} alt="Avatar" class="photo-box-dish" />
                         })}
                         <p style={{lineHeight:'3rem'}}><b>Description: </b>{this.state.dishDetails.dishDescription}</p>
                         <p style={{lineHeight:'3rem'}}><b>Ingredients:</b> {this.state.dishDetails.dishIngredients}</p>

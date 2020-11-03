@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 import '../UpdateRestaurantProfile.css'
 import { connect } from 'react-redux'
 import Moment from 'react-moment';
-import default_image from '../../../images/customer_default_pic.png'
+import { imagepath } from '../../../config/imagepath';
+import { rooturl } from '../../../config/settings';
+
 class UpdateOrder extends React.Component {
     constructor(props) {
         super(props)
@@ -62,9 +64,10 @@ class UpdateOrder extends React.Component {
             deliveryFilter : deliveryFilter
         }
         console.log("Data", data)
-        axios.put('http://localhost:3001/restaurantordersroute/updateorderstatus', data).
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        axios.put(rooturl+'/restaurantordersroute/updateorderstatus', data).
             then(response => {
-                if (response.data.message === "success") {
+                if (response.data.data.message === "success") {
                     alert("Updated Order Status")
                     this.props.history.push('/orders')
                 }
@@ -81,10 +84,10 @@ class UpdateOrder extends React.Component {
             delivery_status: 'Cancelled Order',
             deliveryFilter: 'Cancelled Order'
         }
-
-        axios.put('http://localhost:3001/restaurantordersroute/cancelorder', data).
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        axios.put(rooturl+'/restaurantordersroute/cancelorder', data).
             then(response => {
-                if (response.data.message === "success") {
+                if (response.data.data.message === "success") {
                     alert("Cancelled Order")
                     this.props.history.push('/orders')
                 }

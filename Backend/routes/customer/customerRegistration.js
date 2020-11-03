@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var customer = require('../../models/Customer')
+const kafka = require('../../kafka/client')
 
 // Route to handle Post Request Call for customer Registration
 router.post('/customerregister', function (req, res) {

@@ -3,6 +3,7 @@ import '../RestaurantHomePage.css'
 import { connect } from 'react-redux';
 import ReactPaginate from 'react-paginate';
 import '../Paginate.css'
+import { imagepath } from '../../../config/imagepath';
 
 
 
@@ -34,7 +35,7 @@ class DisplayMenu extends React.Component {
             <div class="card-menu">
                 <div class="card-items">
                     <h5 style={{ textAlign: 'center', lineHeight: '2rem' }}><b>{menu.dishName}</b></h5>
-                    <img src={`/uploads/${menu.dishImages[0]}`} alt="Avatar" class="card-img-top-menu" />
+                    <img src={imagepath+`${menu.dishImages[0]}`} alt="Avatar" class="card-img-top-menu" />
                     <p style={{ lineHeight: '2rem' }}><b><span class="glyphicon glyphicon-th-list"></span>Category: </b> {menu.dishCategory}</p>
                     <p><b>Description: </b>{menu.dishDescription}</p>
                     <p><b>{menu.price}</b></p>

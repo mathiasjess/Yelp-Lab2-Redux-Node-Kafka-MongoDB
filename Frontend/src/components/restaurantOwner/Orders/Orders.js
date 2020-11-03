@@ -10,6 +10,8 @@ import { restaurantLogin } from '../../../actions/restaurantAction'
 import { customerLogin } from '../../../actions/customerAction'
 import ReactPaginate from 'react-paginate';
 import '../Paginate.css'
+import { rooturl } from '../../../config/settings';
+import { imagepath } from '../../../config/imagepath';
 
 class RestaurantOrderHistory extends React.Component {
     constructor(props) {
@@ -29,13 +31,13 @@ class RestaurantOrderHistory extends React.Component {
         this.handleFilters = this.handleFilters.bind(this)
         this.handleAllOrders = this.handleAllOrders.bind(this)
         this.updateOrder = this.updateOrder.bind(this)
-        this.fetchcustomerDetails = this.fetchcustomerDetails.bind(this)
     }
     async componentDidMount() {
-    await axios.get(`http://localhost:3001/restaurantprofiledetailsroute/restaurantprofiledetails/${this.props.user._id}`)
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+    await axios.get(rooturl+`/restaurantprofiledetailsroute/restaurantprofiledetails/${this.props.user._id}`)
             .then((response) => {
-                if (response.data.message === "success") {
-                    this.props.restaurantLogin(response.data.data)
+                if (response.data.data.message === "success") {
+                    this.props.restaurantLogin(response.data.data.data)
                     this.setState({
                         orderSummary: this.props.user.orders,
                         originalorderSummary: this.props.user.orders
@@ -50,14 +52,14 @@ class RestaurantOrderHistory extends React.Component {
             <div>
                 <div class="card-order">
                     <div class="order-header">
-                        {summary.customerImage ? <img src={`/uploads/${summary.customerImage}`} alt="Avatar" class="photo-box" /> : <img class="photo-box" src={default_image} alt="Avatar" />}
+                        {summary.customerImage ? <img src={imagepath+`${summary.customerImage}`} alt="Avatar" class="photo-box" /> : <img class="photo-box" src={default_image} alt="Avatar" />}
                         < Link to={{
                             pathname: '/restaurantviewofcustomer',
                             aboutProps:
                             {
                                 id: summary.customerID,
                             }
-                        }} onClick={() => this.fetchcustomerDetails(summary.customerID)}>
+                        }}>
                             <h5>{summary.customerName}</h5></Link>
                     </div>
                     <div class="order-footer">
@@ -112,15 +114,6 @@ class RestaurantOrderHistory extends React.Component {
     }
     updateOrder = (orderID) => {
         this.props.history.push(`/updateorder/${orderID}`)
-    }
-    async fetchcustomerDetails(id) {
-        await axios.get(`http://localhost:3001/customerprofileroute/customerprofile/${id}`)
-            .then((response) => {
-                if (response.data.message === "success") {
-                    this.props.customerLogin(response.data.data[0])
-                    console.log("Customer Details", response.data.data)
-                }
-            })
     }
     render() {
         console.log("orders", this.state.orderSummary)

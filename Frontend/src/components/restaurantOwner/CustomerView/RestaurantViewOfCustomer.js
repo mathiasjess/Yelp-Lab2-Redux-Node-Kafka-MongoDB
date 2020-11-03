@@ -1,14 +1,16 @@
 import React from 'react'
-import axios from 'axios';
-import { Link, withRouter } from 'react-router-dom';
+import axios from 'axios'
+import { Link, withRouter } from 'react-router-dom'
 import '../../customer/Profile/ProfileDetails.css'
 import default_image from '../../../images/customer_default_pic.png'
 import restaurant_image from '../../../images/restaurantprofileImage.png'
-import { connect } from 'react-redux';
-import Moment from 'react-moment';
-import 'moment-timezone';
+import { connect } from 'react-redux'
+import Moment from 'react-moment'
+import 'moment-timezone'
 import { customerLogin } from '../../../actions/customerAction'
 import { customerReviews } from '../../../actions/customerOtherDetailsAction'
+import { imagepath } from '../../../config/imagepath'
+import { rooturl } from '../../../config/settings'
 
 class ProfileDetails extends React.Component {
     constructor(props) {
@@ -22,21 +24,23 @@ class ProfileDetails extends React.Component {
         let reviewsResult = []
         let individualResult = {}
         console.log("Customer ID", this.props.location.aboutProps.id)
-        await axios.get(`http://localhost:3001/customerprofileroute/customerprofile/${this.props.location.aboutProps.id}`)
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        await axios.get(rooturl+`/restaurantprofiledetailsroute/customerprofile/${this.props.location.aboutProps.id}`)
             .then((response) => {
-                if (response.data.message === "success") {
-                    console.log("Profile data", response.data.data[0])
-                    this.props.customerLogin(response.data.data[0]);
+                if (response.data.data.message === "success") {
+                    console.log("Profile data", response.data.data.data[0])
+                    this.props.customerLogin(response.data.data.data[0]);
                     console.log("User details", this.props.user)
                     this.customerProfile()
                 }
             })
-        await axios.get(`http://localhost:3001/customerreviewroute/getcustomerreviews/${this.props.location.aboutProps.id}`)
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        await axios.get(rooturl+`/restaurantprofiledetailsroute/getcustomerreviews/${this.props.location.aboutProps.id}`)
             .then((response) => {
-                if (response.data.message === "success") {
-                    console.log(response.data.data)
+                if (response.data.data.message === "success") {
+                    console.log("Reviews data",response.data.data.data)
                     {
-                        response.data.data && response.data.data.map(item => {
+                        response.data.data.data && response.data.data.data.map(item => {
                             individualResult = {
                                 restaurantID: item._id,
                                 restaurantName: item.restaurantName,
@@ -61,7 +65,7 @@ class ProfileDetails extends React.Component {
             <div class="table">
                 <div class="tr-middle">
                     <div class="td-11">
-                        {this.props.user.profileImage ? <img src={`/uploads/${this.props.user.profileImage}`} alt="Avatar" class="photo-box-img" /> : <img class="photo-box-img" src={default_image} alt="Avatar" />}
+                        {this.props.user.profileImage ? <img src={imagepath+`${this.props.user.profileImage}`} alt="Avatar" class="photo-box-img" /> : <img class="photo-box-img" src={default_image} alt="Avatar" />}
                     </div>
                     <div class="td-21">
                         <h1> {this.props.user.firstName} {this.props.user.lastName} (Also known as {this.props.user.nickName})</h1>
@@ -85,7 +89,7 @@ class ProfileDetails extends React.Component {
                         return <div class="Reviews" key={i}>
                             <h4>Ratings: {item.ratings}/5</h4>
                             <div class="reviews-header-details">
-                            {item.restaurantImage ? <img src={`/uploads/${item.restaurantImage }`} alt="Avatar" class="photo-box-rest" />: <img class="photo-box-rest" src={restaurant_image} alt="Avatar" /> }
+                            {item.restaurantImage ? <img src={imagepath+`${item.restaurantImage }`} alt="Avatar" class="photo-box-rest" />: <img class="photo-box-rest" src={restaurant_image} alt="Avatar" /> }
                             <h5 style={{paddingTop:'1rem'}}>  {item.restaurantName}</h5>
                             </div>
                             <p style={{paddingTop:'2rem'}}><b>Date: </b><Moment>{item.reviewDate}</Moment></p>

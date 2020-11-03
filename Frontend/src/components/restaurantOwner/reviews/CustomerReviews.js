@@ -6,6 +6,7 @@ import default_image from '../../../images/customer_default_pic.png'
 import ReactPaginate from 'react-paginate';
 import '../Paginate.css'
 import Moment from 'react-moment';
+import { imagepath } from '../../../config/imagepath';
 
 class CustomerReviews extends React.Component {
     constructor(props) {
@@ -27,7 +28,7 @@ class CustomerReviews extends React.Component {
             <div class="Reviews">
                 <h4>Rating: {review.ratings}/5</h4>
                 <div class="review-header">
-                    {review.customerImage ? <img src={`/uploads/${review.customerImage}`} alt="Avatar" class="photo-box" /> : <img class="photo-box" src={default_image} alt="Avatar" />}
+                    {review.customerImage ? <img src={imagepath+`${review.customerImage}`} alt="Avatar" class="photo-box" /> : <img class="photo-box" src={default_image} alt="Avatar" />}
                     <Link to={{
                         pathname: '/restaurantviewofcustomer',
                         aboutProps: { id: review.customerID }

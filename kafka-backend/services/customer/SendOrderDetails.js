@@ -1,4 +1,4 @@
-var customer = require('../../../Backend/models/RestaurantOwnerModel')
+var restaurant = require('../../../Backend/models/RestaurantOwnerModel')
 require('../../../Backend/mongoose')
 
 //Fetch order details for a particular customer

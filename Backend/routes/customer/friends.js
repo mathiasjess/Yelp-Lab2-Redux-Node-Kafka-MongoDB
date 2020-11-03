@@ -1,54 +1,73 @@
 var express = require('express');
 var router = express.Router();
 var customer = require('../../models/Customer')
+const kafka = require('../../kafka/client')
 
 
 router.get('/allusers', function (req, res) {
     let returnObject = {};
-    customer.find({}, { '_id': 1, 'firstName': 1, 'lastName': 1, 'nickName': 1 , 'zipcode': 1}, (err, result) => {
-        console.log("result", result);
+    kafka.make_request('allusers',function (err, results) {
+        console.log('in result');
+        console.log(results);
         if (err) {
-            returnObject.message = "error";
-            res.json(returnObject);
-        }
-        else {
-            returnObject.message = "success";
-            returnObject.data = result;
-            res.json(returnObject);
+            console.log("Inside err");
+            res.json({
+                status: "error",
+                msg: "System Error, Try Again."
+            })
+        } else {
+            console.log("Inside else");
+            res.json({
+                data: results
+            }); 
+            res.end();
         }
     })
 })
 router.put('/addfollowers/:id', function (req, res) {
     let returnObject = {};
     console.log("Inside adding followers", req.body)
-    customer.updateOne(
-        { _id: req.params.id }, { $push: { followers: req.body } }, (err, result) => {
-            if (err) {
-                returnObject.message = "error";
-                res.json(returnObject);
-            }
-            else {
-                returnObject.message = "success";
-                res.json(returnObject)
-            }
-        })
+    const addfollowersdetails = {
+        customerId: req.params.id,
+        followers : req.body
+    }
+    kafka.make_request('addfollowers',addfollowersdetails,function (err, results) {
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Inside err");
+            res.json({
+                status: "error",
+                msg: "System Error, Try Again."
+            })
+        } else {
+            console.log("Inside else");
+            res.json({
+                data: results
+            }); 
+            res.end();
+        }
+    })
 });
 router.get('/following/:id', function (req, res) {
     let returnObject = {};
-    console.log("Inside adding followers", req.body)
-    customer.find({'followers.customerID':req.params.id},{ _id : 1, 'firstName': 1, 'lastName':1, 'zipcode': 1}, (err, result) => {
-        // restaurant.find({'orders.customerID':req.params.id},{ _id : 0, 'orders': 1}, (err, result) => {
-
-            if (err) {
-                returnObject.message = 'error'
-            }
-            else {
-                returnObject.message = "success"
-                returnObject.data = result
-                res.json(returnObject)
-                console.log(returnObject.data)
-            }
-        })
+    kafka.make_request('following',req.params.id,function (err, results) {
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Inside err");
+            res.json({
+                status: "error",
+                msg: "System Error, Try Again."
+            })
+        } else {
+            console.log("Inside else");
+            res.json({
+                data: results
+            }); 
+            res.end();
+        }
+    })
 
 });
 

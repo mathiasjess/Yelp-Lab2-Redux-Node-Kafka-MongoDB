@@ -3,6 +3,7 @@ import axios from 'axios'
 import moment from 'moment'
 import {Link} from 'react-router-dom'
 import './Chat.css'
+import { rooturl } from '../../../config/settings';
 
 
 class ChatHistory extends React.Component {
@@ -18,23 +19,23 @@ class ChatHistory extends React.Component {
         let url = null
         let uniqueuser = []
         if (localStorage.getItem('role') === 'restaurant') {
-            url = `http://localhost:3001/chatroutes/getrestaurantconversations/${id}`
+            url = rooturl+`/chatroutes/getrestaurantconversations/${id}`
         }
         else if (localStorage.getItem('role') === 'customer') {
-            url = `http://localhost:3001/chatroutes/getcustomerconversations/${id}`
+            url = rooturl+`/chatroutes/getcustomerconversations/${id}`
         }
         await axios.get(url)
             .then(response => {
-                if (response.data.message === "success") {
+                if (response.data.data.message === "success") {
                     if (localStorage.getItem('role') === 'customer'){
-                        console.log("Customer Data", response.data.data)
+                        console.log("Customer Data", response.data.data.data)
                         this.setState({
-                            chatdetails: response.data.data.filter((value, index, self) => self.map(x => x.restaurantId).indexOf(value.restaurantId) == index)
+                            chatdetails: response.data.data.data.filter((value, index, self) => self.map(x => x.restaurantId).indexOf(value.restaurantId) == index)
                         })
                     }
                     if (localStorage.getItem('role') === 'restaurant') {
                         this.setState({
-                            chatdetails: response.data.data.filter((value, index, self) => self.map(x => x.customerId).indexOf(value.customerId) == index)
+                            chatdetails: response.data.data.data.filter((value, index, self) => self.map(x => x.customerId).indexOf(value.customerId) == index)
                         })
                     }
                 }

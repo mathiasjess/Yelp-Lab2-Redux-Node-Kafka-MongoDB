@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var restaurant = require('../../models/RestaurantOwnerModel')
 const kafka = require('../../kafka/client')
+const { checkAuth } = require('../../utils/restaurantpassport')
 
 const path = require('path');
 var multer = require('multer');
@@ -21,7 +22,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage }).array('file');
 
 // Router to handle post request to add dishes to Menu
-router.post('/uploadpics', function (req, res) {
+router.post('/uploadpics',checkAuth, function (req, res) {
     let Images = []
     let returnObject = {}
     console.log("Inside upload files");
@@ -44,7 +45,7 @@ router.post('/uploadpics', function (req, res) {
 });
 
 //Router to handle post request to add dishes to Menu
-router.post('/updateMenu', function (req, res) {
+router.post('/updateMenu',checkAuth, function (req, res) {
     let returnObject = {};
     let addDishObject = { 
         restaurantId : req.body.restaurantId,

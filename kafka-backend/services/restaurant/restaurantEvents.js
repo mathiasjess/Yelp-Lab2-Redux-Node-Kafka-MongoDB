@@ -3,7 +3,9 @@ require('../../../Backend/mongoose')
 
 //Router to handle post request to add dishes to Menu
 function handle_request(msg, callback){
+        console.log("Event details", msg)
     let returnObject = {};
+    console.log("Event details", msg)
     let addEventObject = {
         eventName: msg.eventName,
         eventDescription: msg.eventDescription,
@@ -17,7 +19,7 @@ function handle_request(msg, callback){
         { _id: msg.restaurantId }, { $push: { events: addEventObject } }, (err, result) => {
             if (err) {
                 returnObject.message = "error";
-                // res.json(returnObject);
+                callback(null, returnObject)
             }
             else {
                 returnObject.message = "success";

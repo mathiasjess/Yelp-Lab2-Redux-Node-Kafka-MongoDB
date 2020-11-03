@@ -2,10 +2,12 @@ var express = require('express');
 var router = express.Router();
 var restaurant = require('../../models/RestaurantOwnerModel')
 const kafka = require('../../kafka/client')
+const { checkAuth } = require('../../utils/restaurantpassport')
 
 //Router to handle post request to add dishes to Menu
-router.post('/addEvent/:id', function (req, res) {
+router.post('/addEvent/:id', checkAuth,function (req, res) {
     let returnObject = {};
+    console.log("Req.body of add events", req.body)
     let addEventObject = {
         restaurantId : req.params.id,
         eventName: req.body.eventName,
@@ -16,7 +18,7 @@ router.post('/addEvent/:id', function (req, res) {
         eventHashtag: req.body.eventHashtag
     }
     console.log("Add Event", addEventObject)
-    kafka.make_request('addevent', addEventObject, function (err, results) {
+    kafka.make_request('addevent',addEventObject, function (err, results) {
         console.log('In result');
         console.log(results);
         if (err) {

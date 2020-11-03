@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var restaurant = require('../../models/RestaurantOwnerModel')
+const { checkAuth } = require('../../utils/restaurantpassport')
 const kafka = require('../../kafka/client')
 
 const path = require('path');
@@ -23,7 +24,7 @@ var upload = multer({ storage: storage });
 
 
 // Router to handle post request to update restaurant Profile Data
-router.post('/restaurantprofileUpdate/:id', upload.single('restaurantImage'), function (req, res) {
+router.post('/restaurantprofileUpdate/:id',checkAuth, upload.single('restaurantImage'), function (req, res) {
     let imagename = null;
     if (req.file) {
         imagename = req.file.filename
@@ -70,7 +71,7 @@ router.post('/restaurantprofileUpdate/:id', upload.single('restaurantImage'), fu
 });
 
 // Router to handle get request to fetch dishes
-router.get('/restaurantprofiledetails/:id', function (req, res) {
+router.get('/restaurantprofiledetails/:id', checkAuth, function (req, res) {
     let returnObject = {};
     console.log("Inside restaurant profile");
     kafka.make_request('restaurantprofiledetails', req.params.id, function (err, results) {
@@ -90,6 +91,48 @@ router.get('/restaurantprofiledetails/:id', function (req, res) {
             res.end();
         }
     });
+})
+
+router.get('/customerprofile/:id', checkAuth, function(req,res){
+    kafka.make_request('customerprofiledetails', req.params.id, function (err, results) {
+        console.log(req.body);
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Inside err");
+            res.json({
+                status: "error",
+                msg: "System Error, Try Again."
+            })
+        } else {
+            console.log("Inside else");
+            res.json({
+                data: results
+            });
+            res.end();
+        }
+    })
+})
+
+router.get('/getcustomerreviews/:id', checkAuth, function (req, res) {
+    let returnObject = {}
+    kafka.make_request('getcustomerreviews', req.params.id, function (err, results) {
+        console.log('in result');
+        console.log(results);
+        if (err) {
+            console.log("Inside err");
+            res.json({
+                status: "error",
+                msg: "System Error, Try Again."
+            })
+        } else {
+            console.log("Inside else");
+            res.json({
+                data: results
+            }); 
+            res.end();
+        }
+    })
 })
 
 module.exports = router;

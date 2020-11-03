@@ -39,7 +39,7 @@ function handle_request(msg, callback){
                     })
                         .then((value) => {
                             let myObj = {
-                                restaurantName: msg.restaurantName,
+                                restaurantName: msg.restaurantname,
                                 email: msg.email,
                                 password: value,
                                 location: msg.location,
