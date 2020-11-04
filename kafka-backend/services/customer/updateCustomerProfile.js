@@ -12,7 +12,7 @@ function handle_request(msg, callback) {
         DOB :msg.DOB,
         location: msg.location,
         city: msg.city,
-        state: msg.state .state,
+        state: msg.state,
         country: msg.country,
         nickName: msg.nickName,
         phoneNumber: msg.phoneNumber,
@@ -33,7 +33,7 @@ function handle_request(msg, callback) {
         }
         else {
             returnObject.message = "success";
-            returnObject.data = imagename;
+            returnObject.data = msg.profileImage;
             callback(null, returnObject)
         }
     });

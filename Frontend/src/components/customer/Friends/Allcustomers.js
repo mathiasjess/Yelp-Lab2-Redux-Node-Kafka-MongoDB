@@ -6,6 +6,7 @@ import './Allcustomers.css'
 import ReactPaginate from 'react-paginate';
 import '../../restaurantOwner/Paginate.css'
 import { yelpusers } from '../../../actions/customerOtherDetailsAction'
+import { rooturl } from '../../../config/settings';
 
 class AllCustomers extends React.Component {
     constructor(props) {
@@ -25,17 +26,18 @@ class AllCustomers extends React.Component {
         this.handleFilters = this.handleFilters.bind(this)
     }
     async componentDidMount() {
-        await axios.get('http://localhost:3001/allcustomersroute/allusers')
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        await axios.get(rooturl+'/allcustomersroute/allusers')
             .then(response => {
-                console.log(response.data.data)
-                if (response.data.message === "success") {
-                    this.props.yelpusers(response.data.data);
+                console.log(response.data.data.data)
+                if (response.data.data.message === "success") {
+                    this.props.yelpusers(response.data.data.data);
                     this.setState({
                         data: this.props.allusers.yelpusers
                     })
                     this.receivedData()
                 }
-                else if (response.data.message === "error") {
+                else if (response.data.data.message === "error") {
                     alert("Something went wrong")
                 }
             })
@@ -55,15 +57,16 @@ class AllCustomers extends React.Component {
             })
         }
         else if (filter === 'following') {
-            console.log("Inside following")
-            await axios.get(`http://localhost:3001/allcustomersroute/following/${mainID}`)
+            console.log("Inside following") 
+            axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+            await axios.get(rooturl+`/allcustomersroute/following/${mainID}`)
                 .then(response => {
-                    if (response.data.message === "success") {
+                    if (response.data.data.message === "success") {
                         this.setState({
-                            data: response.data.data
+                            data: response.data.data.data
                         })
                     }
-                    else if (response.data.message === "error") {
+                    else if (response.data.data.message === "error") {
                         alert("Something went wrong")
                     }
                 })
@@ -90,7 +93,7 @@ class AllCustomers extends React.Component {
         this.receivedData()
     }
     gotouserprofile(customerId) {
-        this.props.history.replace(`/customerhomepage/${customerId}`);
+        this.props.history.replace(`/otheruserprofile/${customerId}`);
     }
     receivedData() {
         console.log("Data", this.state.data)

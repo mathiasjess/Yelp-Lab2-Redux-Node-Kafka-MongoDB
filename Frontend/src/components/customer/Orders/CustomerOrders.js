@@ -6,13 +6,14 @@ import { addToCart, addItem, removeItem, removecart } from '../../../actions/car
 import { Link } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import '../../restaurantOwner/Paginate.css' 
+import { rooturl } from '../../../config/settings';
 
 class CustomerOrders extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             items: [],
-            restaurantID: '',
+            restaurantId: '',
             customerID: '',
             completeOrderFlag: false,
             takeOutValue : '',
@@ -32,7 +33,7 @@ class CustomerOrders extends React.Component {
     }
     componentDidMount() {
         this.setState({
-            restaurantID: this.props.match.params.id,
+            restaurantId: this.props.match.params.id,
             customerID: this.props.user.id,
 
         })
@@ -72,22 +73,22 @@ class CustomerOrders extends React.Component {
             customerID: this.props.user._id,
             customerName : this.props.user.firstName + ' ' + this.props.user.lastName,
             customerImage : this.props.user.profileImage,
-            restaurantID: this.props.restaurant._id,
-            total_price: this.props.cartItems.total,
-            delivery_option: this.state.takeOutValue,
+            restaurantId: this.props.restaurant._id,
+            totalPrice: this.props.cartItems.total,
+            deliveryOption: this.state.takeOutValue,
             delivery_status: 'Order Recieved',
             deliveryFilter: 'New Order',
             orderDetails : this.props.cartItems.addedItems
         }
         console.log("Restaurant Id",this.props.restaurant._id)
-        // let formData= new FormData()
-        // formData.append('data',JSON.stringify())
-        axios.post('http://localhost:3001/customerordersroute/sendorderdetails', OrderDetails)
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        axios.post(rooturl+'/customerordersroute/sendorderdetails', OrderDetails)
             .then(response => {
-                if (response.data.message === "success") {
+                if (response.data.data.message === "success") {
+                    alert("Placed order successfully")
                     this.props.history.push(`/customerorderhistory`)
                 }
-                else if (response.data.message === "error") {
+                else if (response.data.data.message === "error") {
                     console.log('Could not complete order')
                     this.props.history.push(`/customerhomepage/${this.props.user.id}`)
                     this.props.removecart()

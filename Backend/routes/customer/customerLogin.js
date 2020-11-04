@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const kafka = require('../../kafka/client')
+const { auth } = require("../../utils/customerpassport");
+auth();
 
 // Route to handle Post Request Call for customer Registration
 

@@ -7,6 +7,7 @@ import Moment from 'react-moment';
 import 'moment-timezone';
 import {restaurantEvents} from '../../../actions/customerOtherDetailsAction'
 import { Link } from 'react-router-dom';
+import { rooturl } from '../../../config/settings';
 
 class MainEventsPage extends React.Component {
     constructor(props) {
@@ -29,11 +30,13 @@ class MainEventsPage extends React.Component {
         let allEvents = []
         let x = null
         let y = null
-        await axios.get(`http://localhost:3001/customereventsroute/fetchEvents`)
+        
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        await axios.get(rooturl+`/customereventsroute/fetchEvents`)
             .then((response) => {
-                console.log(response.data.data)
-                if (response.data.message === "success") {
-                    {response.data.data && response.data.data.map(event => {
+                console.log(response.data.data.data)
+                if (response.data.data.message === "success") {
+                    {response.data.data.data && response.data.data.data.map(event => {
                         event.events.map(item => {
                             individualevent = {
                                 restaurantId: event._id,
@@ -121,14 +124,15 @@ class MainEventsPage extends React.Component {
             customerName: this.props.user.firstName + " " + this.props.user.lastName
         }
         console.log("Data", data)
-        axios.post(`http://localhost:3001/customereventsroute/registerForEvent`, data)
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        axios.post(rooturl+`/customereventsroute/registerForEvent`, data)
             .then((response) => {
-                console.log(response.data.data)
-                if (response.data.message === "success") {
+                console.log(response.data.data.data)
+                if (response.data.data.message === "success") {
 
                     alert("Registerd successfully for event")
                 }
-                else if (response.data.message === "error") {
+                else if (response.data.data.message === "error") {
                     alert("Something went wrong")
                 }
             })
@@ -161,8 +165,10 @@ class MainEventsPage extends React.Component {
                     <div class="td-tworow1">
                     </div>
                     <div class="td-tworow2">
+                    <div>
                     <Link to ="#" onClick={()=>this.handleorderofevents("asc")}><span class = "glyphicon glyphicon-arrow-up"> Ascending</span></Link>
-                    <Link to ="#" onClick={()=>this.handleorderofevents("desc")}><span class = "glyphicon glyphicon-arrow-down"> Desceding</span></Link>
+                    <Link to ="#" onClick={()=>this.handleorderofevents("desc")}><span class = "glyphicon glyphicon-arrow-down"> Descending</span></Link>
+                    </div>
                         {this.state.eventsData && this.state.eventsData.map((event, i) => {
                                 return <div class="card-events" key ={i}>
                                     <div class="card-events-body">

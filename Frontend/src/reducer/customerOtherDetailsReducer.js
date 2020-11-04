@@ -1,10 +1,11 @@
-import { FETCH_CUSTOMERORDERHISTORY, FETCH_REVIEWS, FETCH_EVENTS, FETCH_USERS } from '../actions/customerOtherDetailsAction'
+import { FETCH_CUSTOMERORDERHISTORY, FETCH_REVIEWS, FETCH_EVENTS, FETCH_USERS, FETCH_OTHERUSERPROFILE } from '../actions/customerOtherDetailsAction'
 
 export const orderInitialState = {
     ordersummary: [],
     events: [],
     reviews: [],
-    yelpusers :[]
+    yelpusers: [],
+    otherusers: []
 }
 
 const customerOtherDetailsReducer = ((state = orderInitialState, action) => {
@@ -32,6 +33,12 @@ const customerOtherDetailsReducer = ((state = orderInitialState, action) => {
             return {
                 ...state,
                 yelpusers: allusers
+            }
+        case FETCH_OTHERUSERPROFILE:
+            let otherusers = action.payload
+            return {
+                ...state,
+                otherusers: otherusers
             }
         default: return state
     }

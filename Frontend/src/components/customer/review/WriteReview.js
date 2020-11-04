@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import axios from 'axios'
 import {restaurantReviewAdd} from '../../../actions/restaurantAction'
 import {customerReviews} from '../../../actions/customerOtherDetailsAction'
+import { rooturl } from '../../../config/settings';
 
 class WriteReview extends React.Component{
     constructor(props){
@@ -28,6 +29,7 @@ class WriteReview extends React.Component{
         event.preventDefault();
         const sendrestaurantdata = {
             customerID : this.props.user._id,
+            restaurantID : this.props.restaurant._id,
             customerName : this.props.user.firstName + ' '+ this.props.user.lastName,
             customerImage : this.props.user.profileImage,
             reviewDate : new Date(),
@@ -42,9 +44,10 @@ class WriteReview extends React.Component{
             ratings: this.state.ratings,
             comments : this.state.comments
         }
-        axios.post(`http://localhost:3001/customerreviewroute/writereview/${this.props.match.params.id}`,sendrestaurantdata)
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        axios.post(rooturl+`/customerreviewroute/writereview`,sendrestaurantdata)
         .then((response)=>{
-            if(response.data.message === "success"){
+            if(response.data.data.message === "success"){
                 this.props.restaurantReviewAdd(sendrestaurantdata)
                 this.props.customerReviews(customerdata)
 
@@ -52,7 +55,7 @@ class WriteReview extends React.Component{
                     this.props.history.push(`/customerviewofrestaurant/${this.props.match.params.id}`)
 
             }
-            else if(response.data.message === "error"){
+            else if(response.data.data.message === "error"){
                 alert("You have already written a review for this restaurant. Please edit the existing review")
             }
         })

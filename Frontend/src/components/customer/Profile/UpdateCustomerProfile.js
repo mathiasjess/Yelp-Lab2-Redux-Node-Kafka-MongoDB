@@ -4,6 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import { customerProfileUpdate } from '../../../actions/customerAction';
 import { connect } from 'react-redux';
+import { rooturl } from '../../../config/settings';
 
 class UpdateCustomerProfile extends React.Component {
     constructor(props) {
@@ -61,12 +62,12 @@ class UpdateCustomerProfile extends React.Component {
         data.append("headline", this.state.headline);
         data.append("zipcode", this.state.zipcode);
         console.log("Data", data)
-        axios.put(`http://localhost:3001/customerprofileroute/updatecustomerprofile`, data)
+        axios.put(rooturl+`/customerprofileroute/updatecustomerprofile`, data)
             .then((response) => {
-                if (response.data.message === "success") {
+                if (response.data.data.message === "success") {
                     alert('Updated Profile')
                     this.setState({
-                        profileImage : response.data.data
+                        profileImage : response.data.data.data
                     })
                     this.updateallprofileData();
 
@@ -82,22 +83,22 @@ class UpdateCustomerProfile extends React.Component {
         this.setState({
             id: this.props.user._id,
             email: this.props.user.email,
-            firstName: this.props.user.firstName ? this.props.user.firstName : null,
-            lastName: this.props.user.lastName  ? this.props.user.lastName : null,
-            DOB: this.props.user.DOB  ? this.props.user.DOB : null,
-            location: this.props.user.location  ? this.props.user.location : null,
-            city: this.props.user.city  ? this.props.user.city : null,
-            State: this.props.user.state  ? this.props.user.state : null,
-            country: this.props.user.country  ? this.props.user.country : null,
-            nickName: this.props.user.nickName  ? this.props.user.nickName : null,
-            phoneNumber: this.props.user.phoneNumber  ? this.props.user.phoneNumber : null,
-            thingsILove: this.props.user.thingsILove  ? this.props.user.thingsILove : null,
-            profileImage : this.props.user.profileImage  ? this.props.user.profileImage : null,
-            findmeIn: this.props.user.findmeIn  ? this.props.user.findmeIn : null,
-            websiteDetails: this.props.user.websiteDetails  ? this.props.user.websiteDetails : null,
-            favourites: this.props.user.favourites  ? this.props.user.favourites : null,
-            headline: this.props.user.headline  ? this.props.user.headline : null,
-            zipcode: this.props.user.zipcode  ? this.props.user.zipcode : null
+            firstName: this.props.user.firstName,
+            lastName: this.props.user.lastName,
+            DOB: this.props.user.DOB,  
+            location: this.props.user.location,
+            city: this.props.user.city,
+            State: this.props.user.state,
+            country: this.props.user.country,
+            nickName: this.props.user.nickName,
+            phoneNumber: this.props.user.phoneNumber,
+            thingsILove: this.props.user.thingsILove,
+            profileImage : this.props.user.profileImage,
+            findmeIn: this.props.user.findmeIn ,
+            websiteDetails: this.props.user.websiteDetails,
+            favourites: this.props.user.favourites,
+            headline: this.props.user.headline,
+            zipcode: this.props.user.zipcode
         })
         console.log("Website", this.state.websiteDetails)
     }
@@ -110,7 +111,7 @@ class UpdateCustomerProfile extends React.Component {
             DOB: this.state.DOB,
             location: this.state.location,
             city: this.state.city,
-            state: this.state.state,
+            state: this.state.State,
             country: this.state.country,
             nickName: this.state.nickName,
             phoneNumber: this.state.phoneNumber,
@@ -181,7 +182,7 @@ class UpdateCustomerProfile extends React.Component {
                                 <li class="BusinessName"><label class="u-nowrap">State</label></li>
                                 <li><input type="text" class="inputFields"
                                     onChange={this.handleChange}
-                                    name="state"
+                                    name="State"
                                     placeholder={this.props.user.state} /></li>
                                 <li class="BusinessName"><label class="u-nowrap">Country</label></li>
                                 <li><input type="text" class="inputFields"
@@ -217,8 +218,8 @@ class UpdateCustomerProfile extends React.Component {
                                     placeholder={this.props.user.findmeIn} /></li>
                                 <li class="BusinessName"><label class="u-nowrap">Blog or website details</label></li>
                                 <li><input type="text" class="inputFields"
-                                    onChange={this.websiteDetails}
-                                    name="timings"
+                                    onChange={this.handleChange}
+                                    name="websiteDetails"
                                     placeholder={this.props.user.websiteDetails} /></li>
                             </ul>
                         </div>

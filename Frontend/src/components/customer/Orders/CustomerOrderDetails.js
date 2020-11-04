@@ -1,10 +1,10 @@
 import React from 'react'
-import axios from 'axios'
 import { Link } from 'react-router-dom';
 import '../../restaurantOwner/UpdateRestaurantProfile.css'
 import { connect } from 'react-redux'
 import Moment from 'react-moment';
-import default_image from '../../../images/customer_default_pic.png'
+import { imagepath } from '../../../config/imagepath';
+
 class CustomerOrderDetails extends React.Component {
     constructor(props) {
         super(props)
@@ -22,7 +22,7 @@ class CustomerOrderDetails extends React.Component {
                             {this.props.orderhistory.ordersummary && this.props.orderhistory.ordersummary.map((getorder,i)=>{
                                 if(getorder.orderID === this.props.match.params.id){
                                    return <div class="card-order" key={i}>
-                                    <img src={`/uploads/${getorder.restaurantImage }`} alt="Avatar" class="photo-box-img" />
+                                    <img src={imagepath+`${getorder.restaurantImage}`} alt="Avatar" class="photo-box-img" />
                                             <h5>{getorder.restaurantName}</h5>
                                         <div class="order-footer">
                                             <p><b>Date: </b><Moment>{getorder.Date}</Moment> </p>

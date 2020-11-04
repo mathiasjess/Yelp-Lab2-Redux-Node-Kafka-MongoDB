@@ -1,8 +1,8 @@
 import React from 'react'
 import axios from 'axios';
 import Cookies from 'js-cookie';
-// import {connect} from 'react-redux';
-// import {customerLogin} from '../../actions/customerAction'
+import { rooturl } from '../../config/settings'
+
  // @ts-ignore  
  import jwt_decode from "jwt-decode";
 
@@ -35,13 +35,14 @@ class CustomerLogin extends React.Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://localhost:3001/customerloginroute/customerlogin',customerLoginData)
+        axios.post(rooturl+'/customerloginroute/customerlogin',customerLoginData)
         .then(response => {
-            if(response.data.message === "success"){
-                console.log("The data got is", response.data.data)
+            if(response.data.data.message === "success"){
+                console.log("The data got is", response.data.data.data)
+                console.log("Token", response.data.data.token)
                 this.setState({
-                   credentials: response.data,
-                   customerID : response.data.data._id
+                   credentials: response.data.data,
+                   customerID : response.data.data.data._id
                 })
                 // this.props.customerLogin(response.data.data);
             }
@@ -50,16 +51,6 @@ class CustomerLogin extends React.Component {
             }
         })
     }
-        // componentDidMount(){
-        // if(Cookies.get('id')){
-        //     if (Cookies.get('role') == 'customer'){
-        //         this.props.history.replace(`/customerhomepage/${Cookies.get('id')}`);
-        //     }
-        // }
-        // else{
-        //     this.props.history.push(`/login/customerlogin`);
-        // }
-    // }
     render() {
         if (this.state.credentials){
             localStorage.setItem("token", this.state.credentials.token);
@@ -89,10 +80,4 @@ class CustomerLogin extends React.Component {
 
 }
 
-// function mapDispatchToProps(dispatch){
-//     console.log("Dispatch",dispatch);
-//     return {
-//         customerLogin : (data) => dispatch(customerLogin(data))
-//     }
-// }
 export default CustomerLogin;

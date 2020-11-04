@@ -2,11 +2,12 @@ var express = require('express');
 var router = express.Router();
 var customer = require('../../models/Customer')
 const kafka = require('../../kafka/client')
+const { checkAuth } = require('../../utils/customerpassport')
 
 
-router.get('/allusers', function (req, res) {
+router.get('/allusers',checkAuth, function (req, res) {
     let returnObject = {};
-    kafka.make_request('allusers',function (err, results) {
+    kafka.make_request('allusers',"allusers",function (err, results) {
         console.log('in result');
         console.log(results);
         if (err) {
@@ -24,7 +25,7 @@ router.get('/allusers', function (req, res) {
         }
     })
 })
-router.put('/addfollowers/:id', function (req, res) {
+router.put('/addfollowers/:id',checkAuth, function (req, res) {
     let returnObject = {};
     console.log("Inside adding followers", req.body)
     const addfollowersdetails = {
@@ -49,7 +50,7 @@ router.put('/addfollowers/:id', function (req, res) {
         }
     })
 });
-router.get('/following/:id', function (req, res) {
+router.get('/following/:id',checkAuth, function (req, res) {
     let returnObject = {};
     kafka.make_request('following',req.params.id,function (err, results) {
         console.log('in result');

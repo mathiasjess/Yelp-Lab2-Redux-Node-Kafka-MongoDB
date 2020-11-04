@@ -7,6 +7,7 @@ import yelp_brand from '../../../images/yelp_brand.png'
 import { Link } from 'react-router-dom'
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 import { restaurantLogin } from '../../../actions/restaurantAction'
+import { rooturl } from '../../../config/settings';
 
 class SearchRestaurant extends React.Component {
     constructor(props) {
@@ -28,13 +29,14 @@ class SearchRestaurant extends React.Component {
         this.displayMarkers = this.displayMarkers.bind(this)
     }
     componentDidMount() {
-        axios.get('http://localhost:3001/customersearchroute/searchforrestaurant', { params: [this.props.location.aboutProps.searchParameter1] })
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        axios.get(rooturl+'/customersearchroute/searchforrestaurant', { params: [this.props.location.aboutProps.searchParameter1] })
             .then((response) => {
                 console.log(response.data.data)
-                if (response.data.message === "success") {
+                if (response.data.data.message === "success") {
                     this.setState({
-                        searchResults: response.data.data,
-                        staticResults: response.data.data
+                        searchResults: response.data.data.data,
+                        staticResults: response.data.data.data
                     })
                 } else if (response.data.message === "error") {
                     alert("No result found")
@@ -43,14 +45,15 @@ class SearchRestaurant extends React.Component {
             })
 
     }
-    goToRestaurant(restaurantId) {
-        axios.get(`http://localhost:3001/restaurantprofiledetailsroute/restaurantprofiledetails/${restaurantId}`)
+    async goToRestaurant(restaurantId) {
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        await axios.get(rooturl+`/customersearchroute/restaurantprofiledetails/${restaurantId}`)
             .then((response) => {
-                if (response.data.message === "success") {
-                    this.props.restaurantLogin(response.data.data)
-                    this.props.history.push(`/customerviewofrestaurant/${restaurantId}`)
+                if (response.data.data.message === "success") {
+                    this.props.restaurantLogin(response.data.data.data)
                 }
             })
+            this.props.history.push(`/customerviewofrestaurant/${restaurantId}`)
         // this.props.history.push(`/customerviewofrestaurant/${restaurantId}/${delivery_option}`)
     }
     Filter(e) {
@@ -77,21 +80,21 @@ class SearchRestaurant extends React.Component {
             else if (this.state.delivery.curbPickup === true) {
                 this.setState(({
                     searchResults: this.state.searchResults.filter((result) => {
-                        return result.curbPickup === 1;
+                        return result.curbPickup === true;
                     })
                 }), function () { console.log("New results", this.state.searchResults) })
             }
             else if (this.state.delivery.dineIn === true) {
                 this.setState(({
                     searchResults: this.state.searchResults.filter((result) => {
-                        return result.dineIn === 1;
+                        return result.dineIn === true;
                     })
                 }), function () { console.log("New results", this.state.searchResults) })
             }
             else if (this.state.delivery.yelpDelivery === true) {
                 this.setState(({
                     searchResults: this.state.searchResults.filter((result) => {
-                        return result.yelpDelivery === 1;
+                        return result.yelpDelivery === true;
                     })
                 }), function () { console.log("New results", this.state.searchResults) })
             }

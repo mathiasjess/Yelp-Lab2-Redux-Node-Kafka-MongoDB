@@ -1,7 +1,6 @@
 import React from 'react'
 import axios from 'axios';
-
-
+import { rooturl } from '../../config/settings'
 class customerRegister extends React.Component {
     constructor() {
         super()
@@ -32,7 +31,7 @@ class customerRegister extends React.Component {
         //set the with credentials to true
         axios.defaults.withCredentials = true;
         //make a post request with the user data
-        axios.post('http://localhost:3001/customerregistrationroute/customerregister',customerRegistrationData)
+        axios.post(rooturl+'/customerregistrationroute/customerregister',customerRegistrationData)
         .then(response => {
             console.log("Status Code : ",response.status);
             if(response.status === 200){

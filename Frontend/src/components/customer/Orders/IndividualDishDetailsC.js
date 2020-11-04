@@ -1,75 +1,53 @@
 import React from 'react'
-import '../../restaurantOwner/RestaurantHomePage.css'
-import axios from 'axios';
+import { connect } from 'react-redux';
+import '../../restaurantOwner/RestaurantHomePage.css';
 import { Link } from 'react-router-dom'
+import { imagepath } from '../../../config/imagepath';
 
-class IndividualDishDetailsC extends React.Component {
+class DishDetails extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            itemID: this.props.match.params.id,
-            dishName: '',
-            dishIngredients: '',
-            dishDescription: '',
-            dishImag1: '',
-            dishImage2: '',
-            dishImage3: '',
-            dishImage4: '',
-            price: '',
-            dishCategory: '',
-            dishData: []
+            dishDetails: []
         }
-
     }
-
     componentDidMount() {
-        axios.get(`http://localhost:3001/restaurant/fetchdish/${this.props.match.params.menuId}`)
-            // axios.get(`http://localhost:3001/restaurant/fetchMenu/${this.props.user.restaurantId}`)
-            .then((response) => {
-                console.log(response.data.data)
-                if (response.data.message === "success") {
-                    response.data.data.map((dish) => {
-                        return this.setState({
-                            itemID: this.props.match.params.id,
-                            dishName: dish.dishName,
-                            dishIngredients: dish.dishIngredients,
-                            dishDescription: dish.dishDescription,
-                            dishImage1: dish.dishImage1,
-                            dishImage2: dish.dishImage2,
-                            dishImage3: dish.dishImage3,
-                            dishImage4: dish.dishImage4,
-                            price: dish.price,
-                            dishCategory: dish.dishCategory,
-                        })
-                    })
-                }
-            })
+        console.log("Menu Items", this.props.user.menuItem)
+        console.log("ID", this.props.match.params.id)
+        this.props.user.menuItem.map(menu => {
+            if (menu._id === this.props.match.params.id) {
+                return this.setState({
+                    dishDetails: menu
+                })
+            }
+        })
     }
     render() {
+        console.log("Dish details", this.state.dishDetails)
         return (
             <div class="biz-site-expanded-grid-content-column">
-                <div>
-                    <div class="main-link">
-                    <button class="btn btn-primary" onClick = {()=> this.props.history.push(`/customerorder/${this.props.match.params.restId}`)}>Back to Orders Page</button>
-                    </div>
+                <div class="main-link">
+                    <Link to="#" onClick={()=>{this.props.history.push(`/customerorder/${this.props.user._id}`)}}><span class="glyphicon glyphicon-arrow-left" />Return to Restaurant Profile</Link>
+                </div>
                     <h2 style={{ textAlign: 'center' }}> Dish Details</h2>
                     <div class="card-order">
-                        <h5>{this.state.dishName}</h5>
-                        <h6>Category: {this.state.dishCategory}</h6>
-                        <img src={`/uploads/${this.state.dishImage1}`} alt="Avatar" class="photo-box-dish" />
-                        <img src={`/uploads/${this.state.dishImage2}`} alt="Avatar" class="photo-box-dish" />
-                        <img src={`/uploads/${this.state.dishImage3}`} alt="Avatar" class="photo-box-dish" />
-                        <img src={`/uploads/${this.state.dishImage4}`} alt="Avatar" class="photo-box-dish" />
-                        <p style={{lineHeight:'3rem'}}><b>Description: </b>{this.state.dishDescription}</p>
-                        <p style={{lineHeight:'3rem'}}><b>Ingredients:</b> {this.state.dishIngredients}</p>
-                        <p style={{lineHeight:'3rem'}}><b>Price:</b> ${this.state.price}</p>
+                        <h5>{this.state.dishDetails.dishName}</h5>
+                        <h6>Category: {this.state.dishDetails.dishCategory}</h6>
+                        {this.state.dishDetails.dishImages && this.state.dishDetails.dishImages.map(function(image){
+                            return <img src={imagepath+`${image}`} alt="Avatar" class="photo-box-dish" />
+                        })}
+                        <p style={{lineHeight:'3rem'}}><b>Description: </b>{this.state.dishDetails.dishDescription}</p>
+                        <p style={{lineHeight:'3rem'}}><b>Ingredients:</b> {this.state.dishDetails.dishIngredients}</p>
+                        <p style={{lineHeight:'3rem'}}><b>Price:</b> ${this.state.dishDetails.price}</p>
                     </div>
                 </div>
-            </div>
         )
     }
 
 }
+const mapStateToProps = state => ({
+    user: state.restaurantReducer
+});
 
 
-export default IndividualDishDetailsC;
+export default connect(mapStateToProps)(DishDetails);

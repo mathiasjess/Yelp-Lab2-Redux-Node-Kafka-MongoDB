@@ -4,9 +4,9 @@ var restaurant = require('../../../Backend/models/RestaurantOwnerModel')
 function handle_request(msg, callback) {
     let returnObject = {};
     let addReviewObject = {
-        customerID: msg.id,
-        customerName: msg.firstName + ' ' + msg.lastName,
-        customerImage: msg.profileImage,
+        customerID: msg.customerID,
+        customerName: msg.customerName,
+        customerImage: msg.customerImage,
         ratings: msg.ratings,
         comments: msg.comments
     }

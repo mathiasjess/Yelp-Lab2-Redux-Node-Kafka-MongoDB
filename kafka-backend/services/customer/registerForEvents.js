@@ -5,7 +5,7 @@ function handle_request(msg, callback) {
     let returnObject = {};
     console.log(msg.eventId)
     let addRegistry = {
-        customerID: msg.customerId,
+        customerID: msg.customerID,
         customerName: msg.customerName
     }
     console.log("Add dish", addRegistry)

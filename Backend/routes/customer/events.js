@@ -3,11 +3,11 @@ var express = require('express');
 var router = express.Router();
 var restaurant = require('../../models/RestaurantOwnerModel')
 const kafka = require('../../kafka/client')
+const { checkAuth } = require('../../utils/customerpassport')
 
 
-
-router.get('/fetchEvents', function(req,res) {
-    kafka.make_request('fetchEvents',function (err, results) {
+router.get('/fetchEvents',checkAuth, function(req,res) {
+    kafka.make_request('fetchEvents','events',function (err, results) {
         console.log('in result');
         console.log(results);
         if (err) {
@@ -27,7 +27,7 @@ router.get('/fetchEvents', function(req,res) {
 })
 
 
-router.post('/registerForEvent', function (req, res) {
+router.post('/registerForEvent',checkAuth, function (req, res) {
     let returnObject = {};
     console.log(req.body.eventId)
     let addRegistry = {
@@ -56,7 +56,7 @@ router.post('/registerForEvent', function (req, res) {
     })
 })
 
-router.get('/fetchSingleEvent/:value', function(req,res) {
+router.get('/fetchSingleEvent/:value',checkAuth, function(req,res) {
     let returnObject = {}
     restaurant.find({'events.eventName': req.params.value },{'events.$': 1, _id:0},(err,result)=>{
         if(err) {
@@ -70,7 +70,7 @@ router.get('/fetchSingleEvent/:value', function(req,res) {
     })
 })
 
-router.get('/fetchcustomerEvent/:id', function(req,res) {
+router.get('/fetchcustomerEvent/:id', checkAuth, function(req,res) {
     let returnObject = {}
     kafka.make_request('fetchcustomerevents',req.params.id,function (err, results) {
         console.log('in result');

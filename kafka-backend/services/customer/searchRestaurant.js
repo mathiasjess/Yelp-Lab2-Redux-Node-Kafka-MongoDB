@@ -3,7 +3,7 @@ var restaurant = require('../../../Backend/models/RestaurantOwnerModel')
 
 //Router to handle get request to search restaurants
 function handle_request(msg, callback) {
-    // let returnObject = {};
+    let returnObject = {};
     // let param1 = req.query[0]
     // console.log("Params",req.query[0])
 
@@ -47,27 +47,24 @@ function handle_request(msg, callback) {
     else {
         restaurant.find({
             "$or": [{
-                // 'restaurantName': { $regex: '/.*' + msg + '.*/' }
+                // 'restaurantName': msg + '.*/' }
                 'restaurantName': msg
+            },
+            {
+                "cusine": msg 
+            },
+            {
+                "location": msg 
+            },
+            {
+                "city": msg 
+            },
+            {
+                "zipcode": msg 
+            },
+            {
+                "menuItem.dishName": msg 
             }]
-            // {
-            //     "cusine": { $regex: '/.*' + msg + '.*/' }
-            // },
-            // {
-            //     "location": { $regex: '/.*' + msg + '.*/' }
-            // },
-            // {
-            //     "city": { $regex: '/.*' + msg + '.*/' }
-            // },
-            // {
-            //     "zipcode": { $regex: '/.*' + msg + '.*/' }
-            // },
-            // {
-            //     "zipcode": { $regex: '/.*' + msg + '.*/' }
-            // },
-            // {
-            //     "menuItem.dishName": { $regex: '/.*' + msg + '.*/' }
-            // }]
         }, (err, result) => {
             if (err) {
                 returnObject.message = 'error'

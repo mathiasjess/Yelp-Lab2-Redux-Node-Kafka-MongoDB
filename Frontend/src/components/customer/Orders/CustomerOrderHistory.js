@@ -1,12 +1,13 @@
 import React from 'react'
 import axios from 'axios'
 import './CustomerOrders.css'
-import Popup from "reactjs-popup";
+import {Link} from 'react-router-dom'
 import { connect } from 'react-redux'
 import Moment from 'react-moment';
 import { customerOrderHistory } from '../../../actions/customerOtherDetailsAction'
 import ReactPaginate from 'react-paginate';
 import '../../restaurantOwner/Paginate.css' 
+import { rooturl } from '../../../config/settings';
 
 
 class CustomerOrderHistory extends React.Component {
@@ -26,15 +27,17 @@ class CustomerOrderHistory extends React.Component {
         this.handleDelivered = this.handleDelivered.bind(this)
         this.handleFilters = this.handleFilters.bind(this)
         this.handleAllOrders = this.handleAllOrders.bind(this)
+        this.handleorderofevents = this.handleorderofevents.bind(this)
     }
     async componentDidMount() {
         let OrderHistoryresult = []
         let individualOrder = {}
-        await axios.get(`http://localhost:3001/customerordersroute/fetchcustomerordersummary/${this.props.user._id}`)
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        await axios.get(rooturl+`/customerordersroute/fetchcustomerordersummary/${this.props.user._id}`)
             .then(response => {
                 console.log("Response of order history", response.data.data[0])
-                if (response.data.message === "success") {
-                    {response.data.data && response.data.data.map(order => {
+                if (response.data.data.message === "success") {
+                    {response.data.data.data && response.data.data.data.map(order => {
                         order.orders.map(item => {
                             individualOrder = {
                                 restaurantName: order.restaurantName,
@@ -44,7 +47,8 @@ class CustomerOrderHistory extends React.Component {
                                 deliveryOption: item.deliveryOption,
                                 delivery_status: item.delivery_status,
                                 deliveryFilter: item.deliveryFilter,
-                                orderDetails: item.orderDetails
+                                orderDetails: item.orderDetails,
+                                orderDate: item.orderDate
                             }
                             OrderHistoryresult.push(individualOrder)
                             individualOrder = {}
@@ -67,6 +71,7 @@ class CustomerOrderHistory extends React.Component {
         const postData = slice.map(summary => <React.Fragment>
                 <div class="card-order">
                     <h4>Restaurant: {summary.restaurantName}</h4>
+                    <h6> Order Id:{summary.orderID}</h6>
                     <div class="order-footer">
                         <p><b>Date: </b><Moment>{summary.orderDate}</Moment></p>
                         <p><b>Total Price:</b> {summary.totalPrice}</p>
@@ -145,6 +150,29 @@ class CustomerOrderHistory extends React.Component {
         })
         this.receivedData();
     }
+    async handleorderofevents(order){
+        let x = null
+        let y = null
+        let sortedOrders = null
+        if(order === "asc"){
+                sortedOrders = await this.state.orderSummary.orderDate.sort((a,b)=>{
+                x = new Date(a.orderDate.slice(0,10))
+                y = new Date(b.orderDate.slice(0,10))
+                return(x-y)
+            })
+        }
+        else{
+                sortedOrders = await this.state.orderSummary.orderDate.sort((a,b)=>{
+                x = new Date(a.orderDate.slice(0,10))
+                y = new Date(b.orderDate.slice(0,10))
+                return(y-x)
+            })  
+        }
+        await this.setState({
+            orderSummary : sortedOrders
+        })
+        this.receivedData();
+    } 
     render() {
         console.log("From the store", this.props.orderhistory.ordersummary)
         let filters = null
@@ -186,7 +214,11 @@ class CustomerOrderHistory extends React.Component {
                         {filters}
                     </div>
                     <div class="td-items2">
+                    <div>
                         <h2> Orders</h2>
+                        <Link to ="#" onClick={()=>this.handleorderofevents("asc")}><span class = "glyphicon glyphicon-arrow-up"> Ascending</span></Link>
+                        <Link to ="#" onClick={()=>this.handleorderofevents("desc")}><span class = "glyphicon glyphicon-arrow-down"> Descending</span></Link>
+                        </div>
                         {this.state.postData}
                         <ReactPaginate
                         previousLabel={"<<"}

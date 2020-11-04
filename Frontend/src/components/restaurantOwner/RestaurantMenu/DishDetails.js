@@ -27,9 +27,12 @@ class DishDetails extends React.Component {
         return (
             <div class="biz-site-expanded-grid-content-column">
                 <div>
-                    <div class="main-link">
+                    {localStorage.getItem('role') === 'restaurant' && <div class="main-link">
                         <Link to="/displaymenu"><span class="glyphicon glyphicon-arrow-left" />Return to Main Menu</Link>
-                    </div>
+                    </div>}
+                    {localStorage.getItem('role') === 'customer' && <div class="main-link">
+                    <Link to="#" onClick={()=>{this.props.history.push(`/customerorder/${this.props.user._id}`)}}><span class="glyphicon glyphicon-arrow-left" />Return to Restaurant Profile</Link>
+                </div>}
                     <h2 style={{ textAlign: 'center' }}> Dish Details</h2>
                     <div class="card-order">
                         <h5>{this.state.dishDetails.dishName}</h5>

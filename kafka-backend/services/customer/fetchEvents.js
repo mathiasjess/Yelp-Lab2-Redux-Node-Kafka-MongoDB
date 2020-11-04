@@ -1,7 +1,7 @@
 require('../../../Backend/mongoose')
 var restaurant = require('../../../Backend/models/RestaurantOwnerModel')
 
-function handle_request(callback) {
+function handle_request(msg, callback) {
     let returnObject = {}
     restaurant.aggregate([
         // {$bucket:{
@@ -26,6 +26,7 @@ function handle_request(callback) {
             // eventLocation: "$events.eventLocation",
             // eventHashtag : "$events.eventHashtag"}}
     ],(err,result)=>{
+        console.log("Events results", result)
         if(err) {
             returnObject.message = 'error'
             callback(null, returnObject)
