@@ -51,15 +51,15 @@ class AllCustomers extends React.Component {
         }
         else if (filter === 'location') {
           await this.setState({
-                data: this.state.searchResults.filter((result) => {
-                    return result.zipcode === localStorage.getItem('zipcode');
+                    data: this.props.allusers.yelpusers.filter((result) => {
+                    return result.zipcode === this.props.user.zipcode;
                 })
             })
         }
         else if (filter === 'following') {
             console.log("Inside following") 
             axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
-            await axios.get(rooturl+`/allcustomersroute/following/${mainID}`)
+            await axios.get(rooturl+`/allcustomersroute/following/${this.props.user._id}`)
                 .then(response => {
                     if (response.data.data.message === "success") {
                         this.setState({
@@ -170,7 +170,7 @@ class AllCustomers extends React.Component {
 
 }
 const mapStateToProps = state => ({
-    user: state.restaurantReducer,
+    user: state.customerReducer,
     allusers: state.customerOtherDetailsReducer
 });
 function mapDispatchToProps(dispatch) {

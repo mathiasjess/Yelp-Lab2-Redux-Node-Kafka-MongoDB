@@ -5,7 +5,7 @@ const kafka = require('../../kafka/client')
 const { checkAuth } = require('../../utils/restaurantpassport')
 
 //Router to handle post request to add dishes to Menu
-router.post('/addEvent/:id', checkAuth,function (req, res) {
+router.post('/addEvent/:id',function (req, res) {
     let returnObject = {};
     console.log("Req.body of add events", req.body)
     let addEventObject = {

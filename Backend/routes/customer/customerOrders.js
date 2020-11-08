@@ -5,8 +5,8 @@ const kafka = require('../../kafka/client')
 const { checkAuth } = require('../../utils/customerpassport')
 
 //Router to handle post request to add dishes to Menu
-router.post('/sendorderdetails',checkAuth, function (req, res) {
-    console.log("Restaurant ID", req.body.restaurantID)
+router.post('/sendorderdetails', function (req, res) {
+    console.log("Restaurant ID", req.body.restaurantId)
     // let ordersObject = {
     //     restaurantId : req.body.restaurantID,
     //     customerID: req.body.customerID,
@@ -18,7 +18,7 @@ router.post('/sendorderdetails',checkAuth, function (req, res) {
     //     deliveryFilter: req.body.deliveryFilter,
     //     orderDetails: req.body.orderDetails
     // }
-    console.log("Orders",ordersObject)
+    // console.log("Orders",ordersObject)
     kafka.make_request('sendorderdetails', req.body, function (err, results) {
         console.log(req.body);
         console.log('in result');
@@ -40,7 +40,7 @@ router.post('/sendorderdetails',checkAuth, function (req, res) {
 });
 
 //Fetch order details for a particular customer
-router.get('/fetchcustomerordersummary/:id', checkAuth, function (req, res) {
+router.get('/fetchcustomerordersummary/:id',function (req, res) {
     console.log("Inside Customer Order History");
     let returnObject = {};
     kafka.make_request('fetchordersummary', req.params.id, function (err, results) {

@@ -27,7 +27,7 @@ const { checkAuth } = require('../../utils/restaurantpassport')
 // })
 
 //Router to handle updating order status
-router.put('/updateorderstatus', checkAuth, function (req, res) {
+router.put('/updateorderstatus', function (req, res) {
     console.log("Req body", req.body)
     const updateorder = {
         orderID : req.body.orderID,
@@ -35,7 +35,7 @@ router.put('/updateorderstatus', checkAuth, function (req, res) {
         deliveryFilter: req.body.deliveryFilter
 
     }
-    kafka.make_request('updateorderstatus', updateorder, function (err, results) {
+    kafka.make_request('updateorderstatus',updateorder, function (err, results) {
         console.log('In result');
         console.log(results);
         if (err) {
@@ -55,7 +55,7 @@ router.put('/updateorderstatus', checkAuth, function (req, res) {
 });
 
 //Router to handle cancelling order 
-router.put('/cancelorder', checkAuth, function (req, res) {
+router.put('/cancelorder', function (req, res) {
     let returnObject = {};
     const cancelorder = {
         orderID : req.body.orderID,

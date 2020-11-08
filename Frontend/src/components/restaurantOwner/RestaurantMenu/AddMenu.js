@@ -26,7 +26,6 @@ class Menu extends React.Component {
         this.handleMenuChange = this.handleMenuChange.bind(this)
         this.handleCategoryChange = this.handleCategoryChange.bind(this)
         this.updateMenu = this.updateMenu.bind(this)
-        this.uploadPics = this.uploadPics.bind(this)
 
     }
     handleMenuChange(event) {
@@ -64,7 +63,6 @@ class Menu extends React.Component {
         for (var x = 0; x < this.state.dishImages.length; x++) {
             data.append('file', this.state.dishImages[x])
         }
-        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
         axios.post(rooturl+'/restaurantmenuroute/uploadpics', data)
             .then(res => { // then print response status
                 if (res.data.message === "success") {

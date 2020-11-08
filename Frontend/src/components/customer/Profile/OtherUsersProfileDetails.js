@@ -21,16 +21,17 @@ class ProfileDetails extends React.Component {
         this.state = {
             customerDetails: [],
             reviews: [],
-            followFlag:false
+            followFlag: false
         }
         this.addFollowers = this.addFollowers.bind(this)
     }
     async componentDidMount(props) {
         let reviewsResult = []
         let individualResult = {}
+        let userId = localStorage.getItem('id')
         console.log("Params", this.props.match.params.id)
         axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
-        await axios.get(rooturl+`/customerprofileroute/customerprofile/${this.props.match.params.id}`)
+        await axios.get(rooturl + `/customerprofileroute/customerprofile/${this.props.match.params.id}`)
             .then((response) => {
                 if (response.data.data.message === "success") {
                     console.log("Profile data", response.data.data.data)
@@ -42,7 +43,7 @@ class ProfileDetails extends React.Component {
 
             })
         axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
-        await axios.get(rooturl+`/customerreviewroute/getcustomerreviews/${this.props.match.params.id}`)
+        await axios.get(rooturl + `/customerreviewroute/getcustomerreviews/${this.props.match.params.id}`)
             .then((response) => {
                 if (response.data.message === "success") {
                     console.log(response.data.data)
@@ -65,30 +66,49 @@ class ProfileDetails extends React.Component {
                 }
 
             })
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        await axios.get(rooturl + `/allcustomersroute/following/${userId}`)
+            .then(response => {
+                if (response.data.data.message === "success") {
+                    response.data.data.data.map(follow =>{
+                        if(follow.customerID === this.props.user.otherusers._id ){
+                            this.setState({
+                                flag : true
+                            })
+                        }
+                    })
+                }
+                else if (response.data.data.message === "error") {
+                    alert("Something went wrong")
+                }
+            })
     }
-    async addFollowers(){
-        const data ={
+    async addFollowers() {
+        const data = {
             customerID: localStorage.getItem('id'),
-            customerName : localStorage.getItem('name')
+            customerName: localStorage.getItem('name')
         }
         console.log("Data for following", data)
         axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
-        await axios.put(rooturl+`/allcustomersroute/addfollowers/${this.props.match.params.id}`,data)
-        .then(response => {
-            if (response.data.message === "success") {
-                 this.props.userfollowers(data);
-            }
-            else if (response.data.message === "error") {
-                alert("Something went wrong")
-            }
-        })
+        await axios.put(rooturl + `/allcustomersroute/addfollowers/${this.props.match.params.id}`, data)
+            .then(response => {
+                if (response.data.message === "success") {
+                    this.props.userfollowers(data);
+                    this.setState({
+                        flag : true
+                    })
+                }
+                else if (response.data.message === "error") {
+                    alert("Something went wrong")
+                }
+            })
     }
     render() {
         let flag = false
-        if(this.props.user.otherusers.followers){
-            this.props.user.otherusers.followers.map((follower,i)=>{
-                if(follower.customerID === localStorage.getItem('id')){
-                    return flag = true
+        if (this.props.user.otherusers.followers) {
+            this.props.user.otherusers.followers.map((follower, i) => {
+                if (follower.customerID === localStorage.getItem('id')) {
+                    return flag =true
                 }
             })
         }
@@ -96,7 +116,7 @@ class ProfileDetails extends React.Component {
             <div class="table">
                 <div class="tr-middle">
                     <div class="td-11">
-                        {this.props.user.otherusers.profileImage ? <img src={imagepath+`${this.props.user.otherusers.profileImage}`} alt="Avatar" class="photo-box-img" /> : <img class="photo-box-img" src={default_image} alt="Avatar" />}
+                        {this.props.user.otherusers.profileImage ? <img src={imagepath + `${this.props.user.otherusers.profileImage}`} alt="Avatar" class="photo-box-img" /> : <img class="photo-box-img" src={default_image} alt="Avatar" />}
                     </div>
                     <div class="td-21">
                         <h1> {this.props.user.otherusers.firstName} {this.props.user.otherusers.lastName} (Also known as {this.props.user.otherusers.nickName})</h1>
@@ -105,12 +125,12 @@ class ProfileDetails extends React.Component {
                         <h6> Favourites Include: {this.props.user.otherusers.favourites} </h6>
                         {localStorage.getItem('id') !== this.props.match.params.id ?
                             <div class="buttonsuser">
-                            {flag === true && <button class="btn btn-danger">
-                            <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true">Following</span>
-                            </button> }
-                            {flag === false && <button class="btn btn-danger"><Link to ="#" onClick={() =>this.addFollowers()}>
+                                {flag === true && <button class="btn btn-danger">
+                                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true">Following</span>
+                                </button>}
+                                {flag === false && <button class="btn btn-danger"><Link to="#" onClick={() => this.addFollowers()}>
                                     <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true">Follow</span></Link>
-                                </button> }
+                                </button>}
                                 <button class="btn btn-default" onClick={() => this.props.history.push('/mainevents')}><span class="glyphicon glyphicon-bookmark">Followers</span></button>
                             </div>
                             : null}
@@ -127,7 +147,7 @@ class ProfileDetails extends React.Component {
                             return <div class="Reviews" key={i}>
                                 <h4>Ratings: {item.ratings}/5</h4>
                                 <div class="reviews-header-details">
-                                    {item.restaurantImage ? <img src={imagepath+`${item.restaurantImage}`} alt="Avatar" class="photo-box-rest" /> : <img class="photo-box-rest" src={restaurant_image} alt="Avatar" />}
+                                    {item.restaurantImage ? <img src={imagepath + `${item.restaurantImage}`} alt="Avatar" class="photo-box-rest" /> : <img class="photo-box-rest" src={restaurant_image} alt="Avatar" />}
                                     <h5 style={{ paddingTop: '1rem' }}>  {item.restaurantName}</h5>
                                 </div>
                                 <p style={{ paddingTop: '2rem' }}><b>Date: </b><Moment>{item.reviewDate}</Moment></p>
@@ -174,7 +194,7 @@ function mapDispatchToProps(dispatch) {
     return {
         customerReviews: (data) => dispatch(customerReviews(data)),
         otheruserprofile: (data) => dispatch(otheruserprofile(data)),
-        userfollowers:(data) => dispatch(userfollowers(data))
+        userfollowers: (data) => dispatch(userfollowers(data))
 
     }
 }

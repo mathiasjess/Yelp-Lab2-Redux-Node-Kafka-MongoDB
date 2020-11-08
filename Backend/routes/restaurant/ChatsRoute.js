@@ -6,7 +6,7 @@ const kafka = require('../../kafka/client')
 //Get Chats from the database
 
 //Router to get conversations
-router.get('/getchats', function (req, res) {
+router.get('/getchats',function (req, res) {
     console.log("Inside converstaions");
     let returnObject = {};
     console.log("ID", req.params.id);

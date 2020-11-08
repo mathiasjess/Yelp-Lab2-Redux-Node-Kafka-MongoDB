@@ -155,14 +155,14 @@ class CustomerOrderHistory extends React.Component {
         let y = null
         let sortedOrders = null
         if(order === "asc"){
-                sortedOrders = await this.state.orderSummary.orderDate.sort((a,b)=>{
+                sortedOrders = await this.props.orderhistory.ordersummary.sort((a,b)=>{
                 x = new Date(a.orderDate.slice(0,10))
                 y = new Date(b.orderDate.slice(0,10))
                 return(x-y)
             })
         }
         else{
-                sortedOrders = await this.state.orderSummary.orderDate.sort((a,b)=>{
+                sortedOrders = await this.props.orderhistory.ordersummary.sort((a,b)=>{
                 x = new Date(a.orderDate.slice(0,10))
                 y = new Date(b.orderDate.slice(0,10))
                 return(y-x)

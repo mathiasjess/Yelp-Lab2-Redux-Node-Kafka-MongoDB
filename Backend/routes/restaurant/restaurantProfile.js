@@ -24,7 +24,7 @@ var upload = multer({ storage: storage });
 
 
 // Router to handle post request to update restaurant Profile Data
-router.post('/restaurantprofileUpdate/:id',checkAuth, upload.single('restaurantImage'), function (req, res) {
+router.post('/restaurantprofileUpdate/:id', upload.single('restaurantImage'), function (req, res) {
     let imagename = null;
     if (req.file) {
         imagename = req.file.filename
@@ -71,7 +71,7 @@ router.post('/restaurantprofileUpdate/:id',checkAuth, upload.single('restaurantI
 });
 
 // Router to handle get request to fetch dishes
-router.get('/restaurantprofiledetails/:id', checkAuth, function (req, res) {
+router.get('/restaurantprofiledetails/:id', function (req, res) {
     let returnObject = {};
     console.log("Inside restaurant profile");
     kafka.make_request('restaurantprofiledetails', req.params.id, function (err, results) {
@@ -93,7 +93,7 @@ router.get('/restaurantprofiledetails/:id', checkAuth, function (req, res) {
     });
 })
 
-router.get('/customerprofile/:id', checkAuth, function(req,res){
+router.get('/customerprofile/:id', function(req,res){
     kafka.make_request('customerprofiledetails', req.params.id, function (err, results) {
         console.log(req.body);
         console.log('in result');
@@ -114,7 +114,7 @@ router.get('/customerprofile/:id', checkAuth, function(req,res){
     })
 })
 
-router.get('/getcustomerreviews/:id', checkAuth, function (req, res) {
+router.get('/getcustomerreviews/:id', function (req, res) {
     let returnObject = {}
     kafka.make_request('getcustomerreviews', req.params.id, function (err, results) {
         console.log('in result');

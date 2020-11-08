@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom';
 import ReactPaginate from 'react-paginate';
 import '../../restaurantOwner/Paginate.css' 
 import { rooturl } from '../../../config/settings';
+import { imagepath } from '../../../config/imagepath';
+
 
 class CustomerOrders extends React.Component {
     constructor(props) {
@@ -41,7 +43,7 @@ class CustomerOrders extends React.Component {
     }
     viewDetails(menuId){
         //Change to reuse restaurant component
-        return this.props.history.push(`/viewindividualdish/${menuId}/${this.props.match.params.id}`)
+        return this.props.history.push(`/viewindividualdish/${menuId}`)
     }
     handleAddToCart(itemID, dishName, price) {
         let Orderdata = {
@@ -99,7 +101,7 @@ class CustomerOrders extends React.Component {
         const slice = this.props.restaurant.menuItem.slice(this.state.offset, this.state.offset + this.state.perPage)
         const postData = slice.map(menu => <React.Fragment>
                <div class="card1">
-                <img src={`/uploads/${menu.dishImages[0]}`} alt="Avatar" class="card-img-top-items" alt="Card image cap" />
+                <img src={imagepath+`${menu.dishImages[0]}`} alt="Avatar" class="card-img-top-items" alt="Card image cap" />
                     <div class="container-order-menu">
                         <p style={{textAlign:'left'}}><b> Dish Name: </b>{menu.dishName}</p>
                         <p style={{textAlign:'left'}}><b>Price: </b>{menu.price}</p>

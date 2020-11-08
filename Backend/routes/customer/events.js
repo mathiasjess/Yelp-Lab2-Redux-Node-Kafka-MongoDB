@@ -6,7 +6,7 @@ const kafka = require('../../kafka/client')
 const { checkAuth } = require('../../utils/customerpassport')
 
 
-router.get('/fetchEvents',checkAuth, function(req,res) {
+router.get('/fetchEvents', checkAuth,function(req,res) {
     kafka.make_request('fetchEvents','events',function (err, results) {
         console.log('in result');
         console.log(results);

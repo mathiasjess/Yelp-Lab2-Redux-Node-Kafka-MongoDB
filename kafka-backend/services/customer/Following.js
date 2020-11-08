@@ -8,11 +8,11 @@ function handle_request(msg, callback) {
 
             if (err) {
                 returnObject.message = 'error'
+                callback(null, returnObject)
             }
             else {
                 returnObject.message = "success"
                 returnObject.data = result
-                res.json(returnObject)
                 callback(null, returnObject)
             }
         })

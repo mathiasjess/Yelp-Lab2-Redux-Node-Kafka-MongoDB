@@ -9,7 +9,7 @@ var path = require('path')
 require('./mongoose');
 // const { mongoDB } = require('./utils/config')
 const mongoose = require('mongoose')
-const passport = require('passport');
+
 
 const server = require("http").createServer(app);
 const io = require('socket.io')(server)
@@ -22,6 +22,7 @@ app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 
 // Passport middleware
+const passport = require('passport');
 app.use(passport.initialize());
 
 //use express session to maintain session data
@@ -32,7 +33,7 @@ app.use(session({
     duration: 60 * 60 * 1000,    // Overall duration of Session : 30 minutes : 1800 seconds
     activeDuration: 5 * 60 * 1000
 }));
-// app.use(express.static(path.join(__dirname + "./public")));
+
 app.use(express.static(path.join(__dirname + 'public')));
 
 // app.use(bodyParser.urlencoded({
@@ -59,16 +60,7 @@ var options = {
     bufferMaxEntries: 0
 }
 
-// mongoose.connect(mongoDB, options, (err, result) => {
-//     if (err) {
-//         console.log(err)
-//         console.log("MongoDB connection failed")
-//     }
-//     else {
-//         console.log("MongoDB connected")
-//     }
-// })
-
+// Sending and recieving messages using socket.io
 
 io.on("connection", socket => {
     socket.on("Input Chat Message", msg => {
@@ -83,11 +75,6 @@ io.on("connection", socket => {
         console.log("Chat details", chat)
         chat.save((err, doc) => {
             if (err) return res.json({ success: false })
-            // Chat.find({"_id": doc._id})
-            // .populate("sender")
-            // .exec((err, doc)=>{
-            //     return io.emit("Output Chat Message", doc)
-            // })
             Chat.find({ "_id": doc._id }, (err,result)=>{
                 if(err) return res.json({message: "Error"})
                 return io.emit("Output Chat Message", result)
@@ -96,13 +83,7 @@ io.on("connection", socket => {
     })
 })
 
-//Fetching Routes
-
-// var customerprofile = require('./routes/customer/customerProfile')
-// var searchRestaurant = require('./routes/customer/searchRestaurant')
-// var review = require('./routes/customer/customerreview')
-// var orders = require('./routes/customer/orders')
-// var customerevents = require('./routes/customer/events')
+// Fetching Routes of restaurant
 
 var registerrestaurant = require('./routes/restaurant/restaurantRegistration')
 var restaurantloginroute = require('./routes/restaurant/restaurantLogin')
@@ -113,8 +94,6 @@ var restaurantordersroute = require('./routes/restaurant/restaurantOrders')
 var restaurantreviewsroute = require('./routes/restaurant/restaurantReviews')
 var chatroutes = require('./routes/restaurant/ChatsRoute')
 
-
-// Route to handle action calls for registration of restaurant
 app.use('/registerrestaurant', registerrestaurant);
 app.use('/restaurantloginroute', restaurantloginroute);
 app.use('/restaurantprofiledetailsroute', restaurantprofiledetailsroute);
@@ -124,8 +103,7 @@ app.use('/restaurantordersroute', restaurantordersroute)
 app.use('/restaurantreviewsroute', restaurantreviewsroute)
 app.use('/chatroutes', chatroutes)
 
-
-//Customer Routes
+// Customer Routes
 var customerregistrationroute = require('./routes/customer/customerRegistration');
 var customerloginroute = require('./routes/customer/customerLogin')
 var customerprofileroute = require('./routes/customer/customerProfile')
@@ -135,8 +113,6 @@ var customereventsroute = require('./routes/customer/events')
 var customerordersroute = require('./routes/customer/customerOrders')
 var allcustomersroute = require('./routes/customer/friends')
 
-
-
 app.use('/customerregistrationroute', customerregistrationroute)
 app.use('/customerloginroute', customerloginroute)
 app.use('/customerprofileroute', customerprofileroute)
@@ -145,38 +121,6 @@ app.use('/customerreviewroute', customerreviewroute)
 app.use('/customereventsroute', customereventsroute)
 app.use('/customerordersroute', customerordersroute)
 app.use('/allcustomersroute', allcustomersroute)
-// //Route to handle all actions for customer profile
-// app.use('/customerprofile',customerprofile)
 
-// //Route to handle all actions for customer search
-// app.use('/search',searchRestaurant)
-
-// //Route to handle all actions for customer search
-// app.use('/reviews',review)
-
-// //Route to handle all actions for customer orders
-// app.use('/orders',orders)
-
-// //Route to handle all actions for customer orders
-// app.use('/events',customerevents)
-
-// //Route to handle Post Request Call for restaurant
-// app.use('/restaurant',restaurant)  
-
-// //Routes to handle Calls for restaurant event actions
-// app.use('/restaurantevents',restaurantevents)
-
-// //Routes to handle Calls for restaurant orders
-// app.use('/restaurantorders',restaurantorders)
-
-// //Routes to handle Calls for restaurant reviews
-// app.use('/restaurantreviews', restaurantreviews)
-
-// //Routes to handle Calls for customer details
-// app.use('/restaurantviewofcustomer',customerdetails)
-
-
-//start your server on port 3001
-// app.listen(PORT);
 server.listen(PORT);
 console.log("Server Listening on port 3001");

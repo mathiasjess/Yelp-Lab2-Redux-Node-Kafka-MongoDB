@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react';
 import { restaurantLogin } from '../../../actions/restaurantAction'
 import { rooturl } from '../../../config/settings';
+import { imagepath } from '../../../config/imagepath';
 
 class SearchRestaurant extends React.Component {
     constructor(props) {

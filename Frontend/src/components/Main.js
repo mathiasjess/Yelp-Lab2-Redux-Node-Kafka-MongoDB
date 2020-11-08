@@ -152,7 +152,7 @@ class Main extends Component {
                         render={props => <CustomerEvents  {...props} />}
                     />
                     <Route
-                        path="/viewindividualdish/:menuId/:restId"
+                        path="/viewindividualdish/:id"
                         render={props => <IndividualDishDetails  {...props} />}
                     />
                     <Route

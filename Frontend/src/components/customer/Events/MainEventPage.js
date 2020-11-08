@@ -103,17 +103,17 @@ class MainEventsPage extends React.Component {
         })
     }   
     getSearchResults = (event)=>{
-        event.preventDefault();
-        // let searchValue = this.state.searchParameter
+        event.preventDefault()
+        let searchValue = this.state.searchParameter
         console.log("Search value", this.state.searchParameter)
-        // this.props.events.events.map((event)=>{
-        //     if(event.eventName === searchValue){
-        //         return this.setState({
-        //             searchFlag : true,
-        //             eventsData : event
-        //         })
-        //     }
-        // })
+        this.props.events.events.map((event)=>{
+            if(event.eventName === searchValue){
+                return this.setState({
+                    searchFlag : true,
+                    eventsData : event
+                })
+            }
+        })
     }
 
     registerForEvent(eventID, restaurantID) {
@@ -145,6 +145,7 @@ class MainEventsPage extends React.Component {
     }
     render() {
         console.log("All events inside render", this.state.eventsData)
+        console.log("Search", this.state.eventsData.length)
         return (
             <div class="table">
                 <div class="tr-onerow">
@@ -155,7 +156,7 @@ class MainEventsPage extends React.Component {
                         <form class="search-class">
                             <input class="form-control mr-sm-2" name="searchParameter" type="text" onChange={this.captureSearchParameters} placeholder="Event Names" aria-label="Search" />
                             {/*<button class="btn btn-outline-success my-2 my-sm-0" onClick = {this.searchRestaurant} type="submit">Search</button>*/}
-                            <button class="btn btn-danger" onClick={()=>this.handleorderofevents("desc")}>search</button>
+                            <button class="btn btn-danger" onClick={this.getSearchResults}>Search</button>
                         </form>
                     </div>
                     <div class="td-onerow3">
@@ -169,7 +170,7 @@ class MainEventsPage extends React.Component {
                     <Link to ="#" onClick={()=>this.handleorderofevents("asc")}><span class = "glyphicon glyphicon-arrow-up"> Ascending</span></Link>
                     <Link to ="#" onClick={()=>this.handleorderofevents("desc")}><span class = "glyphicon glyphicon-arrow-down"> Descending</span></Link>
                     </div>
-                        {this.state.eventsData && this.state.eventsData.map((event, i) => {
+                        {this.state.eventsData.length > 1 ? this.state.eventsData.map((event, i) => {
                                 return <div class="card-events" key ={i}>
                                     <div class="card-events-body">
                                         <h4 class="card-title">{event.eventName}</h4>
@@ -181,7 +182,19 @@ class MainEventsPage extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-                        })}
+                        }):
+                            <div class="card-events">
+                                <div class="card-events-body">
+                                    <h4 class="card-title">{this.state.eventsData.eventName}</h4>
+                                    <p>Host: {this.state.eventsData.restaurantName}</p>
+                                    <p>Date: <Moment>{this.state.eventsData.eventDate}</Moment></p>
+                                    <div class="event-details">
+                                    <button class="btn btn-danger" onClick={() => this.registerForEvent(this.state.eventsData.eventID, this.state.eventsData.restaurantId)}>Register</button>
+                                    <button class="btn btn-primary" onClick={()=> this.props.history.push(`individualeventdetails/${this.state.eventsData.eventID}`)}>See details</button>
+                                    </div>
+                                </div>
+                            </div>
+                    }
                     </div>
                     <div class="td-tworow3">
                     </div>
