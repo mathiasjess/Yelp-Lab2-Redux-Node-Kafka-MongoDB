@@ -27,7 +27,7 @@ const { checkAuth } = require('../../utils/restaurantpassport')
 // })
 
 //Router to handle updating order status
-router.put('/updateorderstatus', function (req, res) {
+router.put('/updateorderstatus', checkAuth, function (req, res) {
     console.log("Req body", req.body)
     const updateorder = {
         orderID : req.body.orderID,
@@ -55,7 +55,7 @@ router.put('/updateorderstatus', function (req, res) {
 });
 
 //Router to handle cancelling order 
-router.put('/cancelorder', function (req, res) {
+router.put('/cancelorder', checkAuth, function (req, res) {
     let returnObject = {};
     const cancelorder = {
         orderID : req.body.orderID,

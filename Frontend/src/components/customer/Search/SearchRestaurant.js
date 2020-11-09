@@ -173,7 +173,7 @@ class SearchRestaurant extends React.Component {
                         {this.state.searchResults.map((result, i) => {
                             return (<div class="card" key={i}>
                                 <div class="search-res-header">
-                                    {result.restaurantImage ? <img src={`/uploads/${result.restaurantImage}`} alt="Avatar" class="card-img-top-search" /> : <img class="card-img-top-search" src={default_pic} alt="Card image cap" />}
+                                    {result.restaurantImage ? <img src={imagepath+`${result.restaurantImage}`} alt="Avatar" class="card-img-top-search" /> : <img class="card-img-top-search" src={default_pic} alt="Card image cap" />}
                                     <h4 style={{ paddingTop: '45px' }}>{result.restaurantName}</h4>
                                 </div>
                                 <div class="card-body">

@@ -1,9 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import { Route, Link, withRouter } from 'react-router-dom';
+import axios from 'axios'
+import {restaurantLogin} from '../../../actions/restaurantAction'
 import './EventList.css'
 import ReactPaginate from 'react-paginate';
 import '../Paginate.css'
+import { rooturl } from '../../../config/settings';
+
 
 class EventList extends React.Component {
     constructor(props) {
@@ -19,11 +23,18 @@ class EventList extends React.Component {
         this.gotocustomerPage = this.gotocustomerPage.bind(this);
     }
     async componentDidMount() {
-        console.log("Event ID",this.props.match.params.id)
-        await this.props.user.events.map(event => {
-            if (event._id === this.props.match.params.id) {
-                this.setState({
-                    data:event.registeredUsers
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token')
+        await axios.get(rooturl+`/restaurantprofiledetailsroute/restaurantprofiledetails/${this.props.user._id}`)
+                .then((response) => {
+                    if (response.data.data.message === "success") {
+                        this.props.restaurantLogin(response.data.data.data)
+                        console.log("Event ID",this.props.match.params.id)
+                        this.props.user.events.map(event => {
+                        if (event._id === this.props.match.params.id) {
+                        this.setState({
+                            data:event.registeredUsers
+                        })
+                    }
                 })
             }
         })
@@ -102,6 +113,12 @@ class EventList extends React.Component {
 const mapStateToProps = state => ({
     user: state.restaurantReducer
 });
+function mapDispatchToProps(dispatch) {
+    console.log("Dispatch", dispatch);
+    return {
+        restaurantLogin: (data) => dispatch(restaurantLogin(data)),
 
+    }
+}
 
-export default connect(mapStateToProps)(EventList);
+export default connect(mapStateToProps, mapDispatchToProps)(EventList);

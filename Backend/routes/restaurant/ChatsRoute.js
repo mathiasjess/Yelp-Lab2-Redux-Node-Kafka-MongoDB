@@ -1,12 +1,13 @@
 var express = require('express');
 var router = express.Router();
 const Chat = require('../../models/ChatModel')
-const kafka = require('../../kafka/client')
+const kafka = require('../../kafka/client');
+const { checkAuth } = require('../../utils/restaurantpassport');
 
 //Get Chats from the database
 
 //Router to get conversations
-router.get('/getchats',function (req, res) {
+router.get('/getchats',checkAuth,function (req, res) {
     console.log("Inside converstaions");
     let returnObject = {};
     console.log("ID", req.params.id);
@@ -14,7 +15,7 @@ router.get('/getchats',function (req, res) {
         restaurantId: req.query[0],
         customerId : req.query[1]
     }
-    kafka.make_request('getchats', chatquery, function (err, results) {
+    kafka.make_request('getchats',checkAuth, chatquery, function (err, results) {
         console.log('In result');
         console.log(results);
         if (err) {
@@ -35,7 +36,7 @@ router.get('/getchats',function (req, res) {
 })
 
 //Router to get conversations for restaurant
-router.get('/getrestaurantconversations/:id', function (req, res) {
+router.get('/getrestaurantconversations/:id', checkAuth,function (req, res) {
     console.log("Inside restaurant conversations");
     let returnObject = {};
     console.log("ID", req.params.id);
@@ -59,7 +60,7 @@ router.get('/getrestaurantconversations/:id', function (req, res) {
 })
 
 //Router to get conversations for customer
-router.get('/getcustomerconversations/:id', function (req, res) {
+router.get('/getcustomerconversations/:id',checkAuth, function (req, res) {
     console.log("Inside customer conversations");
     let returnObject = {};
     console.log("ID", req.params.id);
