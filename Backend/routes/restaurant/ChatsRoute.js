@@ -36,7 +36,7 @@ router.get('/getchats',checkAuth,function (req, res) {
 })
 
 //Router to get conversations for restaurant
-router.get('/getrestaurantconversations/:id', checkAuth,function (req, res) {
+router.get('/getrestaurantconversations/:id',function (req, res) {
     console.log("Inside restaurant conversations");
     let returnObject = {};
     console.log("ID", req.params.id);
