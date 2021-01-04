@@ -86,5 +86,5 @@ const mapStateToProps = state => ({
 
 
 export default GoogleApiWrapper({
-    apiKey: 'AIzaSyCiheh-O9omWKbtCfWf-S539GT82IK8aNQ'
+    apiKey: ''
 })(withRouter(connect(mapStateToProps)(RestaurantProfile)));

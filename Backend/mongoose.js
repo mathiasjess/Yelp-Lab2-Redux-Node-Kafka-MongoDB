@@ -7,7 +7,7 @@ mongoose.Promise = global.Promise;
 //     console.log("mongoose server running");
 // });
 
-mongoose.connect("mongodb+srv://jessica:mongo123@yelp.pnr8y.mongodb.net/yelp?retryWrites=true&w=majority",
+mongoose.connect("mongodb+srv://id:password@yelp.pnr8y.mongodb.net/yelp?retryWrites=true&w=majority",
     { useNewUrlParser: true, poolSize: 100 }, (err) => {
         if (err) console.log(err);
         else console.log("Connected to MongoDB.")

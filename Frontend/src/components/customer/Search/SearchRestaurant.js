@@ -221,5 +221,5 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default GoogleApiWrapper({
-    apiKey: 'AIzaSyCiheh-O9omWKbtCfWf-S539GT82IK8aNQ'
+    apiKey: ''
 })(connect(mapStateToProps, mapDispatchToProps)(SearchRestaurant));
